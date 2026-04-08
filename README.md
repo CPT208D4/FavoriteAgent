@@ -1,6 +1,6 @@
 # KnowledgeBase Backend
 
-独立实现的知识库后端：**SQLite** 存文档、**Chroma** 存向量、**语义检索（RAG）**、可选 **rerank**、**OpenAI 兼容** 的问答与日报/周报。
+知识库后端：**SQLite** 存文档、**Chroma** 存向量、**语义检索（RAG）**、可选 **rerank**、**OpenAI 兼容** 的问答与日报/周报。
 
 ---
 
@@ -47,7 +47,7 @@ python -m pip install -r requirements.txt
 
 ### 2. 配置环境变量
 
-复制模板并按供应商文档填写（**不要把真实 Key 提交到 Git**）：
+复制模板并按供应商文档填写：
 
 ```bash
 # Windows CMD
@@ -145,10 +145,84 @@ python -m uvicorn app.main:app --reload --reload-dir app --reload-dir scripts --
 | GET | `/reports/weekly` | 最近 7 天文档总结 |
 | POST | `/reports/generate` | `body`: `days`, `max_docs` |
 
-### 给 AI 同学对接（最小约定）
 
-1. **`POST /retrieve`**：只拿上下文片段，自拼 Prompt 调模型。  
-2. **`POST /chat/ask`**：由本服务完成检索 + 调用 LLM；响应含 `sources`（`doc_id`、`chunk_id`）便于溯源。
+---
+
+## 提示词（Prompt）设计
+
+本项目目前有 3 组核心提示词，分别用于：问答命中、问答未命中兜底、周期总结。
+
+### 1) RAG 问答提示词（`POST /chat/ask`）
+
+当检索到 `chunks` 时，后端在 `app/services/qa.py` 中使用如下 system prompt：
+
+```text
+你是严谨的知识库问答助手。只能基于提供的检索片段回答。
+规则：
+1) 先直接回答，再给出2-4条要点。
+2) 不能编造片段外事实；不确定就明确说“不确定”。
+3) 回答末尾附“引用来源”并列出 doc_id / chunk_id。
+```
+
+对应 user prompt 结构：
+
+```text
+问题：{question}
+
+检索片段：
+{context}
+```
+
+其中 `{context}` 由检索结果拼接，格式类似：
+
+```text
+[doc_id=... chunk_id=... title=...]
+<chunk 文本>
+```
+
+### 2) 问答未命中兜底提示词
+
+当检索结果为空时（`used_fallback=true`），使用如下提示词：
+
+```text
+你是知识库助手。当前知识库没有检索到相关片段。请礼貌地说明未命中，并建议用户换关键词或先补充知识库内容。
+```
+
+### 3) 日报/周报总结提示词（`/reports/*`）
+
+`app/services/reporting.py` 中用于生成日报/周报的 system prompt：
+
+```text
+你是学习知识库总结助手。请基于给定材料输出中文报告，格式固定：
+1) 本期主题概览（3-5条）
+2) 关键知识点（按主题分组）
+3) 可执行行动建议（3条）
+不要编造材料外信息。
+```
+
+对应 user prompt 结构：
+
+```text
+统计周期：最近 {days} 天
+
+材料：
+{context}
+```
+
+`{context}` 由文档标题、分类、标签、内容拼接而成。
+
+### 4) 如何调整提示词
+
+直接改下面两个文件中的字符串常量：
+
+- `app/services/qa.py`（问答与兜底）
+- `app/services/reporting.py`（日报/周报）
+
+改完后重启服务生效：
+
+```bash
+python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
+```
 
 ---
 

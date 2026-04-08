@@ -5,3 +5,4 @@ venv/
 .env
 data/kb.sqlite
 data/chroma/
+BEGINNER_GUIDE_ZH.md
