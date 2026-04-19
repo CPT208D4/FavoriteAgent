@@ -192,7 +192,7 @@ python -m uvicorn app.main:app --reload --reload-dir app --reload-dir scripts --
 `app/services/reporting.py` 中用于生成周报的 system prompt：
 
 ```text
-你是学习知识库总结助手。请基于给定材料输出中文报告，格式固定：
+你是学习知识库总结助手。请基于给定材料输出英文报告，格式固定：
 1) 本期主题概览（3-5条）
 2) 关键知识点（按主题分组）
 3) 可执行行动建议（3条）
