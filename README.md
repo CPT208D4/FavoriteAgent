@@ -9,13 +9,13 @@
 | 能力 | 说明 |
 |------|------|
 | 文档管理 | `GET/POST/PATCH/DELETE /documents`，入库时自动分块 + 向量化 |
-| 自动分类与标签 | 新增文档时若未填写 `category/tags`，后端自动推断并回写 |
+| 自动分类与标签 | 未填 `category` 或 `tags` 时调用 LLM 推断；类目为英文收藏夹风格（见下文） |
 | 文件上传 | `POST /documents/upload` 支持 `.txt/.md/.csv/.pdf/.docx` 后自动入库与索引 |
 | 批量种子 | `data/documents.json` + `scripts/init_data.py` 导入或更新 |
 | 语义检索 | `POST /retrieve`：query → embedding → Chroma Top-K |
 | 可选 rerank | `.env` 开启后先多路召回再调用外部 rerank API |
 | 问答 | `POST /chat/ask`：检索片段 + `POST /v1/chat/completions` |
-| 周报总结 | `/reports/weekly` |
+| 周报总结 | `GET /reports/weekly`：最近 7 天（UTC）、英文周报；失败时返回本地兜底摘要 |
 | 运维 | `POST /admin/reindex-all` 全量重建向量；`GET /export/rag-chunks` 调试导出 |
 
 ---
@@ -48,7 +48,7 @@ python -m pip install -r requirements.txt
 
 ### 2. 配置环境变量
 
-复制模板并按供应商文档填写：
+复制模板并按供应商文档填写（**不要把含真实 Key 的 `.env` 提交到 Git**）：
 
 ```bash
 # Windows CMD
@@ -108,6 +108,28 @@ python -m uvicorn app.main:app --reload --reload-dir app --reload-dir scripts --
 
 ---
 
+## 自动分类（收藏夹类目）
+
+新建文档时，若 **`category` 或 `tags` 留空**，会调用 `app/services/classification.py` 推断并写回数据库。类目为**固定英文列表**（便于与收藏夹/导出一致），例如：
+
+`Science`，`Technology`，`Industry`，`Game`，`City`，`Sports`，`Business`，`Arts & Culture`，`Education`，`Health`，`Lifestyle`，`Entertainment`，`News & Media`，`Other`。
+
+LLM 不可用时走关键词兜底。已入库的旧文档**不会自动改类目**；若需更新，可 `PATCH /documents/{id}` 手改或触发重新保存逻辑。
+
+---
+
+## 周报（`/reports/weekly`）如何工作
+
+1. **时间范围**：`created_at` 在 **最近 7 天**内（与服务器 **UTC** 时间比较），`created_at` 为空的条目**不会纳入**。
+2. **条数上限**：默认最多 **`REPORT_MAX_DOCS`**（默认 12）条，按 **`created_at` 从新到旧**。
+3. **拼进模型的材料**：每条包含标题、分类、标签、正文片段；正文按**总长度上限**在条目间**均分预算**，避免只有前几篇占满上下文。
+4. **生成语言**：系统提示要求输出**英文**周报，并尽量**覆盖材料中的每一条**（正文中带 `[Item i/n]` 标记）。
+5. **响应字段**：`report` 为正文；`used_fallback=true` 表示 LLM 调用失败，返回的是根据元数据拼出的**兜底摘要**（非模型生成）。
+
+相关环境变量（见下表 `REPORT_*`）可在 `.env` 中覆盖。
+
+---
+
 ## 环境变量说明
 
 完整示例见仓库根目录 **`.env.example`**。常用项：
@@ -121,7 +143,11 @@ python -m uvicorn app.main:app --reload --reload-dir app --reload-dir scripts --
 | `EMBEDDING_API_BASE` | OpenAI 兼容根地址，如 `https://xxx/v1` |
 | `EMBEDDING_API_KEY` / `EMBEDDING_API_MODEL` | API Key 与模型名 |
 | `RERANK_ENABLED` | `true` 时启用外部 rerank，并配置 `RERANK_*` |
-| `LLM_API_BASE` / `LLM_API_KEY` / `LLM_MODEL` | 问答与报告使用的聊天模型 |
+| `LLM_API_BASE` / `LLM_API_KEY` / `LLM_MODEL` | 问答、自动分类、周报使用的聊天模型 |
+| `LLM_TIMEOUT_SECONDS` / `LLM_CONNECT_TIMEOUT_SECONDS` / `LLM_RETRIES` | LLM 读超时、连接超时、超时类错误重试次数 |
+| `REPORT_MAX_DOCS` | 周报最多纳入多少条文档（默认 12） |
+| `REPORT_MAX_CHARS_PER_DOC` | 周报材料里单条正文片段上限（字符） |
+| `REPORT_MAX_TOTAL_CHARS` | 周报材料总字符上限（多文档时会在条间均分） |
 
 未设置 `LLM_API_BASE` / `LLM_API_KEY` 时，会**回退使用** `EMBEDDING_API_BASE` / `EMBEDDING_API_KEY`（同一网关时常用）。
 
@@ -142,14 +168,14 @@ python -m uvicorn app.main:app --reload --reload-dir app --reload-dir scripts --
 | POST | `/admin/reindex-all` | 全量重建向量 |
 | POST | `/retrieve` | 语义检索，`body`: `query`, `top_k` |
 | POST | `/chat/ask` | RAG 问答，`body`: `question`, `top_k` |
-| GET | `/reports/weekly` | 最近 7 天文档总结 |
+| GET | `/reports/weekly` | 最近 7 天文档周报；JSON 含 `period`、`doc_count`、`report`、`used_fallback` |
 
 
 ---
 
 ## 提示词（Prompt）设计
 
-本项目目前有 3 组核心提示词，分别用于：问答命中、问答未命中兜底、周期总结。
+本项目核心提示词用于：问答命中、问答未命中兜底、自动分类、周报总结。修改后需**重启服务**。
 
 ### 1) RAG 问答提示词（`POST /chat/ask`）
 
@@ -187,34 +213,20 @@ python -m uvicorn app.main:app --reload --reload-dir app --reload-dir scripts --
 你是知识库助手。当前知识库没有检索到相关片段。请礼貌地说明未命中，并建议用户换关键词或先补充知识库内容。
 ```
 
-### 3) 周报总结提示词（`/reports/weekly`）
+### 3) 自动分类提示词（`POST /documents` 等）
 
-`app/services/reporting.py` 中用于生成周报的 system prompt：
+见 `app/services/classification.py`：要求模型从固定英文类目中选一项，并输出 JSON（`category` + `tags`）。
 
-```text
-你是学习知识库总结助手。请基于给定材料输出英文报告，格式固定：
-1) 本期主题概览（3-5条）
-2) 关键知识点（按主题分组）
-3) 可执行行动建议（3条）
-不要编造材料外信息。
-```
+### 4) 周报总结提示词（`/reports/weekly`）
 
-对应 user prompt 结构：
+见 `app/services/reporting.py`：要求基于材料输出**英文**周报，并强调**每条收藏至少被提到一次**（材料中带 `[Item i/n]`）。user 侧会附带统计周期与条目数；以源码中的 `system` / `user` 字符串为准（若与旧文档示例不一致，以代码为准）。
 
-```text
-统计周期：最近 {days} 天
+### 5) 如何调整提示词
 
-材料：
-{context}
-```
-
-`{context}` 由文档标题、分类、标签、内容拼接而成。
-
-### 4) 如何调整提示词
-
-直接改下面两个文件中的字符串常量：
+直接改下面文件中的字符串常量：
 
 - `app/services/qa.py`（问答与兜底）
+- `app/services/classification.py`（自动分类）
 - `app/services/reporting.py`（周报）
 
 改完后重启服务生效：
@@ -236,7 +248,7 @@ KnowledgeBase/
 │   ├── db_models.py
 │   ├── schemas.py
 │   ├── api/routers/       # documents, retrieval, chat, reports
-│   └── services/          # content, chunking, embedding, vector_store, retrieval, rerank, llm, qa, reporting
+│   └── services/          # content, chunking, classification, embedding, vector_store, retrieval, rerank, llm, qa, reporting
 ├── data/                  # kb.sqlite, chroma/, documents.json
 ├── scripts/init_data.py
 ├── requirements.txt
@@ -252,12 +264,17 @@ KnowledgeBase/
 多为供应商网关/额度/权限或临时故障。可用控制台同款 `curl` 测 `.../v1/embeddings`；恢复后重启服务。若曾换过 embedding 模型，清空 `data/chroma` 并重建索引。
 
 **2. `GET /reports/weekly` 返回 `doc_count: 0`**  
-周报按文档 **`created_at` 在最近 7 天内**筛选；种子数据若日期较旧会为空。可 `POST /documents` 新建一条。
+周报按文档 **`created_at` 在最近 7 天内（UTC）**筛选；种子数据若日期过旧会为空。新建一条或检查系统时间与时区。
 
-**3. `/docs` 很卡**  
+**3. 周报内容不全**  
+先看响应里的 **`doc_count`** 是否等于你预期条数。若相等但仍漏提某条，可调高 `REPORT_MAX_TOTAL_CHARS` 或略增 `REPORT_MAX_DOCS`；模型偶尔也会偏重某一主题，可再改 `reporting.py` 中的提示词加强「逐条覆盖」。
+
+**4. `/docs` 很卡**  
 少用全局 `--reload`，或 `--reload-dir` 只监控 `app`、`scripts`、`data`。
 
-**4. `GET /` 404**  
+**5. `GET /` 404**  
 本服务未提供首页，请访问 `/docs`。
+
+
 
 
