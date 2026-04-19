@@ -1,6 +1,6 @@
 # KnowledgeBase Backend
 
-知识库后端：**SQLite** 存文档、**Chroma** 存向量、**语义检索（RAG）**、可选 **rerank**、**OpenAI 兼容** 的问答与日报/周报。
+知识库后端：**SQLite** 存文档、**Chroma** 存向量、**语义检索（RAG）**、可选 **rerank**、**OpenAI 兼容** 的问答与周报。
 
 ---
 
@@ -9,12 +9,13 @@
 | 能力 | 说明 |
 |------|------|
 | 文档管理 | `GET/POST/PATCH/DELETE /documents`，入库时自动分块 + 向量化 |
-| 文件上传 | `POST /documents/upload` 支持 `.txt/.md/.pdf/.docx` 后自动入库与索引 |
+| 自动分类与标签 | 新增文档时若未填写 `category/tags`，后端自动推断并回写 |
+| 文件上传 | `POST /documents/upload` 支持 `.txt/.md/.csv/.pdf/.docx` 后自动入库与索引 |
 | 批量种子 | `data/documents.json` + `scripts/init_data.py` 导入或更新 |
 | 语义检索 | `POST /retrieve`：query → embedding → Chroma Top-K |
 | 可选 rerank | `.env` 开启后先多路召回再调用外部 rerank API |
 | 问答 | `POST /chat/ask`：检索片段 + `POST /v1/chat/completions` |
-| 周期总结 | `/reports/daily`、`/reports/weekly`、`/reports/generate` |
+| 周报总结 | `/reports/weekly` |
 | 运维 | `POST /admin/reindex-all` 全量重建向量；`GET /export/rag-chunks` 调试导出 |
 
 ---
@@ -133,7 +134,7 @@ python -m uvicorn app.main:app --reload --reload-dir app --reload-dir scripts --
 | GET | `/health` | 健康检查 |
 | GET | `/documents` | 列表，支持 `category`、`tag`、`q` 查询参数 |
 | POST | `/documents` | 新建文档（自动索引） |
-| POST | `/documents/upload` | 上传并解析文件：`.txt/.md/.pdf/.docx`（自动索引） |
+| POST | `/documents/upload` | 上传并解析文件：`.txt/.md/.csv/.pdf/.docx`（自动索引） |
 | GET | `/documents/{doc_id}` | 单条 |
 | PATCH | `/documents/{doc_id}` | 更新（会重索引） |
 | DELETE | `/documents/{doc_id}` | 删除文档及对应向量 |
@@ -141,9 +142,7 @@ python -m uvicorn app.main:app --reload --reload-dir app --reload-dir scripts --
 | POST | `/admin/reindex-all` | 全量重建向量 |
 | POST | `/retrieve` | 语义检索，`body`: `query`, `top_k` |
 | POST | `/chat/ask` | RAG 问答，`body`: `question`, `top_k` |
-| GET | `/reports/daily` | 最近 1 天文档总结 |
 | GET | `/reports/weekly` | 最近 7 天文档总结 |
-| POST | `/reports/generate` | `body`: `days`, `max_docs` |
 
 
 ---
@@ -188,9 +187,9 @@ python -m uvicorn app.main:app --reload --reload-dir app --reload-dir scripts --
 你是知识库助手。当前知识库没有检索到相关片段。请礼貌地说明未命中，并建议用户换关键词或先补充知识库内容。
 ```
 
-### 3) 日报/周报总结提示词（`/reports/*`）
+### 3) 周报总结提示词（`/reports/weekly`）
 
-`app/services/reporting.py` 中用于生成日报/周报的 system prompt：
+`app/services/reporting.py` 中用于生成周报的 system prompt：
 
 ```text
 你是学习知识库总结助手。请基于给定材料输出中文报告，格式固定：
@@ -216,7 +215,7 @@ python -m uvicorn app.main:app --reload --reload-dir app --reload-dir scripts --
 直接改下面两个文件中的字符串常量：
 
 - `app/services/qa.py`（问答与兜底）
-- `app/services/reporting.py`（日报/周报）
+- `app/services/reporting.py`（周报）
 
 改完后重启服务生效：
 
@@ -252,8 +251,8 @@ KnowledgeBase/
 **1. `POST /retrieve` 或 `/chat/ask` 报 5xx，终端里是 Embedding HTTP 503**  
 多为供应商网关/额度/权限或临时故障。可用控制台同款 `curl` 测 `.../v1/embeddings`；恢复后重启服务。若曾换过 embedding 模型，清空 `data/chroma` 并重建索引。
 
-**2. `GET /reports/daily` 返回 `doc_count: 0`**  
-日报按文档 **`created_at` 在最近 1 天内**筛选；种子数据若日期较旧会为空。可 `POST /documents` 新建一条，或 `POST /reports/generate` 增大 `days`。
+**2. `GET /reports/weekly` 返回 `doc_count: 0`**  
+周报按文档 **`created_at` 在最近 7 天内**筛选；种子数据若日期较旧会为空。可 `POST /documents` 新建一条。
 
 **3. `/docs` 很卡**  
 少用全局 `--reload`，或 `--reload-dir` 只监控 `app`、`scripts`、`data`。

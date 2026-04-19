@@ -78,12 +78,11 @@ class AskResponse(BaseModel):
     used_fallback: bool = False
 
 
-class ReportRequest(BaseModel):
-    days: int = Field(1, ge=1, le=30, description="统计最近 N 天文档")
-    max_docs: int = Field(50, ge=1, le=500, description="参与总结的最大文档数")
-
-
 class ReportResponse(BaseModel):
     period: str
     doc_count: int
     report: str
+    used_fallback: bool = Field(
+        False,
+        description="True 表示未调用成功 LLM，返回的是根据文档元数据自动拼出的摘要",
+    )

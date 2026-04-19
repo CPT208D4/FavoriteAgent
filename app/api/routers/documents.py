@@ -33,7 +33,7 @@ def create(payload: DocumentCreate, db: Session = Depends(get_db)):
 
 @router.post("/documents/upload", response_model=Document)
 async def upload_document(
-    file: UploadFile = File(..., description="支持 .txt/.md/.pdf/.docx"),
+    file: UploadFile = File(..., description="支持 .txt/.md/.csv/.pdf/.docx"),
     title: str | None = Form(None, description="可选，不填则使用文件名"),
     category: str = Form("", description="可选分类"),
     tags: str = Form("", description="可选，逗号分隔：AI,RAG,学习"),

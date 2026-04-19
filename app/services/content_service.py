@@ -1,6 +1,8 @@
+import csv
 import json
 import uuid
 from io import BytesIO
+from io import StringIO
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
@@ -10,7 +12,7 @@ from sqlalchemy.orm import Session
 from ..config import settings
 from ..db_models import Document as DocumentORM
 from ..schemas import Document, DocumentCreate, DocumentUpdate
-from . import chunking, embedding, vector_store
+from . import chunking, classification, embedding, vector_store
 
 
 def _utc_now() -> datetime:
@@ -65,12 +67,22 @@ def create_document(db: Session, payload: DocumentCreate) -> Document:
     now = _utc_now()
     doc_id = payload.id or f"doc-{uuid.uuid4().hex[:12]}"
     created = payload.created_at or now
+    category = (payload.category or "").strip()
+    tags = payload.tags or []
+    if not category or not tags:
+        inferred_category, inferred_tags = classification.infer_category_and_tags(
+            payload.title, payload.content
+        )
+        if not category:
+            category = inferred_category
+        if not tags:
+            tags = inferred_tags
     row = DocumentORM(
         id=doc_id,
         title=payload.title,
         content=payload.content,
-        category=payload.category or "",
-        tags=payload.tags or [],
+        category=category,
+        tags=tags,
         source_url=payload.source_url,
         created_at=created,
         updated_at=now,
@@ -152,6 +164,29 @@ def _extract_text_from_upload(filename: str, raw: bytes) -> str:
     suffix = Path(filename).suffix.lower()
     if suffix in {".txt", ".md"}:
         return raw.decode("utf-8", errors="ignore")
+    if suffix == ".csv":
+        text = raw.decode("utf-8", errors="ignore")
+        reader = csv.DictReader(StringIO(text))
+        lines: list[str] = []
+        # Prefer header-aware parsing.
+        if reader.fieldnames:
+            for i, row in enumerate(reader, start=1):
+                cells = []
+                for k, v in row.items():
+                    key = (k or "").strip()
+                    val = (v or "").strip()
+                    if key or val:
+                        cells.append(f"{key}: {val}" if key else val)
+                if cells:
+                    lines.append(f"row {i}: " + "; ".join(cells))
+        else:
+            # Fallback for headerless csv.
+            plain = csv.reader(StringIO(text))
+            for i, row in enumerate(plain, start=1):
+                cells = [c.strip() for c in row if c and c.strip()]
+                if cells:
+                    lines.append(f"row {i}: " + " | ".join(cells))
+        return "\n".join(lines)
     if suffix == ".pdf":
         from pypdf import PdfReader
 
@@ -164,7 +199,7 @@ def _extract_text_from_upload(filename: str, raw: bytes) -> str:
         doc = DocxDocument(BytesIO(raw))
         paras = [p.text for p in doc.paragraphs]
         return "\n".join(paras)
-    raise ValueError("仅支持 .txt / .md / .pdf / .docx 文件")
+    raise ValueError("仅支持 .txt / .md / .csv / .pdf / .docx 文件")
 
 
 def create_document_from_upload(

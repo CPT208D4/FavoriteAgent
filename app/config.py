@@ -42,7 +42,16 @@ class Settings(BaseSettings):
     llm_api_key: str | None = None
     llm_model: str = "gpt-4o-mini"
     llm_temperature: float = 0.2
-    llm_timeout_seconds: int = 120
+    # 单次请求的「读取」超时（等模型吐完响应）；连接单独设短一些
+    llm_timeout_seconds: int = 240
+    llm_connect_timeout_seconds: int = 60
+    # 对 Read/Connect 超时额外重试次数（不含首次）
+    llm_retries: int = 2
+
+    # 周报：直接拼进 prompt，需限制长度，避免请求过大或网关超时
+    report_max_docs: int = 12
+    report_max_chars_per_doc: int = 2500
+    report_max_total_chars: int = 18000
 
     @model_validator(mode="after")
     def _paths(self) -> "Settings":
