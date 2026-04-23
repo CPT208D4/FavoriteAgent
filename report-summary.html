@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pockety - Report Summary</title>
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <script>
+    tailwind.config = {
+      mode: 'jit',
+      important: true,
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Jacques+Francois&family=Afacad&family=Adamina&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro', 'Segoe UI', Roboto, sans-serif;
+    }
+
+    .nav-button {
+      transition: transform 160ms ease, opacity 160ms ease;
+    }
+
+    .nav-button:hover {
+      transform: translateY(-1px) scale(1.04);
+    }
+
+    .nav-button:active,
+    .nav-button.nav-press {
+      transform: scale(0.92);
+      opacity: 0.9;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 flex justify-center items-center min-h-screen">
+  <div class="w-[402px] h-[874px] overflow-hidden bg-[rgba(253,253,253,1)] relative shadow-2xl">
+    <!-- Background gradient images -->
+    <img src="./public/assets/report-summary/image_1.png" class="w-[273px] h-[273px] absolute top-[45px] -left-[34px]" />
+    <img src="./public/assets/report-summary/image_2.png" class="w-[500px] h-[500px] absolute top-[15px] left-[152px]" />
+    <img src="./public/assets/report-summary/image_3.png" class="w-[398px] h-[398px] absolute top-[508px] left-[103px]" />
+    <img src="./public/assets/report-summary/image_4.png" class="w-[500px] h-[535px] absolute top-[258px] -left-[302px]" />
+    
+    <!-- Status Bar -->
+    <div class="w-[484px] h-[62px] flex flex-row flex-nowrap justify-center items-center pt-[21px] box-border pb-[19px] absolute top-[11px] -left-[44px]">
+      <div class="w-[141px] h-[22px] flex flex-row flex-nowrap justify-center items-center pt-[1.50px] box-border mr-[154px]">
+        <div class="text-[17px] whitespace-nowrap text-center text-[rgba(0,0,0,1)] leading-[22px] tracking-[normal] font-[590]">
+          <span class="tracking-[0px]">9:41</span>
+        </div>
+      </div>
+      <div class="w-[141px] h-[22px] flex flex-row flex-nowrap justify-center items-center pt-px box-border pr-px">
+        <img src="./public/assets/report-summary/image_5.png" class="w-[19.20px] h-[12.23px] mr-[7px]" />
+        <img src="./public/assets/report-summary/image_6.png" class="w-[17.14px] h-[12.33px] mr-[7px]" />
+        <img src="./public/assets/report-summary/image_7.png" class="w-[27.33px] h-[13px]" />
+      </div>
+    </div>
+    
+    <!-- Title -->
+    <div class="absolute top-[51px] left-[64px] w-[350px] h-[81px] font-['Jacques_Francois'] text-[40px] whitespace-nowrap text-[rgba(0,0,0,1)] leading-[normal] tracking-[normal] font-normal" style="text-shadow: 0px 4px 4px rgba(0,0,0,0.25)">
+      <span class="tracking-[0%]">Report Summary </span>
+    </div>
+    
+    <!-- Back button -->
+    <button id="backButton" type="button" class="w-[37px] h-[35px] overflow-hidden absolute top-[63px] left-[13px] flex justify-start items-start" aria-label="Go back">
+      <img src="./public/assets/report-summary/image_8.png" class="w-[24.67px] h-[23.33px] mt-[5.83px] ml-[6.17px]" />
+    </button>
+    
+    <!-- AI Chat Button -->
+    <div class="absolute top-[663px] -left-[28px] w-[107.92px] h-[105px]">
+      <img src="./public/assets/report-summary/image_9.png" class="w-[107.92px] h-[102.81px] absolute top-[2.19px] left-0" />
+      <div class="absolute top-0 left-[81.67px] w-[19.69px] h-[20.42px] font-['Adamina'] text-[12px] whitespace-nowrap text-center text-[rgba(0,0,0,1)] leading-[37px] tracking-[normal] font-normal">
+        <span class="tracking-[0px]">hi!</span>
+      </div>
+    </div>
+    
+    <!-- Report Items -->
+    <!-- Item 1: Most favorite area -->
+    <div class="w-[373px] rounded-[25px] bg-[rgba(255,255,255,0.32)] min-h-[57px] absolute top-[117px] left-[14px]"></div>
+    <div class="absolute top-[135px] left-[29px] w-[353px] h-[19px] font-['Afacad'] text-[18px] whitespace-nowrap leading-[normal] tracking-[normal] font-normal">
+      <span class="text-[rgba(76,75,75,1)] tracking-[0%]"># This week, your most favorite area is </span>
+      <span class="text-[rgba(73,98,173,1)] tracking-[0%]">science 😍</span>
+    </div>
+    
+    <!-- Item 2: Collected videos/images -->
+    <div class="w-[373px] rounded-[25px] bg-[rgba(255,255,255,0.32)] min-h-[58px] absolute top-[185px] left-[14px]"></div>
+    <div class="absolute top-[192px] left-[29px] w-[353px] h-[38px] font-['Afacad'] text-[18px] leading-[normal] tracking-[normal] font-normal">
+      <span class="text-[rgba(76,75,75,1)] tracking-[0%]"># In </span>
+      <span class="text-[rgba(73,98,173,1)] tracking-[0%]">science </span>
+      <span class="text-[rgba(76,75,75,1)] tracking-[0%]">area, you collected </span>
+      <span class="text-[rgba(211,89,106,1)] tracking-[0%]">12</span>
+      <span class="text-[rgba(76,75,75,1)] tracking-[0%]"> videos, </span>
+      <span class="text-[rgba(211,89,106,1)] tracking-[0%]">20</span>
+      <span class="text-[rgba(76,75,75,1)] tracking-[0%]"> images </span>
+      <span class="text-[rgba(73,98,173,1)] tracking-[0%]">🤗</span>
+    </div>
+    
+    <!-- Item 3: Talked with AI -->
+    <div class="w-[373px] rounded-[25px] bg-[rgba(255,255,255,0.32)] min-h-[57px] absolute top-[253px] left-[14px]"></div>
+    <div class="absolute top-[270px] left-[28px] w-[353px] h-[19px] font-['Afacad'] text-[18px] whitespace-nowrap leading-[normal] tracking-[normal] font-normal">
+      <span class="text-[rgba(76,75,75,1)] tracking-[0%]"># This week, you talked with AI for </span>
+      <span class="text-[rgba(234,179,37,1)] tracking-[0%]">36</span>
+      <span class="text-[rgba(76,75,75,1)] tracking-[0%]"> times 😋</span>
+    </div>
+    
+    <!-- Item 4: Most talked area -->
+    <div class="w-[373px] rounded-[25px] bg-[rgba(255,255,255,0.32)] min-h-[57px] absolute top-[321px] left-[14px]"></div>
+    <div class="absolute top-[329px] left-[28px] w-[353px] h-[48px] font-['Afacad'] text-[18px] leading-[normal] tracking-[normal] font-normal">
+      <span class="text-[rgba(76,75,75,1)] tracking-[0%]"># Area where you talked with AI for most times is </span>
+      <span class="text-[rgba(41,117,237,1)] tracking-[0%]">Java</span>
+      <span class="text-[rgba(76,75,75,1)] tracking-[0%]"> 🧐</span>
+    </div>
+    
+    <!-- Item 5: Reviewed collection -->
+    <div class="w-[373px] rounded-[25px] bg-[rgba(255,255,255,0.32)] min-h-[57px] absolute top-[392px] left-[14px]"></div>
+    <div class="absolute top-[399px] left-[29px] w-[358px] h-[39px] font-['Afacad'] text-[18px] leading-[normal] tracking-[normal] font-normal">
+      <span class="text-[rgba(76,75,75,1)] tracking-[0%]"># You reviewed your last week's collection for </span>
+      <span class="text-[rgba(255,0,4,1)] tracking-[0%]">0</span>
+      <span class="text-[rgba(76,75,75,1)] tracking-[0%]"> times 🥲</span>
+    </div>
+    
+    <!-- Item 6: Favorite areas count -->
+    <div class="w-[373px] rounded-[25px] bg-[rgba(255,255,255,0.32)] min-h-[57px] absolute top-[460px] left-[14px]"></div>
+    <div class="absolute top-[468px] left-[25px] w-[358px] h-[44px] font-['Afacad'] text-[18px] leading-[normal] tracking-[normal] font-normal">
+      <span class="text-[rgba(76,75,75,1)] tracking-[0%]"># This week, your favorite includes </span>
+      <span class="text-[rgba(52,153,184,1)] tracking-[0%]">8</span>
+      <span class="text-[rgba(76,75,75,1)] tracking-[0%]"> kinds of areas😯</span>
+    </div>
+    
+    <!-- Item 7: Tried new area -->
+    <div class="w-[373px] rounded-[25px] bg-[rgba(255,255,255,0.32)] min-h-[58px] absolute top-[528px] left-[14px]"></div>
+    <div class="absolute top-[535px] left-[29px] w-[353px] h-[48px] font-['Afacad'] text-[18px] leading-[normal] tracking-[normal] font-normal">
+      <span class="text-[rgba(76,75,75,1)] tracking-[0%]"># This week, you tried the </span>
+      <span class="text-[rgba(183,173,42,1)] tracking-[0%]">Engineering</span>
+      <span class="text-[rgba(76,75,75,1)] tracking-[0%]"> area for the first time🤩</span>
+    </div>
+    
+    <!-- Item 8: Most visited platform -->
+    <div class="w-[373px] rounded-[25px] bg-[rgba(255,255,255,0.32)] min-h-[57px] absolute top-[599px] left-[14px]"></div>
+    <div class="absolute top-[605px] left-[29px] w-[358px] h-[48px] font-['Afacad'] text-[18px] leading-[normal] tracking-[normal] font-normal">
+      <span class="text-[rgba(76,75,75,1)] tracking-[0%]"># The platform you visited most frequently is </span>
+      <span class="text-[rgba(128,29,198,1)] tracking-[0%]">Tiktok😁</span>
+    </div>
+    
+    <!-- Bottom Navigation Bar -->
+    <div class="absolute top-[768px] left-0 w-[402px] h-[89px]">
+      <div class="w-[402px] rounded-[52px] [box-shadow:inset_0px_-4px_4px_0px_rgba(0,0,0,0.25),_inset_0px_0px_4px_0px_rgba(0,0,0,0.25)] bg-[rgba(255,255,255,1)] min-h-[89px] absolute top-0 left-0"></div>
+      <button id="navWeekly" type="button" class="nav-button absolute top-[6px] left-[212px] w-[77px] h-[77px]" aria-label="Go to Weekly Report">
+        <img src="./public/assets/report-summary/image_10.png" class="w-[77px] h-[77px]" />
+      </button>
+      <div class="w-[302px] h-[41.67px] flex flex-row flex-nowrap justify-start items-center absolute top-[22px] left-[47px]">
+        <button id="navHome" type="button" class="nav-button mr-[55px]" aria-label="Go to Home">
+          <img src="./public/assets/report-summary/image_11.png" class="w-[33px] h-[38px]" />
+        </button>
+        <button id="navFavorite" type="button" class="nav-button mr-[55px]" aria-label="Go to Favorites">
+          <img src="./public/assets/report-summary/image_12.png" class="w-[41.67px] h-[39.63px]" />
+        </button>
+        <button id="navHistory" type="button" class="nav-button mr-[55px]" aria-label="Go to History Report">
+          <img src="./public/assets/report-summary/image_13.png" class="w-[37.50px] h-[41.67px]" />
+        </button>
+        <button id="navProfile" type="button" class="nav-button" aria-label="Go to Profile">
+          <img src="./public/assets/report-summary/image_14.png" class="w-[33.33px] h-[37.50px]" />
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const navConfig = [
+        { id: 'navHome', path: './home.html' },
+        { id: 'navFavorite', path: './favorites-travel.html' },
+        { id: 'navHistory', path: './history-report.html' },
+        { id: 'navWeekly', path: './weekly-report.html' },
+        { id: 'navProfile', path: './profile.html' }
+      ];
+
+      const backButton = document.getElementById('backButton');
+      if (backButton) {
+        backButton.addEventListener('click', function () {
+          if (document.referrer) {
+            window.history.back();
+            return;
+          }
+          window.location.href = './weekly-report.html';
+        });
+      }
+
+      navConfig.forEach(function (item) {
+        const button = document.getElementById(item.id);
+        if (!button) {
+          return;
+        }
+
+        button.addEventListener('click', function () {
+          button.classList.add('nav-press');
+          setTimeout(function () {
+            window.location.href = item.path;
+          }, 90);
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

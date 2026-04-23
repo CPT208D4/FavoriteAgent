@@ -1,0 +1,82 @@
+[
+  {
+    "id": "doc-001",
+    "title": "48 Hours in Aranya",
+    "content": "A compact travel note about architecture, coastal light, and a calm two-day route through Aranya. The focus is on spatial atmosphere and memorable stops.",
+    "category": "travel",
+    "image_path": "./public/assets/my-favorite/image_16.png",
+    "icon_path": "./public/assets/my-favorite/image_9.png",
+    "source_url": null,
+    "created_at": "2026-01-19T09:00:00Z"
+  },
+  {
+    "id": "doc-002",
+    "title": "Aranya Canteen No.4",
+    "content": "A food collection entry centered on Aranya dining, quick recommendations, and what makes this place worth revisiting during a short trip.",
+    "category": "travel",
+    "image_path": "./public/assets/my-favorite/image_8.png",
+    "icon_path": "./public/assets/my-favorite/image_9.png",
+    "source_url": null,
+    "created_at": "2025-12-10T09:00:00Z"
+  },
+  {
+    "id": "doc-003",
+    "title": "Orange Sunset Sea",
+    "content": "A visual diary entry about seaside sunset colors, blue-hour tones, and the emotional mood of watching the horizon near the water.",
+    "category": "travel",
+    "image_path": "./public/assets/my-favorite/image_11.png",
+    "icon_path": "./public/assets/my-favorite/image_12.png",
+    "source_url": null,
+    "created_at": "2025-05-12T09:00:00Z"
+  },
+  {
+    "id": "doc-004",
+    "title": "Aranya Suka Hotel",
+    "content": "A stay review focused on a bright room, floor-to-ceiling windows, and the feeling of slowing down during a design-oriented weekend trip.",
+    "category": "travel",
+    "image_path": "./public/assets/my-favorite/image_14.png",
+    "icon_path": "./public/assets/my-favorite/image_15.png",
+    "source_url": null,
+    "created_at": "2025-03-13T09:00:00Z"
+  },
+  {
+    "id": "doc-005",
+    "title": "Resumes HR Hates Most",
+    "content": "A practical summary of resume mistakes that immediately weaken first impressions, including messy structure, weak evidence, and generic wording.",
+    "category": "resume",
+    "image_path": "./public/assets/my-favorite-resume/image_22.png",
+    "icon_path": "./public/assets/my-favorite-resume/image_16.png",
+    "source_url": null,
+    "created_at": "2026-01-19T08:50:00Z"
+  },
+  {
+    "id": "doc-006",
+    "title": "AI-generated Resume",
+    "content": "A comparison note on using AI to draft resumes faster while still refining tone, relevance, and credibility before sending applications.",
+    "category": "resume",
+    "image_path": "./public/assets/my-favorite-resume/image_15.png",
+    "icon_path": "./public/assets/my-favorite-resume/image_16.png",
+    "source_url": null,
+    "created_at": "2025-12-10T08:50:00Z"
+  },
+  {
+    "id": "doc-007",
+    "title": "Resume-to-Website",
+    "content": "A favorite about turning resume content into a personal website so that projects, achievements, and identity feel more vivid and easier to scan.",
+    "category": "resume",
+    "image_path": "./public/assets/my-favorite-resume/image_20.png",
+    "icon_path": "./public/assets/my-favorite-resume/image_21.png",
+    "source_url": null,
+    "created_at": "2025-05-12T08:50:00Z"
+  },
+  {
+    "id": "doc-008",
+    "title": "STAR Method Resume",
+    "content": "A structured note on rewriting experience bullets with situation, task, action, and result so each line proves clear impact.",
+    "category": "resume",
+    "image_path": "./public/assets/my-favorite-resume/image_18.png",
+    "icon_path": "./public/assets/my-favorite-resume/image_19.png",
+    "source_url": null,
+    "created_at": "2025-03-13T08:50:00Z"
+  }
+]

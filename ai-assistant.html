@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pockety - AI Assistant</title>
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <script>
+    tailwind.config = {
+      mode: 'jit',
+      important: true,
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Jacques+Francois&family=Abril+Fatface&family=Abhaya+Libre:wght@400;700;800&family=Afacad&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro', 'Segoe UI', Roboto, sans-serif;
+    }
+
+    .ui-copy {
+      font-family: 'Afacad', sans-serif;
+      color: rgba(74, 74, 74, 1);
+      letter-spacing: 0;
+    }
+
+    .chat-scrollbar::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .chat-scrollbar::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 999px;
+    }
+
+    .bubble-user {
+      background: rgba(193, 235, 230, 0.45);
+      align-self: flex-end;
+    }
+
+    .bubble-assistant {
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      align-self: flex-start;
+    }
+
+    .message-bubble {
+      transition: opacity 220ms ease, transform 220ms ease;
+    }
+
+    .message-bubble.is-entering {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+
+    .suggestions-panel {
+      transition: opacity 260ms ease, transform 260ms ease, visibility 260ms ease;
+    }
+
+    .suggestions-panel.suggestions-hidden {
+      opacity: 0;
+      transform: translateY(-8px);
+      pointer-events: none;
+      visibility: hidden;
+    }
+
+    .chat-viewport {
+      top: 492px;
+      height: 288px;
+      transition: top 260ms ease, height 260ms ease;
+    }
+
+    .chat-viewport.chat-expanded {
+      top: 196px;
+      height: 583px;
+    }
+
+    .whiteboard-bg {
+      transition: opacity 260ms ease, transform 260ms ease, visibility 260ms ease;
+    }
+
+    .whiteboard-bg.whiteboard-hidden {
+      opacity: 0;
+      transform: translateY(-6px);
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .suggestion-chip-shell {
+      border-radius: 89px;
+      border: 1px solid rgba(0, 0, 0, 0.13);
+      background: rgba(255, 255, 255, 0.68);
+      box-shadow: 0 6px 18px rgba(107, 128, 167, 0.08);
+      transition: transform 180ms ease, background 180ms ease, box-shadow 180ms ease;
+    }
+
+    .suggestion-chip:hover .suggestion-chip-shell,
+    .suggestion-chip:focus-visible .suggestion-chip-shell {
+      transform: translateY(-1px);
+      background: rgba(255, 255, 255, 0.82);
+      box-shadow: 0 10px 22px rgba(107, 128, 167, 0.12);
+    }
+
+    .suggestion-chip-label {
+      font-family: 'Afacad', sans-serif;
+      font-size: 17px;
+      font-weight: 600;
+      color: rgba(82, 81, 81, 1);
+      line-height: 1;
+    }
+
+    .composer-shell {
+      box-shadow: 0 10px 24px rgba(153, 168, 196, 0.12);
+    }
+
+    .suggestion-badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      background: rgba(126, 165, 255, 0.92);
+      box-shadow: 0 4px 10px rgba(126, 165, 255, 0.22);
+    }
+
+    .suggestion-badge span {
+      font-family: 'Afacad', sans-serif;
+      font-size: 15px;
+      line-height: 1;
+      color: rgba(255, 255, 255, 1);
+      transform: translateY(-0.5px);
+    }
+  </style>
+</head>
+<body class="bg-gray-100 flex justify-center items-center min-h-screen">
+  <div class="w-[402px] h-[874px] overflow-hidden bg-[rgba(255,255,255,1)] relative shadow-2xl">
+    <div class="absolute top-0 left-0 w-[402px] h-[92px] bg-[linear-gradient(180deg,_rgba(250,248,244,0.98)_0%,rgba(250,248,244,0.72)_68%,rgba(250,248,244,0)_100%)]"></div>
+
+    <!-- Background gradient images -->
+    <img src="./public/assets/ai-assistant/image_2.png" class="w-[281px] h-[281px] absolute top-[18px] left-[177px]" />
+    <img src="./public/assets/ai-assistant/image_3.png" class="w-[278px] h-[278px] absolute top-[569px] left-[107px]" />
+    <img src="./public/assets/ai-assistant/image_4.png" class="w-[500px] h-[500px] absolute top-[183px] -left-[132.27px]" />
+    <img src="./public/assets/ai-assistant/image_5.png" class="w-[273px] h-[273px] absolute top-[6px] -left-[73px]" />
+    <img id="whiteboardBg" src="./public/assets/ai-assistant/image_6.png" class="whiteboard-bg w-[369px] h-[321px] absolute top-[168px] left-[17px]" />
+
+    <!-- AI Avatar -->
+    <img src="./public/assets/ai-assistant/image_7.png" class="w-[76px] h-[76px] absolute top-[120px] left-[163px]" />
+    
+    <!-- Hi! bubble -->
+    <div class="absolute top-[110px] left-[122px] w-[43px] h-[35px]">
+      <img src="./public/assets/ai-assistant/image_8.png" class="w-[43px] h-[35px] absolute top-0 left-0" />
+      <div class="ui-copy absolute top-px left-[10px] opacity-[0.65] text-[18px] whitespace-nowrap leading-[normal] font-medium">
+        <span class="tracking-[0%]">Hi!</span>
+      </div>
+    </div>
+    
+    <div id="suggestionsPanel" class="suggestions-panel">
+      <!-- Question mark icon -->
+      <div id="suggestionQIcon" class="suggestion-badge absolute top-[206px] left-[27px]" aria-hidden="true">
+        <span>?</span>
+      </div>
+
+    <!-- Status Bar -->
+    <div class="w-[506px] h-[62px] flex flex-row flex-nowrap justify-center items-center pt-[21px] box-border pb-[19px] absolute top-[6px] -left-[58px]">
+      <div class="w-[152px] h-[22px] flex flex-row flex-nowrap justify-center items-center pt-[1.50px] box-border mr-[154px]">
+        <div class="text-[17px] whitespace-nowrap text-center text-[rgba(0,0,0,1)] leading-[22px] tracking-[normal] font-[590]">
+          <span class="tracking-[0px]">9:41</span>
+        </div>
+      </div>
+      <div class="w-[152px] h-[22px] flex flex-row flex-nowrap justify-center items-center pt-px box-border pr-px">
+        <img src="./public/assets/ai-assistant/image_10.png" class="w-[19.20px] h-[12.23px] mr-[7px]" />
+        <img src="./public/assets/ai-assistant/image_11.png" class="w-[17.14px] h-[12.33px] mr-[7px]" />
+        <img src="./public/assets/ai-assistant/image_12.png" class="w-[27.33px] h-[13px]" />
+      </div>
+    </div>
+    
+    <!-- Back button -->
+    <button id="backHomeButton" type="button" class="absolute top-[65.83px] left-[16.17px] w-[24.67px] h-[23.33px]" aria-label="Back to Home">
+      <img src="./public/assets/ai-assistant/image_1.png" class="w-[24.67px] h-[23.33px]" />
+    </button>
+
+    <!-- Title -->
+    <div class="absolute top-[50px] left-[106px] font-['Jacques_Francois'] text-[31px] whitespace-nowrap text-[rgba(0,0,0,1)] leading-[normal] tracking-[normal] font-normal">
+      <span class="tracking-[0%]">AI Assistant</span>
+    </div>
+    
+      <!-- You might also ask -->
+      <div id="suggestionHeader" class="suggestion-header absolute top-[203px] left-[58px] font-['Afacad'] text-[18px] whitespace-nowrap text-[rgba(99,135,225,1)] leading-[140%] tracking-[normal] font-semibold">
+        <span class="tracking-[0%]">You might also ask</span>
+      </div>
+
+      <!-- Suggestion buttons -->
+      <div role="button" tabindex="0" data-prompt="Show my historical collection records." class="suggestion-chip absolute top-[236px] left-[34px] w-[331px] h-[42px] text-left cursor-pointer">
+      <div class="suggestion-chip-shell w-[331px] min-h-[42px] absolute top-0 left-0"></div>
+      <div class="suggestion-chip-label absolute top-[11px] left-[15px] whitespace-nowrap">
+        <span class="tracking-[0%]">Collection history</span>
+      </div>
+      <img src="./public/assets/ai-assistant/image_13.png" class="w-[19.40px] h-[18.79px] absolute top-[11.02px] left-[299.35px]" />
+      </div>
+
+      <div role="button" tabindex="0" data-prompt="Generate today's digest." class="suggestion-chip absolute top-[290px] left-[34px] w-[331px] h-[42px] text-left cursor-pointer">
+      <div class="suggestion-chip-shell w-[331px] min-h-[42px] absolute top-0 left-0"></div>
+      <div class="suggestion-chip-label absolute top-[11px] left-[15px] whitespace-nowrap">
+        <span class="tracking-[0%]">Today's digest</span>
+      </div>
+      <img src="./public/assets/ai-assistant/image_13.png" class="w-[19.40px] h-[18.79px] absolute top-[11.02px] left-[299.35px]" />
+      </div>
+
+      <div role="button" tabindex="0" data-prompt="What happened on this day last year?" class="suggestion-chip absolute top-[344px] left-[34px] w-[331px] h-[42px] text-left cursor-pointer">
+      <div class="suggestion-chip-shell w-[331px] min-h-[42px] absolute top-0 left-0"></div>
+      <div class="suggestion-chip-label absolute top-[11px] left-[15px] whitespace-nowrap">
+        <span class="tracking-[0%]">On this day last year</span>
+      </div>
+      <img src="./public/assets/ai-assistant/image_13.png" class="w-[19.40px] h-[18.79px] absolute top-[11.02px] left-[299.35px]" />
+      </div>
+
+      <div role="button" tabindex="0" data-prompt="Give me some Java learning tips." class="suggestion-chip absolute top-[398px] left-[34px] w-[331px] h-[42px] text-left cursor-pointer">
+      <div class="suggestion-chip-shell w-[331px] min-h-[42px] absolute top-0 left-0"></div>
+      <div class="suggestion-chip-label absolute top-[11px] left-[15px] whitespace-nowrap">
+        <span class="tracking-[0%]">Java learning tips</span>
+      </div>
+      <img src="./public/assets/ai-assistant/image_13.png" class="w-[19.40px] h-[18.79px] absolute top-[11.02px] left-[299.35px]" />
+      </div>
+    </div>
+
+    <!-- Chat area -->
+    <div id="chatViewport" class="chat-scrollbar chat-viewport absolute left-[16px] w-[370px] overflow-y-auto pr-1">
+      <div id="messages" class="flex flex-col gap-3 px-1 pb-2"></div>
+    </div>
+
+    <!-- Input area -->
+    <div class="composer-shell w-[301px] rounded-[32px] bg-[rgba(255,255,255,0.92)] min-h-[54px] absolute top-[799px] left-[85px] border border-[rgba(0,0,0,0.08)]"></div>
+    <img src="./public/assets/ai-assistant/image_14.png" class="w-[57.44px] h-[55px] absolute top-[796px] left-[10px]" />
+    <button id="sendButton" type="button" class="absolute top-[806px] left-[341px] w-[30px] h-[38px] flex items-center justify-center" aria-label="Send">
+      <img src="./public/assets/ai-assistant/image_15.png" class="w-[20px] h-[28.89px]" />
+    </button>
+    <textarea id="chatInput" rows="1" placeholder="Ask me something." class="ui-copy absolute top-[811px] left-[98px] w-[235px] h-[30px] bg-transparent resize-none outline-none text-[18px] leading-[24px] placeholder:text-[rgba(0,0,0,0.4)]"></textarea>
+  </div>
+
+  <script>
+    (function () {
+      const config = window.__AI_CHAT_CONFIG__ || {};
+      const chatMode = config.mode || 'backend';
+      const state = {
+        messages: [],
+        sending: false,
+        hasAsked: false,
+      };
+
+      const messagesEl = document.getElementById('messages');
+      const viewportEl = document.getElementById('chatViewport');
+      const inputEl = document.getElementById('chatInput');
+      const sendBtn = document.getElementById('sendButton');
+      const suggestionEls = document.querySelectorAll('.suggestion-chip');
+      const suggestionHeaderEl = document.getElementById('suggestionHeader');
+      const suggestionQIconEl = document.getElementById('suggestionQIcon');
+      const suggestionQMarkEl = document.getElementById('suggestionQMark');
+      const whiteboardBgEl = document.getElementById('whiteboardBg');
+      const backHomeButton = document.getElementById('backHomeButton');
+
+      function scrollToBottom(immediate) {
+        if (immediate) {
+          viewportEl.scrollTop = viewportEl.scrollHeight;
+          return;
+        }
+
+        try {
+          viewportEl.scrollTo({
+            top: viewportEl.scrollHeight,
+            behavior: 'smooth',
+          });
+        } catch (error) {
+          viewportEl.scrollTop = viewportEl.scrollHeight;
+        }
+      }
+
+      function setSending(isSending) {
+        state.sending = isSending;
+        sendBtn.disabled = isSending;
+        inputEl.disabled = isSending;
+        sendBtn.style.opacity = isSending ? '0.5' : '1';
+      }
+
+      function createBubble(role, content) {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'message-bubble max-w-[86%] rounded-2xl px-3 py-2 font-[Afacad] text-[16px] text-[rgba(76,75,75,1)] leading-[1.45] whitespace-pre-wrap break-words ' +
+          (role === 'user' ? 'bubble-user ml-auto' : 'bubble-assistant mr-auto');
+        wrapper.textContent = content;
+        return wrapper;
+      }
+
+      function addMessage(role, content) {
+        state.messages.push({ role: role, content: content });
+        const bubble = createBubble(role, content);
+        bubble.classList.add('is-entering');
+        messagesEl.appendChild(bubble);
+        requestAnimationFrame(function () {
+          bubble.classList.remove('is-entering');
+        });
+        scrollToBottom(false);
+      }
+
+      function hideSuggestions() {
+        if (suggestionHeaderEl) {
+          suggestionHeaderEl.style.display = 'none';
+        }
+
+        if (suggestionQIconEl) {
+          suggestionQIconEl.style.display = 'none';
+        }
+
+        if (suggestionQMarkEl) {
+          suggestionQMarkEl.style.display = 'none';
+        }
+
+        suggestionEls.forEach(function (el) {
+          el.style.display = 'none';
+        });
+
+        if (whiteboardBgEl) {
+          whiteboardBgEl.classList.add('whiteboard-hidden');
+        }
+
+        viewportEl.classList.add('chat-expanded');
+        scrollToBottom(true);
+      }
+
+      function delay(ms) {
+        return new Promise(function (resolve) {
+          setTimeout(resolve, ms);
+        });
+      }
+
+      function buildMockReply(userInput) {
+        const text = (userInput || '').toLowerCase();
+
+        if (text.includes('resume') || text.includes('cv') || text.includes('jianli')) {
+          return 'Mock: I found 3 resume-related favorites. Would you like me to summarize skills, projects, and achievements from them?';
+        }
+
+        if (text.includes('digest') || text.includes('today')) {
+          return 'Mock: Here is your daily digest: 1) 2 new favorites 2) 1 weekly report ready 3) Top topic today: travel notes.';
+        }
+
+        if (text.includes('java')) {
+          return 'Mock: Java tips: focus on OOP basics, Collections, exception handling, and one small project each week.';
+        }
+
+        return 'Mock: I received your message: "' + userInput + '". Later this will be replaced by your backend AI response.';
+      }
+
+      async function requestAssistantReply(userInput) {
+        if (chatMode === 'mock') {
+          await delay(config.mockDelay || 700);
+          return buildMockReply(userInput);
+        }
+
+        const endpoint = config.endpoint || 'http://127.0.0.1:8000/chat/ask';
+        const topK = typeof config.topK === 'number' ? config.topK : 5;
+        const headers = {
+          'Content-Type': 'application/json',
+        };
+
+        const payload = {
+          question: userInput,
+          top_k: topK,
+        };
+
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: headers,
+          body: JSON.stringify(payload),
+        });
+
+        if (!response.ok) {
+          const text = await response.text();
+          throw new Error('Request failed (' + response.status + '): ' + text);
+        }
+
+        const data = await response.json();
+        return data.answer || data.reply || data.content || data.message || 'Backend returned no answer field.';
+      }
+
+      async function sendMessage(content) {
+        if (!content || state.sending) {
+          return;
+        }
+
+        if (!state.hasAsked) {
+          state.hasAsked = true;
+          hideSuggestions();
+        }
+
+        addMessage('user', content);
+        setSending(true);
+
+        try {
+          const reply = await requestAssistantReply(content);
+          addMessage('assistant', reply);
+        } catch (error) {
+          addMessage('assistant', 'Sorry, I could not reach the AI service. ' + error.message);
+        } finally {
+          setSending(false);
+          inputEl.focus();
+        }
+      }
+
+      function trySendFromInput() {
+        const content = inputEl.value.trim();
+        if (!content) {
+          return;
+        }
+        inputEl.value = '';
+        sendMessage(content);
+      }
+
+      sendBtn.addEventListener('click', trySendFromInput);
+
+      inputEl.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter' && !event.shiftKey) {
+          event.preventDefault();
+          trySendFromInput();
+        }
+      });
+
+      suggestionEls.forEach(function (el) {
+        el.addEventListener('click', function () {
+          const prompt = el.getAttribute('data-prompt');
+          if (!prompt) {
+            return;
+          }
+          inputEl.value = prompt;
+          trySendFromInput();
+        });
+
+        el.addEventListener('keydown', function (event) {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            el.click();
+          }
+        });
+      });
+
+      if (backHomeButton) {
+        backHomeButton.addEventListener('click', function () {
+          window.location.href = './home.html';
+        });
+      }
+
+      addMessage('assistant', 'Hi! I am ready to help. Ask me anything about your favorites.');
+
+      const initialQuestion = new URLSearchParams(window.location.search).get('q');
+      if (initialQuestion) {
+        sendMessage(initialQuestion.trim());
+      }
+    })();
+  </script>
+</body>
+</html>

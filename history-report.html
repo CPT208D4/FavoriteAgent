@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pockety - History Report</title>
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <script>
+    tailwind.config = {
+      mode: 'jit',
+      important: true,
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Aclonica&family=Adamina&family=Actor&family=Jacques+Francois&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro', 'Segoe UI', Roboto, sans-serif;
+    }
+
+    .nav-button,
+    .history-card {
+      transition: transform 160ms ease, opacity 160ms ease;
+    }
+
+    .nav-button:hover,
+    .history-card:hover {
+      transform: translateY(-1px) scale(1.02);
+    }
+
+    .nav-button:active,
+    .nav-button.nav-press,
+    .history-card:active,
+    .history-card.card-press {
+      transform: scale(0.92);
+      opacity: 0.9;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 flex justify-center items-center min-h-screen">
+  <div class="w-[402px] h-[874px] overflow-hidden bg-[rgba(255,255,255,1)] relative shadow-2xl">
+    <!-- Background gradient image -->
+    <img src="./public/assets/history-report/image_1.png" class="w-[838px] h-[1181.50px] absolute top-[609px] -left-[163px]" />
+    
+    <!-- Decorative element -->
+    <img src="./public/assets/history-report/image_2.png" class="w-[242px] h-[242px] absolute top-[161.50px] left-px" />
+    
+    <!-- This week Card -->
+    <button id="cardThisWeek" type="button" class="history-card absolute top-[590px] left-[188px] w-[204.39px] h-[144.37px] text-left" aria-label="Open This Week report">
+      <div class="w-[204.39px] rounded-[25px] [box-shadow:0px_4px_4px_0px_rgba(0,0,0,0.25)] bg-[linear-gradient(91deg,_rgba(254,250,233,1)_2.23%,rgba(105,142,109,1)_96.98%)] min-h-[144.37px] absolute top-0 left-0"></div>
+      <img src="./public/assets/history-report/image_3.png" class="w-[19.40px] h-[18.79px] absolute top-[111px] left-[165px]" />
+      <div class="absolute top-[18px] left-[32px] w-[146px] h-[29px] font-['Adamina'] text-[30px] whitespace-nowrap text-center text-[rgba(11,85,57,1)] leading-[22px] tracking-[normal] font-normal">
+        <span class="tracking-[0px]">This week</span>
+      </div>
+      <div class="absolute top-[63px] left-[33px] w-[70px] h-[17px] font-['Actor'] text-[15px] whitespace-nowrap text-center text-[rgba(0,0,0,1)] leading-[22px] tracking-[normal] font-normal">
+        <span class="tracking-[0px]">#Science</span>
+      </div>
+      <div class="absolute top-[93px] left-[25px] w-[112px] h-[26px] font-['Actor'] text-[15px] whitespace-nowrap text-center text-[rgba(0,0,0,1)] leading-[22px] tracking-[normal] font-normal">
+        <span class="tracking-[0px]">#Technology</span>
+      </div>
+    </button>
+    
+    <!-- 5th week Card -->
+    <button id="cardWeek5" type="button" class="history-card absolute top-[128px] left-[8px] w-[204.39px] h-[144.37px] text-left" aria-label="Open 5th week report">
+      <div class="w-[204.39px] rounded-[25px] [box-shadow:0px_4px_4px_0px_rgba(0,0,0,0.25)] bg-[linear-gradient(90deg,_rgba(251,241,215,1)_0%,rgba(115,174,81,1)_99.81%)] min-h-[144.37px] absolute top-0 left-0"></div>
+      <img src="./public/assets/history-report/image_3.png" class="w-[19.40px] h-[18.79px] absolute top-[111px] left-[165px]" />
+      <div class="absolute top-[18.41px] left-[20px] w-[155px] h-[40px] font-['Adamina'] text-[30px] whitespace-nowrap text-center text-[rgba(11,85,57,1)] leading-[22px] tracking-[normal] font-normal">
+        <span class="tracking-[0px]">5 th week</span>
+      </div>
+      <div class="absolute top-[64.41px] left-[14px] w-[92px] h-[23px] font-['Actor'] text-[16px] whitespace-nowrap text-center text-[rgba(0,0,0,1)] leading-[22px] tracking-[normal] font-normal">
+        <span class="tracking-[0px]">#Travel</span>
+      </div>
+      <div class="absolute top-[93.41px] left-[14px] w-[92px] h-[35px] font-['Actor'] text-[16px] whitespace-nowrap text-center text-[rgba(0,0,0,1)] leading-[22px] tracking-[normal] font-normal">
+        <span class="tracking-[0px]">#Music</span>
+      </div>
+    </button>
+    
+    <!-- 2nd week Card -->
+    <button id="cardWeek2" type="button" class="history-card absolute top-[405px] left-[189px] w-[204.39px] h-[144.37px] text-left" aria-label="Open 2nd week report">
+      <div class="w-[204.39px] rounded-[25px] [box-shadow:0px_4px_4px_0px_rgba(0,0,0,0.25)] bg-[linear-gradient(90deg,_rgba(251,241,215,1)_0%,rgba(115,174,81,1)_99.81%)] min-h-[144.37px] absolute top-0 left-0"></div>
+      <img src="./public/assets/history-report/image_3.png" class="w-[19.40px] h-[18.79px] absolute top-[111px] left-[165px]" />
+      <div class="absolute top-[22px] left-[32px] w-[146px] h-[29px] font-['Adamina'] text-[30px] whitespace-nowrap text-center text-[rgba(11,85,57,1)] leading-[22px] tracking-[normal] font-normal">
+        <span class="tracking-[0px]">2 nd week</span>
+      </div>
+      <div class="absolute top-[63px] left-[25px] w-[70px] h-[17px] font-['Actor'] text-[15px] whitespace-nowrap text-center text-[rgba(0,0,0,1)] leading-[22px] tracking-[normal] font-normal">
+        <span class="tracking-[0px]">#Film</span>
+      </div>
+      <div class="absolute top-[95px] left-[30px] w-[73px] h-[26px] font-['Actor'] text-[15px] whitespace-nowrap text-center text-[rgba(0,0,0,1)] leading-[22px] tracking-[normal] font-normal">
+        <span class="tracking-[0px]">#Videos</span>
+      </div>
+    </button>
+    
+    <!-- 3rd week Card -->
+    <button id="cardWeek3" type="button" class="history-card absolute top-[315px] left-[10px] w-[204.39px] h-[144.37px] text-left" aria-label="Open 3rd week report">
+      <div class="w-[204.39px] rounded-[25px] [box-shadow:0px_4px_4px_0px_rgba(0,0,0,0.25)] bg-[linear-gradient(90deg,_rgba(205,237,222,1)_9.120000000000001%,rgba(104,144,126,1)_99.81%)] min-h-[144.37px] absolute top-0 left-0"></div>
+      <img src="./public/assets/history-report/image_3.png" class="w-[19.40px] h-[18.79px] absolute top-[111px] left-[165px]" />
+      <div class="absolute top-[18px] left-[23px] w-[155px] font-['Adamina'] text-[30px] whitespace-nowrap text-center text-[rgba(11,85,57,1)] leading-[22px] tracking-[normal] font-normal">
+        <span class="tracking-[0px]">3 rd week</span>
+      </div>
+      <div class="absolute top-[63px] left-[31px] w-[70px] h-[17px] font-['Actor'] text-[15px] whitespace-nowrap text-center text-[rgba(0,0,0,1)] leading-[22px] tracking-[normal] font-normal">
+        <span class="tracking-[0px]">#Workout</span>
+      </div>
+      <div class="absolute top-[93px] left-[23px] w-[73px] h-[26px] font-['Actor'] text-[15px] whitespace-nowrap text-center text-[rgba(0,0,0,1)] leading-[22px] tracking-[normal] font-normal">
+        <span class="tracking-[0px]">#Sports</span>
+      </div>
+    </button>
+    
+    <!-- 4th week Card (positioned differently) -->
+    <button id="cardWeek4" type="button" class="history-card absolute top-[210px] left-[189px] w-[204.39px] h-[144.37px] text-left" aria-label="Open 4th week report">
+      <div class="w-[204.39px] rounded-[25px] [box-shadow:0px_4px_4px_0px_rgba(0,0,0,0.25)] bg-[linear-gradient(91deg,_rgba(254,250,233,1)_2.23%,rgba(105,142,109,1)_96.98%)] min-h-[144.37px] absolute top-0 left-0"></div>
+      <img src="./public/assets/history-report/image_3.png" class="w-[19.40px] h-[18.79px] absolute top-[111px] left-[165px]" />
+      <div class="absolute top-[18px] left-[32px] w-[146px] h-[29px] font-['Adamina'] text-[30px] whitespace-nowrap text-center text-[rgba(11,85,57,1)] leading-[22px] tracking-[normal] font-normal">
+        <span class="tracking-[0px]">4 th week</span>
+      </div>
+      <div class="absolute top-[63px] left-[33px] w-[70px] h-[17px] font-['Actor'] text-[15px] whitespace-nowrap text-center text-[rgba(0,0,0,1)] leading-[22px] tracking-[normal] font-normal">
+        <span class="tracking-[0px]">#Java</span>
+      </div>
+      <div class="absolute top-[93px] left-[25px] w-[112px] h-[26px] font-['Actor'] text-[15px] whitespace-nowrap text-center text-[rgba(0,0,0,1)] leading-[22px] tracking-[normal] font-normal">
+        <span class="tracking-[0px]">#Python</span>
+      </div>
+    </button>
+    
+    <!-- Title -->
+    <div class="absolute top-[50px] left-[83px] w-[270px] h-[79px] font-['Jacques_Francois'] text-[36px] whitespace-nowrap text-[rgba(0,0,0,1)] leading-[normal] tracking-[normal] font-normal [text-shadow:0px_4px_4px_rgba(0,0,0,0.25)]">
+      <span class="tracking-[0%]">History Report</span>
+    </div>
+    
+    <!-- Status Bar -->
+    <div class="w-[484px] h-[62px] flex flex-row flex-nowrap justify-center items-center pt-[21px] box-border pb-[19px] absolute top-[8px] -left-[41px]">
+      <div class="w-[141px] h-[22px] flex flex-row flex-nowrap justify-center items-center pt-[1.50px] box-border mr-[154px]">
+        <div class="text-[17px] whitespace-nowrap text-center text-[rgba(0,0,0,1)] leading-[22px] tracking-[normal] font-[590]">
+          <span class="tracking-[0px]">9:41</span>
+        </div>
+      </div>
+      <div class="w-[141px] h-[22px] flex flex-row flex-nowrap justify-center items-center pt-px box-border pr-px">
+        <img src="./public/assets/history-report/image_4.png" class="w-[19.20px] h-[12.23px] mr-[7px]" />
+        <img src="./public/assets/history-report/image_5.png" class="w-[17.14px] h-[12.33px] mr-[7px]" />
+        <img src="./public/assets/history-report/image_6.png" class="w-[27.33px] h-[13px]" />
+      </div>
+    </div>
+    
+    <!-- Back button -->
+    <button id="backButton" type="button" class="w-[37px] h-[35px] overflow-hidden absolute top-[56px] left-[11px] flex justify-end items-start" aria-label="Go back">
+      <img src="./public/assets/history-report/image_7.png" class="w-[24.67px] h-[23.33px] mt-[5.83px] mr-[6.17px]" />
+    </button>
+    
+    <!-- AI Chat Button -->
+    <button id="aiChatButton" type="button" class="history-card absolute top-[651px] left-[6px] w-[148px] h-[144px] text-left" aria-label="Open AI chat">
+      <img src="./public/assets/history-report/image_8.png" class="w-[148px] h-[141px] absolute top-[3px] left-0" />
+      <div class="absolute top-0 left-[112px] w-[27px] h-[28px] font-['Adamina'] text-[12px] whitespace-nowrap text-center text-[rgba(0,0,0,1)] leading-[37px] tracking-[normal] font-normal">
+        <span class="tracking-[0px]">hi!</span>
+      </div>
+    </button>
+    
+    <!-- Last week Card -->
+    <button id="cardLastWeek" type="button" class="history-card absolute top-[496px] left-[8px] w-[204.39px] h-[144.37px] text-left" aria-label="Open Last Week report">
+      <div class="w-[204.39px] rounded-[25px] [box-shadow:0px_4px_4px_0px_rgba(0,0,0,0.25)] bg-[linear-gradient(91deg,_rgba(254,250,233,1)_2.23%,rgba(105,142,109,1)_96.98%)] min-h-[144.37px] absolute top-0 left-0"></div>
+      <div class="absolute top-[17px] left-[23px] w-[146px] h-[29px] font-['Adamina'] text-[30px] whitespace-nowrap text-center text-[rgba(11,85,57,1)] leading-[22px] tracking-[normal] font-normal">
+        <span class="tracking-[0px]">Last week</span>
+      </div>
+      <div class="absolute top-[62px] left-[31px] w-[70px] h-[17px] font-['Actor'] text-[15px] whitespace-nowrap text-center text-[rgba(0,0,0,1)] leading-[22px] tracking-[normal] font-normal">
+        <span class="tracking-[0px]">#Software</span>
+      </div>
+      <div class="absolute top-[92px] left-[15px] w-[73px] h-[26px] font-['Actor'] text-[15px] whitespace-nowrap text-center text-[rgba(0,0,0,1)] leading-[22px] tracking-[normal] font-normal">
+        <span class="tracking-[0px]">#Web</span>
+      </div>
+      <img src="./public/assets/history-report/image_3.png" class="w-[19.40px] h-[18.79px] absolute top-[115px] left-[165px]" />
+    </button>
+    
+    <!-- Bottom Navigation Bar -->
+    <div class="absolute top-[768px] left-0 w-[402px] h-[89px]">
+      <div class="w-[402px] rounded-[52px] [box-shadow:inset_0px_-4px_4px_0px_rgba(0,0,0,0.25),_inset_0px_0px_4px_0px_rgba(0,0,0,0.25)] bg-[rgba(255,255,255,1)] min-h-[89px] absolute top-0 left-0"></div>
+      <button id="navHistory" type="button" class="nav-button absolute top-[6px] left-[212px] w-[77px] h-[77px]" aria-label="Go to History Report">
+        <img src="./public/assets/history-report/image_9.png" class="w-[77px] h-[77px]" />
+      </button>
+      <div class="w-[302px] h-[41.67px] flex flex-row flex-nowrap justify-start items-center absolute top-[22px] left-[47px]">
+        <button id="navHome" type="button" class="nav-button mr-[55px]" aria-label="Go to Home">
+          <img src="./public/assets/history-report/image_10.png" class="w-[33px] h-[38px]" />
+        </button>
+        <button id="navFavorite" type="button" class="nav-button mr-[55px]" aria-label="Go to Favorites">
+          <img src="./public/assets/history-report/image_11.png" class="w-[41.67px] h-[39.63px]" />
+        </button>
+        <button id="navWeekly" type="button" class="nav-button mr-[55px]" aria-label="Go to Weekly Report">
+          <img src="./public/assets/history-report/image_12.png" class="w-[37.50px] h-[41.67px]" />
+        </button>
+        <button id="navProfile" type="button" class="nav-button" aria-label="Go to Profile">
+          <img src="./public/assets/history-report/image_13.png" class="w-[33.33px] h-[37.50px]" />
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const navConfig = [
+        { id: 'navHome', path: './home.html' },
+        { id: 'navFavorite', path: './favorites-travel.html' },
+        { id: 'navHistory', path: './history-report.html' },
+        { id: 'navWeekly', path: './weekly-report.html' },
+        { id: 'navProfile', path: './profile.html' }
+      ];
+
+      const thisWeekCard = document.getElementById('cardThisWeek');
+      const aiChatButton = document.getElementById('aiChatButton');
+
+      const backButton = document.getElementById('backButton');
+      if (backButton) {
+        backButton.addEventListener('click', function () {
+          if (document.referrer) {
+            window.history.back();
+            return;
+          }
+          window.location.href = './home.html';
+        });
+      }
+
+      if (thisWeekCard) {
+        thisWeekCard.addEventListener('click', function () {
+          thisWeekCard.classList.add('card-press');
+          setTimeout(function () {
+            window.location.href = './report-summary.html';
+          }, 90);
+        });
+      }
+
+      if (aiChatButton) {
+        aiChatButton.addEventListener('click', function () {
+          aiChatButton.classList.add('card-press');
+          setTimeout(function () {
+            window.location.href = './ai-assistant.html';
+          }, 90);
+        });
+      }
+
+      navConfig.forEach(function (item) {
+        const button = document.getElementById(item.id);
+        if (!button) {
+          return;
+        }
+
+        button.addEventListener('click', function () {
+          button.classList.add('nav-press');
+          setTimeout(function () {
+            window.location.href = item.path;
+          }, 90);
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pockety - Profile</title>
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <script>
+    tailwind.config = {
+      mode: 'jit',
+      important: true,
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Jacques+Francois&family=Afacad&family=Aref+Ruqaa+Ink&family=Inter&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro', 'Segoe UI', Roboto, sans-serif;
+    }
+    .toggle-switch {
+      position: relative;
+      width: 67px;
+      height: 38px;
+      background: rgba(22, 255, 22, 1);
+      border-radius: 65px;
+      cursor: pointer;
+    }
+    .toggle-switch::after {
+      content: '';
+      position: absolute;
+      width: 31px;
+      height: 36px;
+      background: white;
+      border-radius: 50%;
+      top: 1px;
+      right: 2px;
+      transition: transform 0.3s;
+    }
+    .toggle-switch.active::after {
+      transform: translateX(-29px);
+    }
+  </style>
+</head>
+<body class="bg-gray-100 flex justify-center items-center min-h-screen">
+  <div class="w-[402px] h-[874px] overflow-hidden bg-[rgba(255,255,255,1)] relative shadow-2xl">
+    <!-- Background gradient images -->
+    <img src="./public/assets/profile/image_1.png" class="w-[278px] h-[278px] absolute top-[488.45px] -left-[64.50px]" />
+    <img src="./public/assets/profile/image_2.png" class="w-[500px] h-[500px] absolute top-[163px] left-[51px]" />
+    <img src="./public/assets/profile/image_3.png" class="w-[242px] h-[242px] absolute top-[34px] -left-[99px]" />
+    <img src="./public/assets/profile/image_4.png" class="w-[273px] h-[273px] absolute top-[86px] left-[178px]" />
+    
+    <!-- Status Bar -->
+    <div class="w-[484px] h-[62px] flex flex-row flex-nowrap justify-center items-center pt-[21px] box-border pb-[19px] absolute top-[11px] -left-[46px]">
+      <div class="w-[141px] h-[22px] flex flex-row flex-nowrap justify-center items-center pt-[1.50px] box-border mr-[154px]">
+        <div class="text-[17px] whitespace-nowrap text-center text-[rgba(0,0,0,1)] leading-[22px] tracking-[normal] font-[590]">
+          <span class="tracking-[0px]">9:41</span>
+        </div>
+      </div>
+      <div class="w-[141px] h-[22px] flex flex-row flex-nowrap justify-center items-center pt-px box-border pr-px">
+        <img src="./public/assets/profile/image_5.png" class="w-[19.20px] h-[12.23px] mr-[7px]" />
+        <img src="./public/assets/profile/image_6.png" class="w-[17.14px] h-[12.33px] mr-[7px]" />
+        <img src="./public/assets/profile/image_7.png" class="w-[27.33px] h-[13px]" />
+      </div>
+    </div>
+    
+    <!-- User Avatar -->
+    <img src="./public/assets/profile/image_8.png" class="w-[108px] h-[108px] absolute top-[53px] left-[22px]" />
+    <div class="w-[50px] h-[50px] overflow-hidden absolute top-[82px] left-[51px] flex justify-start items-center">
+      <img src="./public/assets/profile/image_9.png" class="w-[33.33px] h-[37.50px] ml-[8.33px]" />
+    </div>
+    
+    <!-- Nickname -->
+    <div class="absolute top-[65px] left-[178px] w-[214px] h-[26px] font-['Jacques_Francois'] text-[22px] whitespace-nowrap text-[rgba(0,0,0,1)] leading-[normal] tracking-[normal] font-normal">
+      <span class="tracking-[0%]">Nickname</span>
+    </div>
+    
+    <!-- ID -->
+    <div class="absolute top-[118px] left-[178px] w-[136px] h-[30px] font-['Jacques_Francois'] text-[20px] whitespace-nowrap text-[rgba(0,0,0,1)] leading-[normal] tracking-[normal] font-normal">
+      <span class="tracking-[0%]">ID</span>
+    </div>
+    
+    <!-- Main Card -->
+    <div class="w-[384px] opacity-80 rounded-[48px] bg-[rgba(193,235,230,0.29)] min-h-[383px] absolute top-[195px] left-[9px]"></div>
+    
+    <!-- Authorized Application Section -->
+    <div class="absolute top-[210px] left-[35px] w-[204px] h-[33px] font-['Afacad'] text-[20px] whitespace-nowrap text-[rgba(0,0,0,1)] leading-[normal] tracking-[normal] font-normal">
+      <span class="tracking-[0%]">Authorized Application</span>
+    </div>
+    
+    <!-- App List -->
+    <div class="absolute top-[266px] left-[52px] w-[202px] h-[222px]">
+      <!-- Bilibili -->
+      <div class="absolute top-[3px] left-[57px] w-[145px] h-[51px] font-['Aref_Ruqaa_Ink'] text-[24px] whitespace-nowrap text-[rgba(239,93,168,1)] leading-[normal] tracking-[normal] font-bold">
+        <span class="tracking-[0%]">Bilibili</span>
+      </div>
+      <img src="./public/assets/profile/image_13.png" class="w-[49px] h-[48px] absolute top-0 left-0" />
+      
+      <!-- RedNote -->
+      <img src="./public/assets/profile/image_11.png" class="w-[49px] h-[49px] absolute top-[83px] left-0" />
+      <div class="absolute top-[86px] left-[57px] w-[145px] h-[52px] font-['Aref_Ruqaa_Ink'] text-[24px] whitespace-nowrap text-[rgba(255,0,0,1)] leading-[normal] tracking-[normal] font-bold">
+        <span class="tracking-[0%]">RedNote</span>
+      </div>
+      
+      <!-- TikTok -->
+      <img src="./public/assets/profile/image_12.png" class="w-[49px] h-[49px] absolute top-[168px] left-0" />
+      <div class="absolute top-[171px] left-[56px] w-[145px] h-[51px] font-['Aref_Ruqaa_Ink'] text-[24px] whitespace-nowrap text-[rgba(0,0,0,1)] leading-[normal] tracking-[normal] font-bold">
+        <span class="tracking-[0%]">TikTok</span>
+      </div>
+    </div>
+    
+    <!-- Toggle Switches -->
+    <div class="w-[67px] rounded-[65px] bg-[rgba(22,255,22,1)] min-h-[38px] absolute top-[273px] left-[263px]">
+      <img src="./public/assets/profile/image_10.png" class="w-[31px] h-[36px] absolute top-[1px] left-[32px]" />
+    </div>
+    <div class="w-[67px] rounded-[65px] bg-[rgba(22,255,22,1)] min-h-[38px] absolute top-[355px] left-[263px]">
+      <img src="./public/assets/profile/image_10.png" class="w-[31px] h-[36px] absolute top-[1px] left-[32px]" />
+    </div>
+    <div class="w-[67px] rounded-[65px] bg-[rgba(22,255,22,1)] min-h-[38px] absolute top-[440px] left-[263px]">
+      <img src="./public/assets/profile/image_10.png" class="w-[31px] h-[36px] absolute top-[1px] left-[32px]" />
+    </div>
+    
+    <!-- More apps -->
+    <div class="absolute top-[515px] left-[41px] w-[111px] h-[35px] font-['Afacad'] text-[20px] whitespace-nowrap text-[rgba(0,0,0,1)] leading-[normal] tracking-[normal] font-normal">
+      <span class="tracking-[0%]">More apps</span>
+    </div>
+    
+    <!-- Settings Menu -->
+    <!-- Settings -->
+    <div class="w-[31px] h-[31px] overflow-hidden absolute top-[609px] left-[37px] flex justify-center items-end">
+      <img src="./public/assets/profile/image_16.png" class="w-[28.42px] h-[28.42px] mb-[1.29px]" />
+    </div>
+    <div class="absolute top-[610px] left-[81px] w-[123px] h-[31px] font-['Afacad'] text-[20px] whitespace-nowrap text-[rgba(0,0,0,1)] leading-[normal] tracking-[normal] font-normal">
+      <span class="tracking-[0%]">settings</span>
+    </div>
+    <div class="w-[24px] h-[24px] overflow-hidden absolute top-[616px] left-[347px] flex justify-center items-center">
+      <img src="./public/assets/profile/image_15.png" class="w-[6px] h-[12px]" />
+    </div>
+    
+    <!-- Help -->
+    <div class="w-[31px] h-[31px] overflow-hidden absolute top-[669px] left-[37px] flex justify-start items-start">
+      <img src="./public/assets/profile/image_14.png" class="w-[25.83px] h-[25.83px] mt-[2.58px] ml-[2.58px]" />
+    </div>
+    <div class="absolute top-[675px] left-[81px] w-[55px] h-[25px] font-['Inter'] text-[16px] whitespace-nowrap text-[rgba(0,0,0,1)] leading-[normal] tracking-[normal] font-normal">
+      <span class="tracking-[0%]">help</span>
+    </div>
+    <div class="w-[24px] h-[24px] overflow-hidden absolute top-[673px] left-[347px] flex justify-center items-center">
+      <img src="./public/assets/profile/image_15.png" class="w-[6px] h-[12px]" />
+    </div>
+    
+    <!-- Share -->
+    <div class="w-[30px] h-[30px] overflow-hidden absolute top-[730px] left-[37px] flex justify-center items-center">
+      <img src="./public/assets/profile/image_17.png" class="w-[20px] h-[25px]" />
+    </div>
+    <div class="absolute top-[730px] left-[81px] w-[112px] h-[36px] font-['Inter'] text-[18px] whitespace-nowrap text-[rgba(0,0,0,1)] leading-[normal] tracking-[normal] font-normal">
+      <span class="tracking-[0%]">share</span>
+    </div>
+    <div class="w-[24px] h-[24px] overflow-hidden absolute top-[732px] left-[347px] flex justify-center items-center">
+      <img src="./public/assets/profile/image_15.png" class="w-[6px] h-[12px]" />
+    </div>
+    
+    <!-- Bottom Navigation Bar -->
+    <div class="absolute top-[768px] left-0 w-[402px] h-[89px]">
+      <div class="w-[402px] rounded-[52px] [box-shadow:inset_0px_-4px_4px_0px_rgba(0,0,0,0.25),_inset_0px_0px_4px_0px_rgba(0,0,0,0.25)] bg-[rgba(255,255,255,1)] min-h-[89px] absolute top-0 left-0"></div>
+      <img src="./public/assets/profile/image_18.png" class="w-[77px] h-[77px] absolute top-[7px] left-[301px]" />
+      <div class="w-[302px] h-[41.67px] flex flex-row flex-nowrap justify-start items-center absolute top-[22px] left-[47px]">
+        <!-- Home Icon -->
+        <div class="w-[33px] h-[38px] mr-[55px] flex justify-center items-center cursor-pointer" onclick="window.location.href='home.html'">
+          <img src="./public/assets/profile/image_19.png" class="w-[33px] h-[38px]" />
+        </div>
+        <!-- Favorites Icon -->
+        <div class="w-[41.67px] h-[39.63px] mr-[55px] flex justify-center items-center cursor-pointer" onclick="window.location.href='favorites-travel.html'">
+          <img src="./public/assets/profile/image_20.png" class="w-[41.67px] h-[39.63px]" />
+        </div>
+        <!-- Report Icon -->
+        <div class="w-[37.50px] h-[41.67px] mr-[55px] flex justify-center items-center cursor-pointer" onclick="window.location.href='weekly-report.html'">
+          <img src="./public/assets/profile/image_21.png" class="w-[37.50px] h-[41.67px]" />
+        </div>
+        <!-- Profile Icon (Active) -->
+        <div class="w-[33.33px] h-[37.50px] flex justify-center items-center">
+          <img src="./public/assets/profile/image_22.png" class="w-[33.33px] h-[37.50px]" />
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
