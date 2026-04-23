@@ -1,17 +1,17 @@
 {
   "version": 2,
-  "routes": [
+  "rewrites": [
     {
-      "src": "^/api/(.*)$",
-      "dest": "/api/index.py"
+      "source": "/api/(.*)",
+      "destination": "/api/index.py"
     },
     {
-      "src": "^/$",
-      "dest": "/FavoriteAgent-frontend-pockety/home.html"
+      "source": "/",
+      "destination": "/FavoriteAgent-frontend-pockety/home.html"
     },
     {
-      "src": "^/(.*)$",
-      "dest": "/FavoriteAgent-frontend-pockety/$1"
+      "source": "/(.*)",
+      "destination": "/FavoriteAgent-frontend-pockety/$1"
     }
   ]
 }
