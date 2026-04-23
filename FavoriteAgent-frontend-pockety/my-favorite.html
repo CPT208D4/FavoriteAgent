@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pockety - My Favorite</title>
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <script>
+    tailwind.config = {
+      mode: 'jit',
+      important: true,
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Jacques+Francois&family=Adamina&family=Actor&family=Alegreya&family=Albert+Sans&family=Afacad:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro', 'Segoe UI', Roboto, sans-serif;
+    }
+
+    .page-shell {
+      background:
+        radial-gradient(circle at 84% 12%, rgba(188, 207, 255, 0.92), transparent 32%),
+        radial-gradient(circle at 10% 78%, rgba(213, 237, 224, 0.88), transparent 30%),
+        linear-gradient(180deg, rgba(252, 249, 244, 1) 0%, rgba(245, 248, 252, 1) 100%);
+    }
+
+    .panel-slide {
+      transition: transform 320ms ease, opacity 320ms ease;
+      will-change: transform, opacity;
+    }
+
+    .main-board {
+      background: linear-gradient(145deg, rgba(202, 229, 214, 0.96) 0%, rgba(124, 165, 146, 0.98) 100%);
+      box-shadow: 0 18px 36px rgba(84, 113, 99, 0.16);
+    }
+
+    .side-preview {
+      background: linear-gradient(145deg, rgba(250, 240, 217, 0.88) 0%, rgba(186, 220, 160, 0.86) 100%);
+      box-shadow: 0 12px 24px rgba(125, 146, 138, 0.12);
+    }
+
+    .row-divider {
+      height: 1px;
+      background: rgba(56, 74, 64, 0.34);
+    }
+
+    .favorite-row {
+      transition: transform 180ms ease, background 180ms ease;
+    }
+
+    .favorite-row:hover {
+      transform: translateY(-1px);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .nav-button {
+      transition: transform 160ms ease, opacity 160ms ease;
+    }
+
+    .nav-button:hover {
+      transform: translateY(-1px) scale(1.04);
+    }
+
+    .nav-button:active,
+    .nav-button.nav-press {
+      transform: scale(0.92);
+      opacity: 0.9;
+    }
+
+    .stack-scroll {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .stack-scroll::-webkit-scrollbar {
+      display: none;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 flex justify-center items-center min-h-screen">
+  <div class="page-shell w-[402px] h-[874px] relative overflow-hidden shadow-2xl">
+    <img src="./public/assets/my-favorite/image_1.png" class="w-[518px] h-[517px] absolute top-[21px] -left-[160px]" />
+    <img src="./public/assets/my-favorite/image_2.png" class="w-[242px] h-[242px] absolute top-[127px] left-[4px]" />
+    <img src="./public/assets/my-favorite/image_3.png" class="w-[171px] h-[173px] absolute top-[507px] left-[250px]" />
+
+    <div class="absolute top-[77px] left-[43px] font-['Jacques_Francois'] text-[38px] leading-none text-[rgba(0,0,0,1)]">My Favorite</div>
+
+    <button id="backButton" type="button" class="absolute top-[91px] left-[19px] z-20" aria-label="Go back">
+      <img src="./public/assets/my-favorite/image_18.png" class="w-[24.67px] h-[23.33px]" />
+    </button>
+
+    <button id="assistantButton" type="button" class="absolute top-[56px] left-[291px] z-20 w-[124px] h-[124px]" aria-label="Ask AI about this category">
+      <img src="./public/assets/my-favorite/image_19.png" class="w-[108px] h-auto absolute top-[8px] right-0" />
+      <img src="./public/assets/my-favorite/image_20.png" class="w-[43px] h-[35px] absolute top-0 left-0" />
+      <div class="absolute top-px left-[11px] opacity-[0.47] text-[20px] whitespace-nowrap text-[rgba(0,0,0,1)] leading-[normal] font-normal">Hi!</div>
+    </button>
+
+    <div class="w-[506px] h-[62px] flex flex-row flex-nowrap justify-center items-center pt-[21px] box-border pb-[19px] absolute top-0 -left-[52px]">
+      <div class="w-[152px] h-[22px] flex flex-row flex-nowrap justify-center items-center pt-[1.50px] box-border mr-[154px]">
+        <div class="text-[17px] whitespace-nowrap text-center text-[rgba(0,0,0,1)] leading-[22px] font-[590]">9:41</div>
+      </div>
+      <div class="w-[152px] h-[22px] flex flex-row flex-nowrap justify-center items-center pt-px box-border pr-px">
+        <img src="./public/assets/my-favorite/image_4.png" class="w-[19.20px] h-[12.23px] mr-[7px]" />
+        <img src="./public/assets/my-favorite/image_5.png" class="w-[17.14px] h-[12.33px] mr-[7px]" />
+        <img src="./public/assets/my-favorite/image_6.png" class="w-[27.33px] h-[13px]" />
+      </div>
+    </div>
+
+    <div id="swipeArea" class="absolute top-[163px] left-[37px] w-[330px] h-[567px] overflow-visible">
+      <button id="leftPreview" type="button" class="panel-slide side-preview absolute top-[165px] -left-[208px] w-[198px] h-[286px] rounded-[26px] px-[18px] py-[22px] opacity-[0.86] text-left"></button>
+      <button id="rightPreview" type="button" class="panel-slide side-preview absolute top-[165px] -right-[208px] w-[198px] h-[286px] rounded-[26px] px-[18px] py-[22px] opacity-[0.86] text-left"></button>
+
+      <div id="mainPanel" class="panel-slide main-board absolute inset-0 rounded-[30px] px-[18px] py-[20px] text-[rgba(42,58,50,1)]">
+        <div class="absolute inset-x-[16px] top-[18px] flex items-start justify-between">
+          <div>
+            <div id="mainCategoryTitle" class="font-['Adamina'] text-[40px] leading-[0.95] text-[rgba(46,98,75,1)]">Travel</div>
+            <div id="mainCategoryDescription" class="mt-[12px] max-w-[210px] font-['Afacad'] text-[15px] leading-[1.25] text-[rgba(62,81,71,0.78)]">
+              Sea breeze, architecture, and memorable routes you want to keep.
+            </div>
+          </div>
+          <div id="panelHint" class="mt-[8px] font-['Afacad'] text-[12px] font-semibold uppercase tracking-[0.08em] text-[rgba(76,104,91,0.6)]">Swipe</div>
+        </div>
+
+        <div id="rowsContainer" class="stack-scroll absolute left-[16px] right-[16px] top-[98px] bottom-[18px] overflow-y-auto pr-[4px]"></div>
+      </div>
+    </div>
+
+    <div class="absolute top-[768px] left-0 w-[402px] h-[89px]">
+      <div class="w-[402px] rounded-[52px] [box-shadow:inset_0px_-4px_4px_0px_rgba(0,0,0,0.25),_inset_0px_0px_4px_0px_rgba(0,0,0,0.25)] bg-[rgba(255,255,255,1)] min-h-[89px] absolute top-0 left-0"></div>
+      <button id="navFavorite" type="button" class="nav-button absolute top-[6px] left-[118px] w-[77px] h-[77px]" aria-label="Go to Favorites">
+        <img src="./public/assets/my-favorite/image_21.png" class="w-[77px] h-[77px]" />
+      </button>
+      <div class="w-[302px] h-[41.67px] flex flex-row flex-nowrap justify-start items-center absolute top-[22px] left-[47px]">
+        <button id="navHome" type="button" class="nav-button mr-[55px]" aria-label="Go to Home">
+          <img src="./public/assets/my-favorite/image_22.png" class="w-[33px] h-[38px]" />
+        </button>
+        <button id="navHistory" type="button" class="nav-button mr-[55px]" aria-label="Go to History">
+          <img src="./public/assets/my-favorite/image_23.png" class="w-[41.67px] h-[39.63px]" />
+        </button>
+        <button id="navWeekly" type="button" class="nav-button mr-[55px]" aria-label="Go to Weekly Report">
+          <img src="./public/assets/my-favorite/image_24.png" class="w-[37.50px] h-[41.67px]" />
+        </button>
+        <button id="navProfile" type="button" class="nav-button" aria-label="Go to Profile">
+          <img src="./public/assets/my-favorite/image_25.png" class="w-[33.33px] h-[37.50px]" />
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const API_BASE = (window.__POCKETY_API_BASE__ || 'http://127.0.0.1:8000').replace(/\/$/, '');
+      const STORAGE_KEY = 'pockety-custom-favorites';
+      const HIDDEN_KEY = 'pockety-hidden-favorite-categories';
+      const rowsContainerEl = document.getElementById('rowsContainer');
+      const leftPreviewEl = document.getElementById('leftPreview');
+      const rightPreviewEl = document.getElementById('rightPreview');
+      const mainCategoryTitleEl = document.getElementById('mainCategoryTitle');
+      const mainCategoryDescriptionEl = document.getElementById('mainCategoryDescription');
+      const mainPanelEl = document.getElementById('mainPanel');
+      const swipeAreaEl = document.getElementById('swipeArea');
+      const assistantButtonEl = document.getElementById('assistantButton');
+      const backButtonEl = document.getElementById('backButton');
+      const navConfig = [
+        { id: 'navHome', path: './home.html' },
+        { id: 'navFavorite', path: './favorites-travel.html' },
+        { id: 'navHistory', path: './history-report.html' },
+        { id: 'navWeekly', path: './weekly-report.html' },
+        { id: 'navProfile', path: './profile.html' }
+      ];
+
+      const defaultCategories = [
+        { slug: 'travel', title: 'Travel', description: 'Sea breeze, architecture, and memorable routes you want to keep.' },
+        { slug: 'resume', title: 'Resume', description: 'Highlights and references that can support your next application.' },
+        { slug: 'music', title: 'Music', description: 'Concert moments, playlists, and stages worth revisiting.' },
+        { slug: 'java', title: 'Java', description: 'Backend notes, patterns, and small wins from your coding sessions.' },
+        { slug: 'workout', title: 'Workout', description: 'Training clips and routines you may want to revisit this week.' }
+      ];
+
+      const fallbackItems = [
+        {
+          id: 'doc-001',
+          title: '48 Hours in Aranya',
+          content: 'A compact travel note about architecture, coastal light, and a calm two-day route through Aranya. The focus is on spatial atmosphere and memorable stops.',
+          category: 'travel',
+          image_path: './public/assets/my-favorite/image_16.png',
+          icon_path: './public/assets/my-favorite/image_9.png',
+          source_url: null,
+          created_at: '2026-01-19T09:00:00Z'
+        },
+        {
+          id: 'doc-002',
+          title: 'Aranya Canteen No.4',
+          content: 'A food collection entry centered on Aranya dining, quick recommendations, and what makes this place worth revisiting during a short trip.',
+          category: 'travel',
+          image_path: './public/assets/my-favorite/image_8.png',
+          icon_path: './public/assets/my-favorite/image_9.png',
+          source_url: null,
+          created_at: '2025-12-10T09:00:00Z'
+        },
+        {
+          id: 'doc-003',
+          title: 'Orange Sunset Sea',
+          content: 'A visual diary entry about seaside sunset colors, blue-hour tones, and the emotional mood of watching the horizon near the water.',
+          category: 'travel',
+          image_path: './public/assets/my-favorite/image_11.png',
+          icon_path: './public/assets/my-favorite/image_12.png',
+          source_url: null,
+          created_at: '2025-05-12T09:00:00Z'
+        },
+        {
+          id: 'doc-004',
+          title: 'Aranya Suka Hotel',
+          content: 'A stay review focused on a bright room, floor-to-ceiling windows, and the feeling of slowing down during a design-oriented weekend trip.',
+          category: 'travel',
+          image_path: './public/assets/my-favorite/image_14.png',
+          icon_path: './public/assets/my-favorite/image_15.png',
+          source_url: null,
+          created_at: '2025-03-13T09:00:00Z'
+        },
+        {
+          id: 'doc-005',
+          title: 'Resumes HR Hates Most',
+          content: 'A practical summary of resume mistakes that immediately weaken first impressions, including messy structure, weak evidence, and generic wording.',
+          category: 'resume',
+          image_path: './public/assets/my-favorite-resume/image_22.png',
+          icon_path: './public/assets/my-favorite-resume/image_16.png',
+          source_url: null,
+          created_at: '2026-01-19T08:50:00Z'
+        },
+        {
+          id: 'doc-006',
+          title: 'AI-generated Resume',
+          content: 'A comparison note on using AI to draft resumes faster while still refining tone, relevance, and credibility before sending applications.',
+          category: 'resume',
+          image_path: './public/assets/my-favorite-resume/image_15.png',
+          icon_path: './public/assets/my-favorite-resume/image_16.png',
+          source_url: null,
+          created_at: '2025-12-10T08:50:00Z'
+        },
+        {
+          id: 'doc-007',
+          title: 'Resume-to-Website',
+          content: 'A favorite about turning resume content into a personal website so that projects, achievements, and identity feel more vivid and easier to scan.',
+          category: 'resume',
+          image_path: './public/assets/my-favorite-resume/image_20.png',
+          icon_path: './public/assets/my-favorite-resume/image_21.png',
+          source_url: null,
+          created_at: '2025-05-12T08:50:00Z'
+        },
+        {
+          id: 'doc-008',
+          title: 'STAR Method Resume',
+          content: 'A structured note on rewriting experience bullets with situation, task, action, and result so each line proves clear impact.',
+          category: 'resume',
+          image_path: './public/assets/my-favorite-resume/image_18.png',
+          icon_path: './public/assets/my-favorite-resume/image_19.png',
+          source_url: null,
+          created_at: '2025-03-13T08:50:00Z'
+        }
+      ];
+
+      const state = {
+        categories: [],
+        items: [],
+        activeIndex: 0,
+        pointerStartX: 0,
+        isSwiping: false,
+        isAnimating: false
+      };
+
+      function readCustomCategories() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          const parsed = raw ? JSON.parse(raw) : [];
+          if (!Array.isArray(parsed)) {
+            return [];
+          }
+          return parsed.map(function (item, index) {
+            return {
+              slug: 'custom-' + index,
+              title: String(item.title || 'New Favorite').trim() || 'New Favorite',
+              description: String(item.description || '').trim() || 'A custom favorite board created by you.',
+              image_path: item.image_path || null
+            };
+          });
+        } catch (error) {
+          return [];
+        }
+      }
+
+      function buildCategories() {
+        const hidden = readHiddenCategories();
+        return defaultCategories.concat(readCustomCategories()).filter(function (category) {
+          return hidden.indexOf(category.slug) === -1;
+        });
+      }
+
+      function titleFromSlug(slug) {
+        if (!slug) return 'Other';
+        const cleaned = String(slug).replace(/[_-]+/g, ' ').trim();
+        if (!cleaned) return 'Other';
+        return cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
+      }
+
+      function mapDocToFavoriteItem(doc, index) {
+        const fallbackThumbs = [
+          './public/assets/my-favorite/image_16.png',
+          './public/assets/my-favorite/image_8.png',
+          './public/assets/my-favorite/image_11.png',
+          './public/assets/my-favorite/image_14.png',
+          './public/assets/my-favorite-resume/image_22.png',
+          './public/assets/my-favorite-resume/image_15.png',
+          './public/assets/my-favorite-resume/image_20.png',
+          './public/assets/my-favorite-resume/image_18.png'
+        ];
+        return {
+          id: doc.id || ('doc-' + index),
+          title: doc.title || 'Untitled',
+          content: doc.content || '',
+          category: String(doc.category || 'other').toLowerCase(),
+          image_path: fallbackThumbs[index % fallbackThumbs.length],
+          icon_path: './public/assets/my-favorite/image_9.png',
+          source_url: doc.source_url || null,
+          created_at: doc.created_at || new Date().toISOString(),
+          tags: Array.isArray(doc.tags) ? doc.tags : []
+        };
+      }
+
+      function buildCategoriesFromItems(items) {
+        const hidden = readHiddenCategories();
+        const seen = Object.create(null);
+        const merged = [];
+
+        defaultCategories.concat(readCustomCategories()).forEach(function (category) {
+          if (!category || !category.slug) return;
+          if (hidden.indexOf(category.slug) !== -1) return;
+          if (seen[category.slug]) return;
+          seen[category.slug] = true;
+          merged.push(category);
+        });
+
+        items.forEach(function (item) {
+          const slug = String(item.category || '').toLowerCase().trim();
+          if (!slug || seen[slug] || hidden.indexOf(slug) !== -1) return;
+          seen[slug] = true;
+          merged.push({
+            slug: slug,
+            title: titleFromSlug(slug),
+            description: 'Imported from backend documents.'
+          });
+        });
+
+        return merged;
+      }
+
+      function readHiddenCategories() {
+        try {
+          const raw = localStorage.getItem(HIDDEN_KEY);
+          const parsed = raw ? JSON.parse(raw) : [];
+          return Array.isArray(parsed) ? parsed : [];
+        } catch (error) {
+          return [];
+        }
+      }
+
+      async function loadItems() {
+        try {
+          const response = await fetch(API_BASE + '/documents');
+          if (response.ok) {
+            const docs = await response.json();
+            if (Array.isArray(docs) && docs.length) {
+              return docs.map(mapDocToFavoriteItem);
+            }
+          }
+        } catch (error) {
+          // Continue to local fallback.
+        }
+
+        try {
+          const response = await fetch('./public/data/favorite-items.json');
+          if (!response.ok) {
+            throw new Error('load failed');
+          }
+          const data = await response.json();
+          return Array.isArray(data) ? data : fallbackItems;
+        } catch (error) {
+          return fallbackItems;
+        }
+      }
+
+      function formatDate(value) {
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) {
+          return '';
+        }
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return year + '.' + month + '.' + day;
+      }
+
+      function previewMarkup(category) {
+        if (!category) {
+          return '';
+        }
+        return '<div class="font-[Adamina] text-[32px] leading-none text-[rgba(46,98,75,0.9)]">' + category.title + '</div>' +
+          '<div class="mt-[14px] font-[Actor] text-[14px] text-[rgba(65,84,73,0.72)]">Swipe</div>';
+      }
+
+      function createRow(item) {
+        const row = document.createElement('button');
+        row.type = 'button';
+        row.className = 'favorite-row relative flex w-full items-start gap-[13px] rounded-[18px] px-[6px] py-[10px] text-left';
+
+        const thumbWrap = document.createElement('div');
+        thumbWrap.className = 'relative h-[82px] w-[82px] shrink-0';
+        thumbWrap.innerHTML =
+          '<img src="' + item.image_path + '" class="h-[82px] w-[82px] rounded-[16px] object-cover" />' +
+          '<img src="' + item.icon_path + '" class="absolute top-[8px] left-[8px] h-[15px] w-[15px]" />';
+
+        const body = document.createElement('div');
+        body.className = 'min-w-0 flex-1 pt-[2px]';
+
+        const title = document.createElement('div');
+        title.className = "font-['Alegreya'] text-[16px] leading-[1.15] text-[rgba(47,47,47,1)]";
+        title.textContent = item.title;
+
+        const lineOne = document.createElement('div');
+        lineOne.className = "mt-[10px] font-['Albert_Sans'] text-[12px] leading-[1.2] text-[rgba(76,75,75,1)]";
+        lineOne.textContent = '#  ' + item.content.split(/[,.]/)[0].slice(0, 22);
+
+        const lineTwo = document.createElement('div');
+        lineTwo.className = "mt-[3px] font-['Albert_Sans'] text-[12px] leading-[1.2] text-[rgba(76,75,75,1)]";
+        lineTwo.textContent = '#  ' + item.title.slice(0, 22);
+
+        const date = document.createElement('div');
+        date.className = "mt-[10px] font-['Alegreya'] text-[13px] leading-none text-[rgba(83,83,83,1)]";
+        date.textContent = formatDate(item.created_at);
+
+        body.appendChild(title);
+        body.appendChild(lineOne);
+        body.appendChild(lineTwo);
+        body.appendChild(date);
+
+        row.appendChild(thumbWrap);
+        row.appendChild(body);
+
+        row.addEventListener('click', function () {
+          window.location.href = './ai-assistant.html?q=' + encodeURIComponent('Summarize this item: ' + item.title);
+        });
+
+        return row;
+      }
+
+      function renderCategory(index) {
+        const category = state.categories[index];
+        if (!category) {
+          return;
+        }
+
+        const left = state.categories[(index - 1 + state.categories.length) % state.categories.length];
+        const right = state.categories[(index + 1) % state.categories.length];
+        const items = state.items.filter(function (item) {
+          return item.category === category.slug;
+        }).sort(function (a, b) {
+          return new Date(b.created_at) - new Date(a.created_at);
+        });
+
+        mainCategoryTitleEl.textContent = category.title;
+        mainCategoryDescriptionEl.textContent = category.description;
+        leftPreviewEl.innerHTML = previewMarkup(left);
+        rightPreviewEl.innerHTML = previewMarkup(right);
+
+        rowsContainerEl.innerHTML = '';
+
+        if (!items.length) {
+          const empty = document.createElement('div');
+          empty.className = 'flex h-full flex-col justify-center rounded-[24px] border border-dashed border-[rgba(70,100,86,0.25)] bg-[rgba(255,255,255,0.18)] px-[18px] text-center';
+          empty.innerHTML =
+            '<div class="font-[Adamina] text-[32px] leading-none text-[rgba(46,98,75,1)]">' + category.title + '</div>' +
+            '<div class="mt-[14px] font-[Afacad] text-[16px] leading-[1.45] text-[rgba(66,84,74,0.82)]">' + category.description + '</div>' +
+            '<div class="mt-[18px] font-[Afacad] text-[14px] leading-[1.35] text-[rgba(88,106,97,0.7)]">This category is ready. Once you connect related records, the list will appear here.</div>';
+          rowsContainerEl.appendChild(empty);
+          return;
+        }
+
+        items.forEach(function (item, idx) {
+          if (idx > 0) {
+            const divider = document.createElement('div');
+            divider.className = 'row-divider mx-[6px]';
+            rowsContainerEl.appendChild(divider);
+          }
+          rowsContainerEl.appendChild(createRow(item));
+        });
+      }
+
+      function animateTo(nextIndex, direction) {
+        if (state.isAnimating) {
+          return;
+        }
+        state.isAnimating = true;
+
+        const offset = direction > 0 ? -42 : 42;
+        mainPanelEl.style.transform = 'translateX(' + offset + 'px)';
+        mainPanelEl.style.opacity = '0.35';
+        leftPreviewEl.style.transform = 'translateX(' + (direction > 0 ? -18 : 18) + 'px)';
+        rightPreviewEl.style.transform = 'translateX(' + (direction > 0 ? -18 : 18) + 'px)';
+
+        setTimeout(function () {
+          state.activeIndex = nextIndex;
+          renderCategory(nextIndex);
+          mainPanelEl.style.transform = 'translateX(' + (-offset) + 'px)';
+          requestAnimationFrame(function () {
+            mainPanelEl.style.transform = 'translateX(0)';
+            mainPanelEl.style.opacity = '1';
+            leftPreviewEl.style.transform = 'translateX(0)';
+            rightPreviewEl.style.transform = 'translateX(0)';
+          });
+        }, 150);
+
+        setTimeout(function () {
+          state.isAnimating = false;
+        }, 340);
+      }
+
+      function moveCategory(direction) {
+        const total = state.categories.length;
+        if (!total) {
+          return;
+        }
+        const nextIndex = (state.activeIndex + direction + total) % total;
+        animateTo(nextIndex, direction);
+      }
+
+      function initSwipe() {
+        swipeAreaEl.addEventListener('pointerdown', function (event) {
+          state.pointerStartX = event.clientX;
+          state.isSwiping = true;
+        });
+
+        swipeAreaEl.addEventListener('pointerup', function (event) {
+          if (!state.isSwiping) {
+            return;
+          }
+          state.isSwiping = false;
+          const deltaX = event.clientX - state.pointerStartX;
+          if (Math.abs(deltaX) < 40) {
+            return;
+          }
+          moveCategory(deltaX < 0 ? 1 : -1);
+        });
+
+        swipeAreaEl.addEventListener('pointercancel', function () {
+          state.isSwiping = false;
+        });
+      }
+
+      leftPreviewEl.addEventListener('click', function () {
+        moveCategory(-1);
+      });
+
+      rightPreviewEl.addEventListener('click', function () {
+        moveCategory(1);
+      });
+
+      backButtonEl.addEventListener('click', function () {
+        const currentCategory = state.categories[state.activeIndex];
+        const fallback = currentCategory && currentCategory.slug === 'resume'
+          ? './favorites-resume.html'
+          : './favorites-travel.html';
+        if (document.referrer) {
+          window.history.back();
+          return;
+        }
+        window.location.href = fallback;
+      });
+
+      assistantButtonEl.addEventListener('click', function () {
+        const category = state.categories[state.activeIndex];
+        if (!category) {
+          return;
+        }
+        window.location.href = './ai-assistant.html?q=' + encodeURIComponent('Tell me about my ' + category.title + ' favorites.');
+      });
+
+      navConfig.forEach(function (item) {
+        const button = document.getElementById(item.id);
+        if (!button) {
+          return;
+        }
+        button.addEventListener('click', function () {
+          button.classList.add('nav-press');
+          setTimeout(function () {
+            window.location.href = item.path;
+          }, 90);
+        });
+      });
+
+      (async function init() {
+        state.items = await loadItems();
+        state.categories = buildCategoriesFromItems(state.items);
+        const currentSlug = new URLSearchParams(window.location.search).get('category') || 'travel';
+        const matchedIndex = state.categories.findIndex(function (item) {
+          return item.slug === currentSlug;
+        });
+        state.activeIndex = matchedIndex >= 0 ? matchedIndex : 0;
+        if (!state.categories.length) {
+          window.location.href = './favorites-travel.html';
+          return;
+        }
+        initSwipe();
+        renderCategory(state.activeIndex);
+      })();
+    })();
+  </script>
+</body>
+</html>

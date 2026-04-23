@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pockety - Add a Theme</title>
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <script>
+    tailwind.config = {
+      mode: 'jit',
+      important: true,
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Adamina&family=Afacad:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro', 'Segoe UI', Roboto, sans-serif;
+    }
+
+    .page-bg {
+      background:
+        radial-gradient(circle at 85% 10%, rgba(180, 204, 255, 0.88), transparent 34%),
+        radial-gradient(circle at 14% 84%, rgba(208, 235, 222, 0.9), transparent 28%),
+        linear-gradient(180deg, rgba(249, 246, 239, 1) 0%, rgba(247, 250, 252, 1) 100%);
+    }
+
+    .dialog-shell {
+      background: rgba(255, 255, 255, 0.6);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: 0 24px 60px rgba(104, 131, 120, 0.18);
+    }
+
+    .field-shell {
+      background: rgba(255, 255, 255, 0.74);
+      border: 1px solid rgba(103, 120, 108, 0.22);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    }
+
+    .field-shell:focus-within {
+      border-color: rgba(91, 145, 119, 0.56);
+      box-shadow: 0 0 0 3px rgba(91, 145, 119, 0.14);
+    }
+
+    .primary-button {
+      background: linear-gradient(135deg, rgba(115, 174, 81, 1) 0%, rgba(74, 130, 91, 1) 100%);
+      box-shadow: 0 14px 26px rgba(96, 132, 85, 0.28);
+    }
+
+    .secondary-button {
+      background: rgba(255, 255, 255, 0.74);
+      border: 1px solid rgba(103, 120, 108, 0.18);
+    }
+  </style>
+</head>
+<body class="bg-gray-100 flex justify-center items-center min-h-screen">
+  <div class="page-bg w-[402px] h-[874px] overflow-hidden relative shadow-2xl">
+    <div class="absolute top-[86px] left-[26px] font-['Adamina'] text-[34px] leading-none text-[rgba(33,82,60,1)]">
+      Add a Theme
+    </div>
+    <div class="absolute top-[128px] left-[26px] right-[26px] font-['Afacad'] text-[18px] leading-[1.25] text-[rgba(70,87,79,0.8)]">
+      Create a new board for your own favorites. It will appear in your scrollable collection.
+    </div>
+
+    <div class="dialog-shell absolute top-[198px] left-[22px] w-[358px] rounded-[34px] border border-[rgba(255,255,255,0.48)] px-[22px] py-[24px]">
+      <form id="addThemeForm" class="flex flex-col gap-[18px]">
+        <div>
+          <label for="themeInput" class="mb-[8px] block font-['Afacad'] text-[16px] font-semibold text-[rgba(46,67,56,1)]">
+            Theme name
+          </label>
+          <div class="field-shell rounded-[18px] px-[16px] py-[12px]">
+            <input id="themeInput" name="theme" type="text" maxlength="28" placeholder="For example: Photography" class="w-full bg-transparent outline-none font-['Afacad'] text-[18px] text-[rgba(52,58,56,1)] placeholder:text-[rgba(93,101,99,0.52)]" />
+          </div>
+        </div>
+
+        <div>
+          <label for="describeInput" class="mb-[8px] block font-['Afacad'] text-[16px] font-semibold text-[rgba(46,67,56,1)]">
+            Describe it
+          </label>
+          <div class="field-shell rounded-[22px] px-[16px] py-[14px]">
+            <textarea id="describeInput" name="describe" rows="6" maxlength="180" placeholder="Describe what you collect here, so the board feels clear and useful." class="w-full resize-none bg-transparent outline-none font-['Afacad'] text-[17px] leading-[1.4] text-[rgba(52,58,56,1)] placeholder:text-[rgba(93,101,99,0.52)]"></textarea>
+          </div>
+        </div>
+
+        <div class="flex gap-[12px] pt-[4px]">
+          <button id="cancelButton" type="button" class="secondary-button h-[50px] flex-1 rounded-[18px] font-['Afacad'] text-[17px] font-semibold text-[rgba(60,79,69,0.9)]">
+            Cancel
+          </button>
+          <button type="submit" class="primary-button h-[50px] flex-1 rounded-[18px] font-['Afacad'] text-[17px] font-semibold text-white">
+            Save board
+          </button>
+        </div>
+      </form>
+
+      <div id="helperText" class="mt-[14px] font-['Afacad'] text-[15px] leading-[1.35] text-[rgba(68,89,78,0.74)]">
+        New boards are saved locally in this browser.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const STORAGE_KEY = 'pockety-custom-favorites';
+      const form = document.getElementById('addThemeForm');
+      const themeInput = document.getElementById('themeInput');
+      const describeInput = document.getElementById('describeInput');
+      const cancelButton = document.getElementById('cancelButton');
+      const helperText = document.getElementById('helperText');
+      const params = new URLSearchParams(window.location.search);
+      const from = params.get('from') === 'resume' ? 'resume' : 'travel';
+
+      function escapeTagPart(value) {
+        return value.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+      }
+
+      function buildTags(title, description) {
+        const source = [title, description].join(' ');
+        const parts = escapeTagPart(source).split(/\s+/).filter(Boolean);
+        const unique = [];
+
+        parts.forEach(function (part) {
+          if (part.length < 4) {
+            return;
+          }
+          if (unique.indexOf(part) !== -1) {
+            return;
+          }
+          unique.push(part);
+        });
+
+        const tags = unique.slice(0, 3).map(function (part) {
+          return '#' + part;
+        });
+
+        if (!tags.length) {
+          return ['#custom', '#favorite'];
+        }
+
+        return tags;
+      }
+
+      function readItems() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          const parsed = raw ? JSON.parse(raw) : [];
+          return Array.isArray(parsed) ? parsed : [];
+        } catch (error) {
+          return [];
+        }
+      }
+
+      function writeItems(items) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+      }
+
+      function getReturnPath() {
+        return from === 'resume' ? './favorites-resume.html?new=1' : './favorites-travel.html?new=1';
+      }
+
+      cancelButton.addEventListener('click', function () {
+        window.location.href = getReturnPath().replace('?new=1', '');
+      });
+
+      form.addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        const title = themeInput.value.trim();
+        const description = describeInput.value.trim();
+
+        if (!title) {
+          helperText.textContent = 'Please enter a theme name first.';
+          themeInput.focus();
+          return;
+        }
+
+        const items = readItems();
+        items.push({
+          title: title,
+          description: description,
+          tags: buildTags(title, description),
+          createdAt: new Date().toISOString()
+        });
+        writeItems(items);
+
+        window.location.href = getReturnPath();
+      });
+    })();
+  </script>
+</body>
+</html>

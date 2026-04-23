@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pockety - Favorites - Travel</title>
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <script>
+    tailwind.config = { mode: 'jit', important: true };
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Aclonica&family=Adamina&family=Actor&family=Afacad:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro', 'Segoe UI', Roboto, sans-serif;
+    }
+
+    .favorites-shell {
+      background:
+        radial-gradient(circle at 84% 12%, rgba(187, 208, 255, 0.92), transparent 32%),
+        radial-gradient(circle at 12% 78%, rgba(210, 236, 223, 0.86), transparent 28%),
+        linear-gradient(180deg, rgba(252, 249, 244, 1) 0%, rgba(244, 248, 252, 1) 100%);
+    }
+
+    .disc-shell {
+      background: rgba(255, 255, 255, 0.62);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: 0 20px 48px rgba(84, 110, 101, 0.14);
+    }
+
+    .disc-shell::before {
+      content: "";
+      position: absolute;
+      inset: 74px 20px 32px;
+      border-radius: 999px;
+      background:
+        radial-gradient(circle, rgba(255, 255, 255, 0.52) 0%, rgba(255, 255, 255, 0.08) 48%, rgba(255, 255, 255, 0) 72%),
+        radial-gradient(circle, rgba(186, 213, 201, 0.15) 0%, rgba(186, 213, 201, 0) 70%);
+      pointer-events: none;
+    }
+
+    .disc-viewport {
+      touch-action: none;
+      user-select: none;
+      cursor: grab;
+    }
+
+    .disc-viewport.is-dragging {
+      cursor: grabbing;
+    }
+
+    .disc-ring {
+      position: absolute;
+      inset: 0;
+    }
+
+    .orbit-card {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 142px;
+      min-height: 108px;
+      padding: 15px 13px 13px;
+      border-radius: 24px;
+      color: rgba(34, 52, 43, 1);
+      box-shadow: 0 16px 28px rgba(70, 86, 79, 0.14);
+      transform-origin: center center;
+      transition: transform 180ms ease, opacity 180ms ease, box-shadow 180ms ease;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+    }
+
+    .orbit-card::after {
+      content: "";
+      position: absolute;
+      right: 10px;
+      bottom: 10px;
+      width: 24px;
+      height: 24px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.34);
+    }
+
+    .orbit-card.is-active {
+      width: 190px;
+      min-height: 140px;
+      box-shadow: 0 20px 36px rgba(62, 95, 80, 0.22);
+    }
+
+    .orbit-title {
+      font-family: 'Adamina', serif;
+      font-size: 21px;
+      line-height: 0.95;
+      margin-bottom: 9px;
+    }
+
+    .orbit-card.is-active .orbit-title {
+      font-size: 30px;
+    }
+
+    .orbit-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      max-width: 106px;
+    }
+
+    .orbit-card.is-active .orbit-tags {
+      max-width: 144px;
+    }
+
+    .orbit-tag {
+      font-family: 'Actor', sans-serif;
+      font-size: 11px;
+      line-height: 1;
+      padding: 5px 8px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.38);
+    }
+
+    .orbit-note {
+      margin-top: 8px;
+      font-family: 'Afacad', sans-serif;
+      font-size: 11px;
+      line-height: 1.28;
+      color: rgba(55, 67, 61, 0.72);
+    }
+
+    .orbit-card.is-active .orbit-note {
+      font-size: 13px;
+    }
+
+    .mini-assistant {
+      transition: transform 180ms ease;
+    }
+
+    .mini-assistant:hover {
+      transform: translateY(-2px) scale(1.03);
+    }
+
+    .nav-button {
+      transition: transform 160ms ease, opacity 160ms ease;
+    }
+
+    .nav-button:hover {
+      transform: translateY(-1px) scale(1.04);
+    }
+
+    .nav-button:active,
+    .nav-button.nav-press {
+      transform: scale(0.92);
+      opacity: 0.9;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 flex justify-center items-center min-h-screen">
+  <div class="favorites-shell w-[402px] h-[874px] overflow-hidden relative shadow-2xl">
+    <div class="absolute inset-x-0 top-0 h-[132px] bg-[linear-gradient(180deg,_rgba(252,249,244,0.95)_0%,rgba(252,249,244,0.68)_55%,rgba(252,249,244,0)_100%)]"></div>
+    <div class="absolute top-[88px] left-[20px] font-['Aclonica'] text-[32px] leading-none text-[rgba(42,101,34,1)]">Pockety</div>
+
+    <div class="disc-shell absolute top-[132px] left-[18px] w-[366px] h-[612px] rounded-[38px] border border-[rgba(255,255,255,0.45)] overflow-hidden">
+      <div class="absolute top-[18px] left-[18px] font-['Afacad'] text-[14px] font-medium tracking-[0.08em] uppercase text-[rgba(75,112,97,0.78)]">Favorite Disc</div>
+      <div class="absolute top-[42px] left-[18px] right-[18px] flex items-start justify-between z-20">
+        <div>
+          <div id="activeBoardTitle" class="font-['Adamina'] text-[34px] leading-none text-[rgba(33,82,60,1)]">Travel</div>
+          <div id="activeBoardCopy" class="mt-[8px] max-w-[190px] font-['Afacad'] text-[16px] leading-[1.2] text-[rgba(70,87,79,0.8)]">Rotate the disc to browse your boards.</div>
+        </div>
+        <div class="flex flex-col items-end gap-[10px]">
+          <button id="createCollectionButton" type="button" class="h-[36px] rounded-[18px] bg-[rgba(255,255,255,0.78)] px-[14px] font-['Afacad'] text-[15px] font-semibold text-[rgba(54,102,79,1)] shadow-[0_8px_18px_rgba(120,140,128,0.14)]">+ New</button>
+          <button id="deleteCollectionButton" type="button" class="h-[34px] rounded-[17px] bg-[rgba(255,255,255,0.64)] px-[12px] font-['Afacad'] text-[14px] font-semibold text-[rgba(130,72,62,1)] shadow-[0_8px_18px_rgba(120,140,128,0.1)]">- Delete</button>
+          <button id="assistantTrigger" type="button" class="mini-assistant relative w-[72px] h-[72px] z-20 overflow-visible" aria-label="Open AI Assistant">
+            <img src="./public/assets/favorites-travel/image_14.png" class="w-[72px] h-auto max-w-none object-contain" />
+            <span class="absolute -top-[8px] -left-[10px] inline-flex h-[28px] items-center rounded-[20px] bg-[rgba(255,255,255,0.72)] px-[10px] font-['Afacad'] text-[16px] text-[rgba(70,70,70,0.78)]">Hi!</span>
+          </button>
+        </div>
+      </div>
+
+      <div id="discViewport" class="disc-viewport absolute inset-x-0 top-[112px] bottom-[22px] z-10">
+        <div id="discRing" class="disc-ring"></div>
+      </div>
+    </div>
+
+    <div class="w-[506px] h-[62px] flex flex-row flex-nowrap justify-center items-center pt-[21px] box-border pb-[19px] absolute top-0 -left-[52px]">
+      <div class="w-[152px] h-[22px] flex flex-row flex-nowrap justify-center items-center pt-[1.50px] box-border mr-[154px]">
+        <div class="text-[17px] whitespace-nowrap text-center text-[rgba(0,0,0,1)] leading-[22px] font-[590]">9:41</div>
+      </div>
+      <div class="w-[152px] h-[22px] flex flex-row flex-nowrap justify-center items-center pt-px box-border pr-px">
+        <img src="./public/assets/favorites-travel/image_11.png" class="w-[19.20px] h-[12.23px] mr-[7px]" />
+        <img src="./public/assets/favorites-travel/image_12.png" class="w-[17.14px] h-[12.33px] mr-[7px]" />
+        <img src="./public/assets/favorites-travel/image_13.png" class="w-[27.33px] h-[13px]" />
+      </div>
+    </div>
+
+    <div class="absolute top-[768px] left-0 w-[402px] h-[89px]">
+      <div class="w-[402px] rounded-[52px] [box-shadow:inset_0px_-4px_4px_0px_rgba(0,0,0,0.25),_inset_0px_0px_4px_0px_rgba(0,0,0,0.25)] bg-[rgba(255,255,255,0.96)] min-h-[89px] absolute top-0 left-0"></div>
+      <button id="navFavorite" type="button" class="nav-button absolute top-[6px] left-[113px] w-[77px] h-[77px]">
+        <img src="./public/assets/favorites-travel/image_16.png" class="w-[77px] h-[77px]" />
+      </button>
+      <div class="w-[302px] h-[41.67px] flex flex-row flex-nowrap justify-start items-center absolute top-[22px] left-[47px]">
+        <button id="navHome" type="button" class="nav-button mr-[55px]"><img src="./public/assets/favorites-travel/image_17.png" class="w-[33px] h-[38px]" /></button>
+        <button id="navHistory" type="button" class="nav-button mr-[55px]"><img src="./public/assets/favorites-travel/image_18.png" class="w-[41.67px] h-[39.63px]" /></button>
+        <button id="navWeekly" type="button" class="nav-button mr-[55px]"><img src="./public/assets/favorites-travel/image_19.png" class="w-[37.50px] h-[41.67px]" /></button>
+        <button id="navProfile" type="button" class="nav-button"><img src="./public/assets/favorites-travel/image_20.png" class="w-[33.33px] h-[37.50px]" /></button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const STORAGE_KEY = 'pockety-custom-favorites';
+      const HIDDEN_KEY = 'pockety-hidden-favorite-categories';
+      const activeSlug = 'travel';
+      const discViewport = document.getElementById('discViewport');
+      const discRing = document.getElementById('discRing');
+      const activeBoardTitle = document.getElementById('activeBoardTitle');
+      const activeBoardCopy = document.getElementById('activeBoardCopy');
+      const activeBoardMeta = document.getElementById('activeBoardMeta');
+      const assistantTrigger = document.getElementById('assistantTrigger');
+      const createCollectionButton = document.getElementById('createCollectionButton');
+      const deleteCollectionButton = document.getElementById('deleteCollectionButton');
+
+      const palettes = [
+        'linear-gradient(145deg, rgba(213,236,223,0.98) 0%, rgba(111,161,141,0.95) 100%)',
+        'linear-gradient(145deg, rgba(250,240,217,0.98) 0%, rgba(179,213,145,0.94) 100%)',
+        'linear-gradient(145deg, rgba(222,234,255,0.96) 0%, rgba(155,187,242,0.94) 100%)',
+        'linear-gradient(145deg, rgba(250,231,221,0.98) 0%, rgba(229,187,161,0.92) 100%)'
+      ];
+
+      const slots = {
+        '-2': { x: 54, y: 344, scale: 0.72, opacity: 0.36, z: 7 },
+        '-1': { x: 95, y: 236, scale: 0.84, opacity: 0.66, z: 11 },
+        '0': { x: 183, y: 196, scale: 1, opacity: 1, z: 20 },
+        '1': { x: 271, y: 236, scale: 0.84, opacity: 0.66, z: 11 },
+        '2': { x: 312, y: 344, scale: 0.72, opacity: 0.36, z: 7 }
+      };
+
+      const defaultBoards = [
+        { slug: 'travel', title: 'Travel', tags: ['#aranya', '#vlog'], description: 'Sea breeze, architecture, and memorable routes you want to keep.', path: './my-favorite.html?category=travel' },
+        { slug: 'resume', title: 'Resume', tags: ['#interview', '#mass apply'], description: 'Highlights and references that can support your next application.', path: './my-favorite.html?category=resume' },
+        { slug: 'music', title: 'Music', tags: ['#live', '#k-pop'], description: 'Concert moments, playlists, and stages worth revisiting.', path: './my-favorite.html?category=music' },
+        { slug: 'java', title: 'Java', tags: ['#http', '#mysql'], description: 'Backend notes, patterns, and small wins from your coding sessions.', path: './my-favorite.html?category=java' },
+        { slug: 'workout', title: 'Workout', tags: ['#hiit', '#pilates'], description: 'Training clips and routines you may want to revisit this week.', path: './my-favorite.html?category=workout' }
+      ];
+
+      const state = {
+        rotation: 0,
+        dragStartX: 0,
+        rotationStart: 0,
+        isDragging: false,
+        hasMoved: false,
+        activeIndex: 0,
+        cards: []
+      };
+
+      function readCustomBoards() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          const parsed = raw ? JSON.parse(raw) : [];
+          return Array.isArray(parsed) ? parsed : [];
+        } catch (error) {
+          return [];
+        }
+      }
+
+      function readHiddenCategories() {
+        try {
+          const raw = localStorage.getItem(HIDDEN_KEY);
+          const parsed = raw ? JSON.parse(raw) : [];
+          return Array.isArray(parsed) ? parsed : [];
+        } catch (error) {
+          return [];
+        }
+      }
+
+      function writeHiddenCategories(categories) {
+        localStorage.setItem(HIDDEN_KEY, JSON.stringify(categories));
+      }
+
+      function hideCategory(slug) {
+        const hidden = readHiddenCategories();
+        if (hidden.indexOf(slug) === -1) {
+          hidden.push(slug);
+          writeHiddenCategories(hidden);
+        }
+      }
+
+      function normalizeCustomBoard(item, index) {
+        const title = String(item.title || 'New Favorite').trim() || 'New Favorite';
+        const description = String(item.description || '').trim();
+        const tags = Array.isArray(item.tags) && item.tags.length ? item.tags : ['#custom', '#favorite'];
+        return {
+          slug: 'custom-' + index,
+          title: title,
+          tags: tags.slice(0, 3),
+          description: description || 'A custom favorite board created by you.',
+          path: './my-favorite.html?category=' + encodeURIComponent('custom-' + index)
+        };
+      }
+
+      function buildBoards() {
+        const hidden = readHiddenCategories();
+        return defaultBoards.concat(readCustomBoards().map(normalizeCustomBoard)).filter(function (board) {
+          return hidden.indexOf(board.slug) === -1;
+        });
+      }
+
+      function createTag(tag) {
+        const el = document.createElement('span');
+        el.className = 'orbit-tag';
+        el.textContent = tag;
+        return el;
+      }
+
+      function createCard(board, index) {
+        const card = document.createElement('button');
+        card.type = 'button';
+        card.className = 'orbit-card text-left';
+        card.style.background = palettes[index % palettes.length];
+
+        const title = document.createElement('div');
+        title.className = 'orbit-title';
+        title.textContent = board.title;
+
+        const tags = document.createElement('div');
+        tags.className = 'orbit-tags';
+        board.tags.forEach(function (tag) { tags.appendChild(createTag(tag)); });
+
+        const note = document.createElement('div');
+        note.className = 'orbit-note';
+        note.textContent = board.description;
+
+        card.appendChild(title);
+        card.appendChild(tags);
+        card.appendChild(note);
+
+        card.addEventListener('click', function () {
+          if (state.hasMoved) {
+            return;
+          }
+          if (board.path) {
+            window.location.href = board.path;
+            return;
+          }
+          window.location.href = './ai-assistant.html?q=' + encodeURIComponent('Tell me about my ' + board.title + ' favorites.');
+        });
+
+        return card;
+      }
+
+      function rotateToIndex(index) {
+        const total = state.cards.length;
+        if (!total) return;
+        const step = 360 / total;
+        state.rotation = -index * step;
+        renderDisc();
+      }
+
+      function normalizeDiff(diff, total) {
+        while (diff > total / 2) diff -= total;
+        while (diff < -total / 2) diff += total;
+        return diff;
+      }
+
+      function interpolateSlot(diff) {
+        if (diff < -2.35 || diff > 2.35) {
+          return null;
+        }
+
+        if (diff <= -2) {
+          return slots['-2'];
+        }
+
+        if (diff >= 2) {
+          return slots['2'];
+        }
+
+        const lower = Math.floor(diff);
+        const upper = Math.ceil(diff);
+        const lowerSlot = slots[String(lower)];
+        const upperSlot = slots[String(upper)];
+
+        if (!lowerSlot || !upperSlot) {
+          return slots[String(Math.round(diff))] || null;
+        }
+
+        if (lower === upper) {
+          return lowerSlot;
+        }
+
+        const progress = diff - lower;
+        return {
+          x: lowerSlot.x + (upperSlot.x - lowerSlot.x) * progress,
+          y: lowerSlot.y + (upperSlot.y - lowerSlot.y) * progress,
+          scale: lowerSlot.scale + (upperSlot.scale - lowerSlot.scale) * progress,
+          opacity: lowerSlot.opacity + (upperSlot.opacity - lowerSlot.opacity) * progress,
+          z: Math.round(lowerSlot.z + (upperSlot.z - lowerSlot.z) * progress)
+        };
+      }
+
+      function renderDisc() {
+        const total = state.cards.length;
+        if (!total) return;
+
+        const step = 360 / total;
+        const floatIndex = -state.rotation / step;
+        let activeIndex = Math.round(floatIndex);
+        activeIndex = ((activeIndex % total) + total) % total;
+        state.activeIndex = activeIndex;
+
+        state.cards.forEach(function (entry, index) {
+          const diff = normalizeDiff(index - floatIndex, total);
+          const slot = interpolateSlot(diff);
+          const visible = !!slot;
+
+          entry.element.style.visibility = visible ? 'visible' : 'hidden';
+          entry.element.style.pointerEvents = visible ? 'auto' : 'none';
+
+          if (!visible) {
+            entry.element.style.opacity = '0';
+            return;
+          }
+
+          entry.element.style.left = slot.x + 'px';
+          entry.element.style.top = slot.y + 'px';
+          entry.element.style.zIndex = String(slot.z);
+          entry.element.style.opacity = String(slot.opacity);
+          entry.element.style.transform = 'translate(-50%, -50%) scale(' + slot.scale + ')';
+          entry.element.classList.toggle('is-active', Math.abs(diff) < 0.5);
+        });
+
+        const activeBoard = state.cards[activeIndex].board;
+        activeBoardTitle.textContent = activeBoard.title;
+        activeBoardCopy.textContent = activeBoard.description;
+        activeBoardMeta.textContent = Math.min(5, total) + ' visible on disc' + (total > 5 ? ' • rotate for more' : '');
+      }
+
+      function initDisc() {
+        const boards = buildBoards();
+        discRing.innerHTML = '';
+        if (!boards.length) {
+          activeBoardTitle.textContent = 'No collections';
+          activeBoardCopy.textContent = 'Use + New to create a new favorite collection.';
+          activeBoardMeta.textContent = '0 visible on disc';
+          state.cards = [];
+          return;
+        }
+        state.cards = boards.map(function (board, index) {
+          const element = createCard(board, index);
+          discRing.appendChild(element);
+          return { board: board, element: element };
+        });
+
+        const activeIndex = boards.findIndex(function (board) { return board.slug === activeSlug; });
+        if (activeIndex >= 0) {
+          state.rotation = -(360 / boards.length) * activeIndex;
+        }
+        renderDisc();
+      }
+
+      discViewport.addEventListener('pointerdown', function (event) {
+        state.isDragging = true;
+        state.hasMoved = false;
+        state.dragStartX = event.clientX;
+        state.rotationStart = state.rotation;
+        discViewport.classList.add('is-dragging');
+      });
+
+      discViewport.addEventListener('pointermove', function (event) {
+        if (!state.isDragging) return;
+        const delta = event.clientX - state.dragStartX;
+        if (Math.abs(delta) > 6) {
+          state.hasMoved = true;
+        }
+        state.rotation = state.rotationStart + delta * 0.32;
+        renderDisc();
+      });
+
+      function endDrag(event) {
+        if (!state.isDragging) return;
+        state.isDragging = false;
+        discViewport.classList.remove('is-dragging');
+        const step = 360 / state.cards.length;
+        const snapped = Math.round(-state.rotation / step);
+        state.rotation = -snapped * step;
+        renderDisc();
+        setTimeout(function () {
+          state.isDragging = false;
+          state.hasMoved = false;
+        }, 40);
+      }
+
+      discViewport.addEventListener('pointerup', endDrag);
+      discViewport.addEventListener('pointercancel', endDrag);
+      discViewport.addEventListener('wheel', function (event) {
+        event.preventDefault();
+        state.rotation += event.deltaY * -0.09;
+        renderDisc();
+        clearTimeout(discViewport._wheelTimer);
+        discViewport._wheelTimer = setTimeout(function () {
+          const step = 360 / state.cards.length;
+          const snapped = Math.round(-state.rotation / step);
+          state.rotation = -snapped * step;
+          renderDisc();
+        }, 90);
+      }, { passive: false });
+
+      [
+        { id: 'navHome', path: './home.html' },
+        { id: 'navFavorite', path: './favorites-travel.html' },
+        { id: 'navHistory', path: './history-report.html' },
+        { id: 'navWeekly', path: './weekly-report.html' },
+        { id: 'navProfile', path: './profile.html' }
+      ].forEach(function (item) {
+        const button = document.getElementById(item.id);
+        if (!button) return;
+        button.addEventListener('click', function () {
+          button.classList.add('nav-press');
+          setTimeout(function () { window.location.href = item.path; }, 90);
+        });
+      });
+
+      assistantTrigger.addEventListener('click', function () {
+        const activeBoard = state.cards[state.activeIndex] && state.cards[state.activeIndex].board;
+        const boardTitle = activeBoard ? activeBoard.title : 'travel';
+        window.location.href = './ai-assistant.html?q=' + encodeURIComponent('Summarize my ' + boardTitle + ' favorites.');
+      });
+
+      createCollectionButton.addEventListener('click', function () {
+        window.location.href = './add-theme.html?from=' + encodeURIComponent(activeSlug);
+      });
+
+      deleteCollectionButton.addEventListener('click', function () {
+        const activeBoard = state.cards[state.activeIndex] && state.cards[state.activeIndex].board;
+        if (!activeBoard) {
+          return;
+        }
+        hideCategory(activeBoard.slug);
+        state.rotation = 0;
+        initDisc();
+      });
+
+      initDisc();
+    })();
+  </script>
+</body>
+</html>

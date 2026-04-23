@@ -3,7 +3,7 @@
     "id": "doc-001",
     "title": "RAG 检索增强生成简介",
     "content": "RAG（Retrieval-Augmented Generation）将外部知识库检索结果与用户问题一起送入大模型，减少幻觉并引用可追溯来源。典型流程：文档分块、向量化、相似度检索、将相关片段作为上下文再生成回答。",
-    "category": "人工智能",
+    "category": "Technology",
     "tags": ["RAG", "大模型", "检索"],
     "source_url": null,
     "created_at": "2025-03-20T08:00:00Z"
@@ -12,9 +12,99 @@
     "id": "doc-002",
     "title": "知识图谱基础",
     "content": "知识图谱用实体与关系三元组（头实体、关系、尾实体）表示结构化知识，便于推理与可视化。与纯向量检索互补：图谱擅长精确关系与多跳推理，向量检索擅长语义相似匹配。",
-    "category": "人工智能",
+    "category": "Technology",
     "tags": ["知识图谱", "三元组", "推理"],
     "source_url": null,
     "created_at": "2025-03-21T10:30:00Z"
+  },
+  {
+    "id": "doc-003",
+    "title": "一条短内容：三分钟看懂“睡眠债”",
+    "content": "睡眠不是“周末补觉一次就还清”。如果连续几天少睡，注意力和情绪都会被拉低。我的做法：固定起床时间+午后不喝咖啡+睡前30分钟不刷短视频，第二天精神差异很明显。",
+    "category": "Health",
+    "tags": ["睡眠", "习惯", "健康"],
+    "source_url": "https://example.com/xhs/sleep-debt-note",
+    "created_at": "2026-04-19T08:10:00Z"
+  },
+  {
+    "id": "doc-004",
+    "title": "收藏：通勤 15 分钟拉伸（脖子/肩背）",
+    "content": "久坐肩颈紧：1) 下巴内收 10 次；2) 斜方肌拉伸左右各 30 秒；3) 肩胛后缩 15 次；4) 胸小肌靠墙开肩。别用力猛，做到“酸但不痛”。",
+    "category": "Health",
+    "tags": ["拉伸", "肩颈", "久坐"],
+    "source_url": "https://example.com/douyin/stretch-commute",
+    "created_at": "2026-04-18T09:20:00Z"
+  },
+  {
+    "id": "doc-005",
+    "title": "小红书笔记：三件套做出“高级感穿搭”",
+    "content": "思路不是买贵，而是“版型+颜色+比例”。上短下长、同色系叠穿、鞋子和包统一材质。普通人最快提升：把上衣塞一点点、露脚踝、少图案多纯色。",
+    "category": "Lifestyle",
+    "tags": ["穿搭", "审美", "小技巧"],
+    "source_url": "https://example.com/xhs/outfit-minimal",
+    "created_at": "2026-04-17T12:00:00Z"
+  },
+  {
+    "id": "doc-006",
+    "title": "城市攻略：雨天也能逛的室内路线（地铁直达）",
+    "content": "路线：地铁→市博物馆→美术馆咖啡→书店→室内市集。雨天别硬跑景点，选“室内+动线短+有座位”的组合，体验反而更好。",
+    "category": "City",
+    "tags": ["城市", "路线", "雨天"],
+    "source_url": "https://example.com/xhs/city-rain-route",
+    "created_at": "2026-04-16T15:45:00Z"
+  },
+  {
+    "id": "doc-007",
+    "title": "收藏：一条“AI 工具链”提升写作效率",
+    "content": "流程：先用模型做大纲→让它按段落给要点→自己补真实案例→最后让模型做语言润色但不改事实。关键是：把“事实”和“表达”分开处理，避免它编造。",
+    "category": "Technology",
+    "tags": ["AI", "写作", "效率"],
+    "source_url": "https://example.com/douyin/ai-writing-workflow",
+    "created_at": "2026-04-19T09:05:00Z"
+  },
+  {
+    "id": "doc-008",
+    "title": "科技短内容：为什么换模型要重建向量库？",
+    "content": "向量库里存的是 embedding 向量。不同模型维度可能不同（比如 384/768/1536），就算维度相同，向量空间也不一样。换模型不重建，检索会乱或直接报维度不匹配。",
+    "category": "Technology",
+    "tags": ["Embedding", "向量库", "RAG"],
+    "source_url": "https://example.com/xhs/embedding-dimension-note",
+    "created_at": "2026-04-19T09:30:00Z"
+  },
+  {
+    "id": "doc-009",
+    "title": "商业思考：一个产品从 0 到 1 先做什么？",
+    "content": "先把“最小闭环”跑通：用户进来→完成一次关键动作→获得明确价值→愿意再来。别一开始就堆功能，先找到一个让用户愿意停留的核心场景。",
+    "category": "Business",
+    "tags": ["产品", "增长", "闭环"],
+    "source_url": "https://example.com/douyin/product-0to1",
+    "created_at": "2026-04-15T20:10:00Z"
+  },
+  {
+    "id": "doc-010",
+    "title": "行业观察：新能源汽车供应链里谁最关键？",
+    "content": "看上去是整车最亮眼，但供应链里电池、功率器件、热管理、充电网络决定体验和成本。理解“成本结构”和“产能瓶颈”比看热搜更能判断趋势。",
+    "category": "Industry",
+    "tags": ["新能源", "供应链", "趋势"],
+    "source_url": "https://example.com/xhs/ev-supply-chain",
+    "created_at": "2026-04-14T10:00:00Z"
+  },
+  {
+    "id": "doc-011",
+    "title": "游戏推荐：适合下班放松的 3 种类型",
+    "content": "想放松别选高压竞技：1) 轻度肉鸽（每局短）2) 种田/建造（节奏慢）3) 叙事互动（投入感强）。挑“低失败惩罚+单局可控”的更容易坚持玩。",
+    "category": "Game",
+    "tags": ["游戏", "放松", "推荐"],
+    "source_url": "https://example.com/douyin/game-afterwork",
+    "created_at": "2026-04-13T19:30:00Z"
+  },
+  {
+    "id": "doc-012",
+    "title": "体育：跑步不伤膝的一个关键点",
+    "content": "别只看配速，先把步频提到稳定区间（比如 160-180 只是参考），减少“跨步着地”。落地在身体重心下方，脚踝更放松，膝盖压力会小很多。",
+    "category": "Sports",
+    "tags": ["跑步", "步频", "训练"],
+    "source_url": "https://example.com/xhs/running-cadence",
+    "created_at": "2026-04-12T07:50:00Z"
   }
 ]

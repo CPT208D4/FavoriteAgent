@@ -68,7 +68,7 @@ Copy-Item .env.example .env
 python scripts/init_data.py
 ```
 
-### 4. 启动服务
+### 4. 启动后端服务
 
 ```bash
 python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
@@ -80,7 +80,22 @@ python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
 python -m uvicorn app.main:app --reload --reload-dir app --reload-dir scripts --reload-dir data --host 127.0.0.1 --port 8000
 ```
 
-### 5. 打开接口文档
+### 5. 启动前端静态页面（联调时推荐）
+
+在**新终端**进入前端目录后运行：
+
+```bash
+cd FavoriteAgent-frontend-pockety
+python -m http.server 5500
+```
+
+然后访问例如：
+
+- <http://127.0.0.1:5500/home.html>
+- <http://127.0.0.1:5500/favorites-travel.html>
+- <http://127.0.0.1:5500/ai-assistant.html>
+
+### 6. 打开接口文档
 
 - **Swagger UI**：<http://127.0.0.1:8000/docs>（在线试接口）
 - **ReDoc**：<http://127.0.0.1:8000/redoc>

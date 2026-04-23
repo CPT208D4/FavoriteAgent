@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pockety - All your likes all in one pocket</title>
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <script>
+    tailwind.config = {
+      mode: 'jit',
+      important: true,
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Aclonica&family=Afacad+Flux&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro', 'Segoe UI', Roboto, sans-serif;
+    }
+
+    .start-track {
+      transition: transform 220ms ease, opacity 220ms ease;
+      touch-action: pan-y;
+      user-select: none;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 flex justify-center items-center min-h-screen">
+  <div class="w-[402px] h-[874px] overflow-hidden bg-[rgba(255,255,255,1)] relative shadow-2xl">
+    <!-- Background gradient image -->
+    <img src="./public/assets/welcome/image_1.png" class="w-[518px] h-[517px] absolute top-[23px] -left-[126px]" />
+    
+    <!-- Decorative element -->
+    <img src="./public/assets/welcome/image_2.png" class="w-[242px] h-[242px] absolute top-[129px] left-[38px]" />
+    
+    <!-- App Title -->
+    <div class="absolute top-[164px] left-[75px] font-['Aclonica'] text-[58px] whitespace-nowrap text-[rgba(42,101,34,1)] leading-[normal] tracking-[normal] font-normal">
+      <span class="tracking-[0%]">Pockety</span>
+    </div>
+    
+    <!-- Pocket icon -->
+    <img src="./public/assets/welcome/image_3.png" class="w-[168px] h-[168px] absolute top-[250px] left-[117px]" />
+    
+    <!-- Status Bar -->
+    <div class="w-[506px] h-[62px] flex flex-row flex-nowrap justify-center items-center pt-[21px] box-border pb-[19px] absolute top-[6px] -left-[60px]">
+      <div class="w-[152px] h-[22px] flex flex-row flex-nowrap justify-center items-center pt-[1.50px] box-border mr-[154px]">
+        <div class="text-[17px] whitespace-nowrap text-center text-[rgba(0,0,0,1)] leading-[22px] tracking-[normal] font-[590]">
+          <span class="tracking-[0px]">9:41</span>
+        </div>
+      </div>
+      <div class="w-[152px] h-[22px] flex flex-row flex-nowrap justify-center items-center pt-px box-border pr-px">
+        <img src="./public/assets/welcome/image_4.png" class="w-[19.20px] h-[12.23px] mr-[7px]" />
+        <img src="./public/assets/welcome/image_5.png" class="w-[17.14px] h-[12.33px] mr-[7px]" />
+        <img src="./public/assets/welcome/image_6.png" class="w-[27.33px] h-[13px]" />
+      </div>
+    </div>
+    
+    <!-- Decorative element -->
+    <img src="./public/assets/welcome/image_7.png" class="w-[171px] h-[173px] absolute top-[509px] left-[263px]" />
+    
+    <!-- Bottom gradient background -->
+    <div class="w-[360px] rounded-[31px] bg-[linear-gradient(90deg,_rgba(130,166,125,0.56)_0%,rgba(206,230,204,0.11)_100%)] min-h-[74px] absolute top-[774px] left-[22px]"></div>
+    
+    <!-- Tagline images -->
+    <img src="./public/assets/welcome/image_8.png" class="w-[471px] h-[76px] absolute top-[570px] -left-[34px]" />
+    <img src="./public/assets/welcome/image_9.png" class="w-[396px] h-[47px] absolute top-[648px] left-[6px]" />
+    
+    <!-- Subtitle -->
+    <div class="absolute top-[699px] left-[12px] text-[17px] whitespace-nowrap text-center text-[rgba(0,0,0,1)] leading-[22px] tracking-[normal] font-[590]">
+      <span class="tracking-[0px]">AI&nbsp;organizes&nbsp;your&nbsp;inspirations,&nbsp;week&nbsp;by&nbsp;week.</span>
+    </div>
+    
+    <!-- Get Started Button -->
+    <button id="startTrigger" type="button" class="start-track w-[357px] h-[82px] overflow-hidden absolute top-[772px] left-[25px] flex justify-start items-start text-left" aria-label="Get started">
+      <div class="mt-[16px] ml-[13px] relative w-[110px] h-[45px]">
+        <div class="w-[110px] rounded-[18px] border-[rgba(42,101,34,1)] border-solid border-[1.5px] bg-[rgba(217,217,217,1)] min-h-[45px] absolute top-0 left-0"></div>
+        <div class="absolute top-[7px] left-[12px] font-['Afacad_Flux'] text-[24px] whitespace-nowrap text-[rgba(0,0,0,1)] leading-[normal] tracking-[normal] font-normal">
+          <span class="tracking-[0%]">Get&nbsp;Start</span>
+        </div>
+      </div>
+      
+      <!-- Arrow icons -->
+      <div class="w-[27px] h-[27px] overflow-hidden mt-[25px] ml-[138px] flex justify-end items-center">
+        <img src="./public/assets/welcome/image_10.png" class="w-[15.74px] h-[27px] mr-[5.63px]" />
+      </div>
+      <div class="w-[27px] h-[27px] overflow-hidden mt-[25px] flex justify-end items-center">
+        <img src="./public/assets/welcome/image_11.png" class="w-[15.74px] h-[27px] mr-[5.63px]" />
+      </div>
+      <div class="w-[27px] h-[27px] overflow-hidden mt-[25px] flex justify-end items-center">
+        <img src="./public/assets/welcome/image_12.png" class="w-[15.74px] h-[27px] mr-[5.63px]" />
+      </div>
+    </button>
+  </div>
+
+  <script>
+    (function () {
+      const startTrigger = document.getElementById('startTrigger');
+      const state = {
+        startX: 0,
+        currentX: 0,
+        dragging: false
+      };
+
+      function goHome() {
+        startTrigger.style.transform = 'translateX(-26px)';
+        startTrigger.style.opacity = '0.78';
+        setTimeout(function () {
+          window.location.href = './home.html';
+        }, 160);
+      }
+
+      startTrigger.addEventListener('click', function () {
+        if (state.dragging) {
+          return;
+        }
+        goHome();
+      });
+
+      startTrigger.addEventListener('pointerdown', function (event) {
+        state.dragging = true;
+        state.startX = event.clientX;
+        state.currentX = event.clientX;
+      });
+
+      startTrigger.addEventListener('pointermove', function (event) {
+        if (!state.dragging) {
+          return;
+        }
+
+        state.currentX = event.clientX;
+        const delta = Math.min(0, state.currentX - state.startX);
+        startTrigger.style.transform = 'translateX(' + delta + 'px)';
+        startTrigger.style.opacity = String(1 + delta / 220);
+      });
+
+      function endSwipe() {
+        if (!state.dragging) {
+          return;
+        }
+
+        const delta = state.currentX - state.startX;
+        state.dragging = false;
+
+        if (delta < -70) {
+          goHome();
+          return;
+        }
+
+        startTrigger.style.transform = 'translateX(0)';
+        startTrigger.style.opacity = '1';
+      }
+
+      startTrigger.addEventListener('pointerup', endSwipe);
+      startTrigger.addEventListener('pointercancel', endSwipe);
+    })();
+  </script>
+</body>
+</html>

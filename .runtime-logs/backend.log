@@ -1,0 +1,11 @@
+﻿python : INFO:     Started server process [3244]
+所在位置 行:1 字符: 1
++ python -m uvicorn app.main:app --host 127.0.0.1 --port 8000 2>&1 | Ou ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (INFO:     Started server process [3244]:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:53347 - "GET /health HTTP/1.1" 200 OK

@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pockety - Home</title>
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <script>
+    tailwind.config = {
+      mode: 'jit',
+      important: true,
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Aclonica&family=Abhaya+Libre:wght@400;700;800&family=Afacad+Flux&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro', 'Segoe UI', Roboto, sans-serif;
+    }
+
+    .prompt-marquee {
+      overflow: hidden;
+      width: 402px;
+      height: 56px;
+      position: absolute;
+      left: 0;
+      pointer-events: none;
+      -webkit-mask-image: linear-gradient(to right, transparent 0, rgba(0, 0, 0, 1) 32px, rgba(0, 0, 0, 1) calc(100% - 32px), transparent 100%);
+      mask-image: linear-gradient(to right, transparent 0, rgba(0, 0, 0, 1) 32px, rgba(0, 0, 0, 1) calc(100% - 32px), transparent 100%);
+    }
+
+    .prompt-track {
+      position: absolute;
+      top: 4px;
+      left: 0;
+      display: flex;
+      white-space: nowrap;
+      animation-name: move-right;
+      animation-timing-function: linear;
+      animation-iteration-count: infinite;
+      pointer-events: auto;
+      --loop-distance: 900px;
+      --row-gap: 14px;
+      will-change: transform;
+    }
+
+    .prompt-track.row-one {
+      animation-duration: 34s;
+      --row-gap: 13px;
+    }
+
+    .prompt-track.row-two {
+      top: 9px;
+      animation-duration: 38s;
+      animation-delay: -12s;
+      --row-gap: 17px;
+    }
+
+    .prompt-seq {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--row-gap);
+      padding-right: var(--row-gap);
+    }
+
+    .prompt-chip {
+      height: 42px;
+      border-radius: 89px;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      background: rgba(233, 243, 237, 0.2);
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 10px;
+      padding: 0 12px 0 14px;
+      flex-shrink: 0;
+      transition: transform 180ms ease;
+    }
+
+    .prompt-chip:hover {
+      transform: translateY(-1px) scale(1.01);
+    }
+
+    .prompt-chip-label {
+      flex: 1;
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-align: left;
+    }
+
+    .prompt-chip-arrow {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: rgba(47, 96, 70, 1);
+      font-size: 18px;
+      line-height: 1;
+      transform: translateY(-1px);
+    }
+
+    .nav-button {
+      transition: transform 160ms ease, opacity 160ms ease;
+    }
+
+    .nav-button:hover {
+      transform: translateY(-1px) scale(1.04);
+    }
+
+    .nav-button:active,
+    .nav-button.nav-press {
+      transform: scale(0.92);
+      opacity: 0.9;
+    }
+
+    .ask-entry {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 321px;
+      min-height: 68px;
+      padding: 0 10px 0 22px;
+      border-radius: 34px;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow: 0 12px 30px rgba(56, 110, 91, 0.12);
+      transition: transform 180ms ease, box-shadow 180ms ease;
+    }
+
+    .ask-entry:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 34px rgba(56, 110, 91, 0.17);
+    }
+
+    .ask-entry:focus-visible {
+      outline: 2px solid rgba(76, 146, 118, 0.45);
+      outline-offset: 3px;
+    }
+
+    .ask-entry-copy {
+      max-width: 228px;
+      font-family: 'Abhaya Libre', serif;
+      font-size: 24px;
+      line-height: 0.95;
+      color: rgba(0, 0, 0, 0.9);
+    }
+
+    .ask-entry-send {
+      width: 48px;
+      height: 48px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(203, 234, 186, 1);
+      color: rgba(47, 96, 70, 1);
+      font-size: 30px;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    @keyframes move-right {
+      from {
+        transform: translate3d(calc(-1 * var(--loop-distance)), 0, 0);
+      }
+
+      to {
+        transform: translate3d(0, 0, 0);
+      }
+    }
+  </style>
+</head>
+<body class="bg-gray-100 flex justify-center items-center min-h-screen">
+  <div class="w-[402px] h-[874px] overflow-hidden bg-[rgba(255,255,255,1)] relative shadow-2xl">
+    <!-- Background gradient image -->
+    <img src="./public/assets/home/image_1.png" class="w-[838px] h-[1181.50px] absolute top-[641.50px] -left-[126px]" />
+    
+    <!-- Decorative element -->
+    <img src="./public/assets/home/image_2.png" class="w-[242px] h-[242px] absolute top-[129px] left-[38px]" />
+    
+    <!-- Auto scrolling prompt rows -->
+    <div class="prompt-marquee top-[381px]">
+      <div id="promptTrackOne" class="prompt-track row-one"></div>
+    </div>
+
+    <div class="prompt-marquee top-[451px]">
+      <div id="promptTrackTwo" class="prompt-track row-two"></div>
+    </div>
+    
+    <!-- Status Bar -->
+    <div class="w-[506px] h-[62px] flex flex-row flex-nowrap justify-center items-center pt-[21px] box-border pb-[19px] absolute top-[6px] -left-[60px]">
+      <div class="w-[152px] h-[22px] flex flex-row flex-nowrap justify-center items-center pt-[1.50px] box-border mr-[154px]">
+        <div class="text-[17px] whitespace-nowrap text-center text-[rgba(0,0,0,1)] leading-[22px] tracking-[normal] font-[590]">
+          <span class="tracking-[0px]">9:41</span>
+        </div>
+      </div>
+      <div class="w-[152px] h-[22px] flex flex-row flex-nowrap justify-center items-center pt-px box-border pr-px">
+        <img src="./public/assets/home/image_6.png" class="w-[19.20px] h-[12.23px] mr-[7px]" />
+        <img src="./public/assets/home/image_7.png" class="w-[17.14px] h-[12.33px] mr-[7px]" />
+        <img src="./public/assets/home/image_8.png" class="w-[27.33px] h-[13px]" />
+      </div>
+    </div>
+    
+    <!-- Bottom Navigation Bar -->
+    <div class="absolute top-[768px] left-0 w-[402px] h-[89px]">
+      <div class="w-[402px] rounded-[52px] [box-shadow:inset_0px_-4px_4px_0px_rgba(0,0,0,0.25),_inset_0px_0px_4px_0px_rgba(0,0,0,0.25)] bg-[rgba(255,255,255,1)] min-h-[89px] absolute top-0 left-0"></div>
+      <button id="navHome" type="button" class="nav-button absolute top-[9px] left-[26px] w-[77px] h-[77px]" aria-label="Go to Home">
+        <img src="./public/assets/home/image_9.png" class="w-[77px] h-[77px]" />
+      </button>
+      <div class="w-[302px] h-[41.67px] flex flex-row flex-nowrap justify-start items-center absolute top-[22px] left-[47px]">
+        <button id="navFavorite" type="button" class="nav-button mr-[55px]" aria-label="Go to My Favorite">
+          <img src="./public/assets/home/image_10.png" class="w-[33px] h-[38px]" />
+        </button>
+        <button id="navHistory" type="button" class="nav-button mr-[55px]" aria-label="Go to History Report">
+          <img src="./public/assets/home/image_11.png" class="w-[41.67px] h-[39.63px]" />
+        </button>
+        <button id="navWeekly" type="button" class="nav-button mr-[55px]" aria-label="Go to Weekly Report">
+          <img src="./public/assets/home/image_12.png" class="w-[37.50px] h-[41.67px]" />
+        </button>
+        <button id="navProfile" type="button" class="nav-button" aria-label="Go to Profile">
+          <img src="./public/assets/home/image_13.png" class="w-[33.33px] h-[37.50px]" />
+        </button>
+      </div>
+    </div>
+    
+    <!-- Decorative element -->
+    <img src="./public/assets/home/image_14.png" class="w-[171px] h-[173px] absolute top-[509px] left-[263px]" />
+    
+    <!-- AI Chat button -->
+    <button id="aiCircleButton" type="button" class="absolute top-[653px] left-[297px] w-[123px] h-[123px]">
+      <img src="./public/assets/home/image_15.png" class="w-[123px] h-[123px] overflow-hidden" />
+    </button>
+
+    <!-- Hi! bubble -->
+    <div class="absolute top-[635px] left-[272px] w-[43px] h-[35px]">
+      <img src="./public/assets/home/image_16.png" class="w-[43px] h-[35px] absolute top-0 left-0" />
+      <div class="absolute top-px left-[11px] opacity-[0.47] text-[20px] whitespace-nowrap text-[rgba(0,0,0,1)] leading-[normal] tracking-[normal] font-normal">
+        <span class="tracking-[0%]">Hi!</span>
+      </div>
+    </div>
+    
+    <!-- Ask Me Anything entry -->
+    <button id="askAnythingTrigger" type="button" class="ask-entry absolute top-[557px] left-[34px] text-left cursor-pointer" aria-label="Ask me anything about your favorite">
+      <div class="ask-entry-copy">
+        <div><span class="tracking-[0%]">Ask Me Anything</span></div>
+        <div><span class="tracking-[0%]">about your Favorite</span></div>
+      </div>
+      <span class="ask-entry-send" aria-hidden="true">↑</span>
+    </button>
+    
+    <!-- Hand pointer -->
+    <div class="absolute top-[645px] left-[9px] w-[52.32px] h-[58.52px]">
+      <img src="./public/assets/home/image_17.png" class="w-[45.64px] h-[49.90px] absolute top-[7.34px] left-0" />
+      <img src="./public/assets/home/image_18.png" class="w-[27.42px] h-[25.18px] absolute top-[3.98px] left-[24.91px]" />
+    </div>
+    
+    <!-- Pockety logo -->
+    <img src="./public/assets/home/image_19.png" class="w-[168px] h-[168px] absolute top-[104px] left-[116px]" />
+    
+    <!-- Pockety title -->
+    <div class="absolute top-[262px] left-[76px] font-['Aclonica'] text-[58px] whitespace-nowrap text-[rgba(42,101,34,1)] leading-[normal] tracking-[normal] font-normal">
+      <span class="tracking-[0%]">Pockety</span>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      function goToAi(question) {
+        const base = './ai-assistant.html';
+        window.location.href = question ? base + '?q=' + encodeURIComponent(question) : base;
+      }
+
+      const rowOneData = [
+        { label: "Generate today's digest", question: "Generate today's digest.", width: 226 },
+        { label: 'Historical Collection Records', question: 'Show my historical collection records.', width: 286 },
+        { label: 'This day last year', question: 'What happened on this day last year?', width: 204 },
+        { label: 'Weekly review plan', question: 'Recommend what I should review this week.', width: 226 },
+        { label: 'Resume related favorites', question: 'Which favorites can help my resume most?', width: 274 },
+        { label: 'Travel favorites for blog', question: 'Find travel favorites I can reuse for a blog post.', width: 280 },
+      ];
+
+      const rowTwoData = [
+        { label: 'JAVA learning tips', question: 'Give me some Java learning tips.', width: 208 },
+        { label: 'Summarize recent favorites', question: 'Summarize my recent favorites into three themes.', width: 298 },
+        { label: 'Top 3 notes to revisit', question: 'Pick my top 3 favorites to revisit today.', width: 250 },
+        { label: 'Project inspiration', question: 'Find favorites that can inspire my next project.', width: 237 },
+        { label: 'Improve my profile bio', question: 'Use my favorites to improve my personal profile bio.', width: 262 },
+        { label: 'Career highlight ideas', question: 'Extract career highlights from my collected posts.', width: 252 },
+      ];
+
+      function createChip(item, index, rowKey) {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'prompt-item prompt-chip';
+        button.style.width = item.width + 'px';
+        button.setAttribute('data-question', item.question);
+
+        const offsets = rowKey === 'one' ? [-2, 1, 0, 2, -1, 1] : [1, -1, 2, 0, -2, 1];
+        button.style.transform = 'translateY(' + offsets[index % offsets.length] + 'px)';
+
+        const text = document.createElement('span');
+        text.className = "prompt-chip-label font-['Abhaya_Libre_ExtraBold'] text-[18px] text-[rgba(82,81,81,1)]";
+        text.textContent = item.label;
+
+        const icon = document.createElement('span');
+        icon.className = 'prompt-chip-arrow';
+        icon.setAttribute('aria-hidden', 'true');
+        icon.textContent = '↗';
+
+        button.appendChild(text);
+        button.appendChild(icon);
+        return button;
+      }
+
+      function renderMarqueeRow(trackId, rowData, rowKey) {
+        const track = document.getElementById(trackId);
+        if (!track) {
+          return;
+        }
+
+        const sequenceA = document.createElement('div');
+        const sequenceB = document.createElement('div');
+        sequenceA.className = 'prompt-seq';
+        sequenceB.className = 'prompt-seq';
+
+        rowData.forEach(function (item, index) {
+          sequenceA.appendChild(createChip(item, index, rowKey));
+          sequenceB.appendChild(createChip(item, index + rowData.length, rowKey));
+        });
+
+        track.innerHTML = '';
+        track.appendChild(sequenceA);
+        track.appendChild(sequenceB);
+
+        requestAnimationFrame(function () {
+          track.style.setProperty('--loop-distance', sequenceA.offsetWidth + 'px');
+        });
+      }
+
+      const askAnythingTrigger = document.getElementById('askAnythingTrigger');
+      const aiCircleButton = document.getElementById('aiCircleButton');
+      const navConfig = [
+        { id: 'navHome', path: './home.html' },
+        { id: 'navFavorite', path: '' },
+        { id: 'navHistory', path: './favorites-travel.html' },
+        { id: 'navWeekly', path: './weekly-report.html' },
+        { id: 'navProfile', path: './profile.html' },
+      ];
+
+      function bindNavButtons() {
+        navConfig.forEach(function (item) {
+          const button = document.getElementById(item.id);
+          if (!button) {
+            return;
+          }
+
+          button.addEventListener('click', function () {
+            button.classList.add('nav-press');
+            if (!item.path) {
+              setTimeout(function () {
+                button.classList.remove('nav-press');
+              }, 140);
+              return;
+            }
+            setTimeout(function () {
+              window.location.href = item.path;
+            }, 90);
+          });
+        });
+      }
+
+      renderMarqueeRow('promptTrackOne', rowOneData, 'one');
+      renderMarqueeRow('promptTrackTwo', rowTwoData, 'two');
+      bindNavButtons();
+
+      if (askAnythingTrigger) {
+        askAnythingTrigger.addEventListener('click', function () {
+          goToAi();
+        });
+
+        askAnythingTrigger.addEventListener('keydown', function (event) {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            goToAi();
+          }
+        });
+      }
+
+      if (aiCircleButton) {
+        aiCircleButton.addEventListener('click', function () {
+          goToAi();
+        });
+      }
+
+      document.addEventListener('click', function (event) {
+        const button = event.target.closest('.prompt-item');
+        if (!button) {
+          return;
+        }
+
+        const question = button.getAttribute('data-question') || '';
+        goToAi(question);
+      });
+    })();
+  </script>
+</body>
+</html>

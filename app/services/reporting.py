@@ -53,10 +53,10 @@ def _compose_context(rows: list[DocumentORM]) -> str:
         tags = ", ".join(r.tags or [])
         body = _truncate(r.content or "", per)
         blocks.append(
-            f"[Item {i}/{n}] 标题: {r.title}\n"
-            f"  分类: {r.category}\n"
-            f"  标签: {tags}\n"
-            f"  内容: {body}"
+            f"[Item {i}/{n}] Title: {r.title}\n"
+            f"  Category: {r.category}\n"
+            f"  Tags: {tags}\n"
+            f"  Content: {body}"
         )
     joined = "\n\n---\n\n".join(blocks)
     if len(joined) > cap:
@@ -96,23 +96,24 @@ def _fallback_report(rows: list[DocumentORM], err: BaseException) -> str:
 def generate_period_report(db: Session, days: int, max_docs: int) -> tuple[int, str, bool]:
     rows = _collect_docs(db, days=days, max_docs=max_docs)
     if not rows:
-        return 0, "本周期知识库暂无新增内容。", False
+        return 0, "No new knowledge-base documents were added in this period.", False
     context = _compose_context(rows)
     n = len(rows)
     system = (
-        "你是收藏夹 / 知识库周报助手。请仅基于给定材料输出一份自然、好读的英文周报。\n"
-        "写作要求：\n"
-        f"1) 材料中共有 {n} 条独立条目（[Item i/n]）。你必须让每一条都至少出现一次："
-        "可先用一小段总述，再按条目简要概括（每条：标题 + 一句要点），不要只展开其中一条而忽略其余。\n"
-        "2) 再提炼跨条目的主题或共性（如有）。\n"
-        "3) 若材料里有数量或频次信息，可自然引用；没有就不要硬编数字。\n"
-        "4) 结尾给出 2-3 条下周可执行建议。\n"
-        "5) 严禁编造材料中不存在的事实。"
+        "You are a weekly report assistant for a favorites/knowledge-base app. "
+        "Write the report in English only and use only the provided material.\n"
+        "Requirements:\n"
+        f"1) There are {n} distinct items in the material ([Item i/n]). Mention every item at least once. "
+        "You may start with a short overview, then summarize each item briefly (title + one key point).\n"
+        "2) Then extract cross-item themes or patterns if any.\n"
+        "3) If numeric counts/frequencies exist in the material, you may cite them naturally; otherwise do not invent numbers.\n"
+        "4) End with 2-3 actionable suggestions for next week.\n"
+        "5) Do not fabricate facts not present in the material."
     )
     prompt = (
-        f"统计周期：最近 {days} 天（按各条目的 created_at 落在该窗口内）。\n"
-        f"本期纳入周报的条目数：{n}。\n\n"
-        f"材料：\n{context}"
+        f"Time window: last {days} days (items whose created_at is within this window).\n"
+        f"Number of items included in this report: {n}.\n\n"
+        f"Material:\n{context}"
     )
     try:
         return len(rows), llm.chat_completion(system, prompt), False

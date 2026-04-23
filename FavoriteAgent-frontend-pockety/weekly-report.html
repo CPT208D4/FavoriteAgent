@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pockety - Weekly Report</title>
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <script>
+    tailwind.config = {
+      mode: 'jit',
+      important: true,
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Jacques+Francois&family=Indie+Flower&family=Adamina&family=Actor&family=Abhaya+Libre:wght@400;700;800&family=Afacad&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro', 'Segoe UI', Roboto, sans-serif;
+    }
+
+    .nav-button,
+    .link-button {
+      transition: transform 160ms ease, opacity 160ms ease;
+    }
+
+    .nav-button:hover,
+    .link-button:hover {
+      transform: translateY(-1px) scale(1.03);
+    }
+
+    .nav-button:active,
+    .link-button:active,
+    .nav-button.nav-press,
+    .link-button.nav-press {
+      transform: scale(0.94);
+      opacity: 0.9;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 flex justify-center items-center min-h-screen">
+  <div class="w-[402px] h-[874px] overflow-hidden bg-[rgba(255,255,255,1)] relative shadow-2xl">
+    <!-- Background gradient images -->
+    <img src="./public/assets/weekly-report/image_1.png" class="w-[242px] h-[242px] absolute top-[567px] -left-[74px]" />
+    <img src="./public/assets/weekly-report/image_2.png" class="w-[273px] h-[273px] absolute top-[458px] left-[231px]" />
+    <img src="./public/assets/weekly-report/image_3.png" class="w-[500px] h-[500px] absolute top-[78px] -left-[259px]" />
+    
+    <!-- Top section background -->
+    <div class="w-[384px] opacity-80 rounded-[48px] bg-[rgba(193,235,230,0.29)] min-h-[405px] absolute top-[124px] left-[9px]"></div>
+    
+    <!-- Bottom section background -->
+    <div class="w-[400px] opacity-80 rounded-[48px] bg-[rgba(193,235,230,0.29)] min-h-[132px] absolute top-[599px] left-[4px]"></div>
+    
+    <!-- Status Bar -->
+    <div class="w-[484px] h-[62px] flex flex-row flex-nowrap justify-center items-center pt-[21px] box-border pb-[19px] absolute top-[11px] -left-[46px]">
+      <div class="w-[141px] h-[22px] flex flex-row flex-nowrap justify-center items-center pt-[1.50px] box-border mr-[154px]">
+        <div class="text-[17px] whitespace-nowrap text-center text-[rgba(0,0,0,1)] leading-[22px] tracking-[normal] font-[590]">
+          <span class="tracking-[0px]">9:41</span>
+        </div>
+      </div>
+      <div class="w-[141px] h-[22px] flex flex-row flex-nowrap justify-center items-center pt-px box-border pr-px">
+        <img src="./public/assets/weekly-report/image_4.png" class="w-[19.20px] h-[12.23px] mr-[7px]" />
+        <img src="./public/assets/weekly-report/image_5.png" class="w-[17.14px] h-[12.33px] mr-[7px]" />
+        <img src="./public/assets/weekly-report/image_6.png" class="w-[27.33px] h-[13px]" />
+      </div>
+    </div>
+    
+    <!-- Title -->
+    <div class="absolute top-[57px] left-[66px] w-[322px] h-[81px] font-['Jacques_Francois'] text-[40px] whitespace-nowrap text-[rgba(88,55,55,1)] leading-[normal] tracking-[normal] font-normal" style="text-shadow: 0px 4px 4px rgba(0,0,0,0.25);">
+      <span class="tracking-[0%]">Weekly Report</span>
+    </div>
+    
+    <!-- Overview section -->
+    <div id="overviewTitle" class="absolute top-[143px] left-[35px] w-[212px] h-[35px] font-['Indie_Flower'] text-[20px] whitespace-nowrap text-[rgba(0,0,0,1)] leading-[normal] tracking-[normal] font-normal">
+      <span class="tracking-[0%]">Overview of this week</span>
+    </div>
+    
+    <!-- Tag cloud background -->
+    <img src="./public/assets/weekly-report/image_7.png" class="w-[278px] h-[278px] absolute top-[83px] left-[175px]" />
+    
+    <!-- Interest tags with cloud backgrounds -->
+    <img src="./public/assets/weekly-report/image_10.png" class="w-[184px] h-[184px] absolute top-[157px] -left-[9px]" />
+    <div id="tagCloud1" class="absolute top-[238px] left-[57px] w-[57px] h-[21px] font-['Abhaya_Libre_ExtraBold'] text-[15px] whitespace-nowrap text-[rgba(0,0,0,1)] leading-[normal] tracking-[normal] font-extrabold">
+      <span class="tracking-[0%]">Science</span>
+    </div>
+    
+    <img src="./public/assets/weekly-report/image_11.png" class="w-[194px] h-[194px] absolute top-[329px] -left-[21px]" />
+    <div id="tagCloud2" class="absolute top-[416px] left-[44px] w-[75px] h-[20px] font-['Abhaya_Libre_ExtraBold'] text-[14px] whitespace-nowrap text-[rgba(0,0,0,1)] leading-[normal] tracking-[normal] font-extrabold">
+      <span class="tracking-[0%]">Engineering</span>
+    </div>
+    
+    <img src="./public/assets/weekly-report/image_12.png" class="w-[212px] h-[212px] absolute top-[124px] left-[192px]" />
+    <div id="tagCloud3" class="absolute top-[220px] left-[266px] w-[79px] h-[17px] font-['Abhaya_Libre_ExtraBold'] text-[14px] whitespace-nowrap text-[rgba(0,0,0,1)] leading-[normal] tracking-[normal] font-extrabold">
+      <span class="tracking-[0%]">Technology</span>
+    </div>
+    
+    <img src="./public/assets/weekly-report/image_13.png" class="w-[143px] h-[143px] absolute top-[314px] left-[203px]" />
+    <div id="tagCloud4" class="absolute top-[376px] left-[254px] w-[52px] h-[24px] font-['Abhaya_Libre_ExtraBold'] text-[12px] whitespace-nowrap text-[rgba(0,0,0,1)] leading-[normal] tracking-[normal] font-extrabold">
+      <span class="tracking-[0%]">Industry</span>
+    </div>
+    
+    <img src="./public/assets/weekly-report/image_14.png" class="w-[140px] h-[140px] absolute top-[403px] left-[133px]" />
+    <div id="tagCloud5" class="absolute top-[462px] left-[185px] w-[59px] h-[24px] font-['Abhaya_Libre_ExtraBold'] text-[14px] whitespace-nowrap text-[rgba(0,0,0,1)] leading-[normal] tracking-[normal] font-extrabold">
+      <span class="tracking-[0%]">Sports</span>
+    </div>
+    
+    <img src="./public/assets/weekly-report/image_15.png" class="w-[124px] h-[124px] absolute top-[392px] left-[256px]" />
+    <div id="tagCloud6" class="absolute top-[443px] left-[306px] w-[40px] h-[24px] font-['Abhaya_Libre_ExtraBold'] text-[14px] whitespace-nowrap text-[rgba(0,0,0,1)] leading-[normal] tracking-[normal] font-extrabold">
+      <span class="tracking-[0%]">City</span>
+    </div>
+    
+    <img src="./public/assets/weekly-report/image_16.png" class="w-[123px] h-[123px] absolute top-[283px] left-[44px]" />
+    <div id="tagCloud7" class="absolute top-[334px] left-[88px] w-[41px] h-[17px] font-['Abhaya_Libre_ExtraBold'] text-[14px] whitespace-nowrap text-[rgba(0,0,0,1)] leading-[normal] tracking-[normal] font-extrabold">
+      <span class="tracking-[0%]">Game</span>
+    </div>
+    
+    <img src="./public/assets/weekly-report/image_17.png" class="w-[172px] h-[172px] absolute top-[230px] left-[129px]" />
+    <div id="tagCloud8" class="absolute top-[306px] left-[190px] w-[52px] h-[24px] font-['Abhaya_Libre_ExtraBold'] text-[14px] whitespace-nowrap text-[rgba(0,0,0,1)] leading-[normal] tracking-[normal] font-extrabold">
+      <span class="tracking-[0%]">Industry</span>
+    </div>
+    
+    <!-- More details link -->
+    <button id="moreDetailsButton" type="button" class="link-button absolute top-[502px] left-[268px] flex justify-start items-start w-[104.36px] h-[21px]" aria-label="Open more details">
+      <div class="flex justify-center items-center w-[86px] h-[21px]">
+        <div class="w-[86px] h-[21px] font-['Afacad'] text-[16px] whitespace-nowrap text-[rgba(0,0,0,1)] leading-[normal] tracking-[normal] font-normal flex-shrink-0">
+          <span class="tracking-[0%]">More details</span>
+        </div>
+      </div>
+      <img src="./public/assets/weekly-report/image_8.png" class="w-[16.49px] h-[15.21px] mt-[4.25px] ml-[1.87px]" />
+    </button>
+
+    <!-- History Report section -->
+    <div class="absolute top-[554px] left-[33px] w-[130px] h-[35px] font-['Indie_Flower'] text-[20px] whitespace-nowrap text-[rgba(0,0,0,1)] leading-[normal] tracking-[normal] font-normal">
+      <span class="tracking-[0%]">History Report</span>
+    </div>
+    
+    <!-- More reports link -->
+    <button id="moreReportsButton" type="button" class="link-button absolute top-[738px] left-[273px] flex justify-start items-start w-[108.49px] h-[21px]" aria-label="Open more reports">
+      <div class="w-[86px] h-[21px] font-['Afacad'] text-[16px] whitespace-nowrap text-[rgba(0,0,0,1)] leading-[normal] tracking-[normal] font-normal flex-shrink-0">
+        <span class="tracking-[0%]">More reports</span>
+      </div>
+      <img src="./public/assets/weekly-report/image_8.png" class="w-[16.49px] h-[15.21px] mt-[4px] ml-[6px]" />
+    </button>
+
+    <!-- Week cards -->
+    <!-- 5th week -->
+    <div class="absolute top-[608px] left-[10.46px] w-[118.54px] h-[114px]">
+      <div class="w-[118.54px] opacity-[0.55] rounded-[25px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] bg-[linear-gradient(90deg,_rgba(205,237,222,1)_9.09%,rgba(104,144,126,1)_99.54%)] min-h-[114px] absolute top-0 left-0"></div>
+      <img src="./public/assets/weekly-report/image_9.png" class="w-[4px] h-[8px] absolute top-[93px] left-[101.54px]" />
+      <div class="absolute top-[18.41px] left-[10.96px] w-[82.88px] h-[28.83px] font-['Adamina'] text-[16px] whitespace-nowrap text-center text-[rgba(11,85,57,1)] leading-[22px] tracking-[normal] font-normal">
+        <span class="tracking-[0px]">5th week</span>
+      </div>
+      <div id="weekCard1Tag1" class="absolute top-[47px] left-[1.54px] w-[49px] h-[17px] font-['Actor'] text-[11px] whitespace-nowrap text-center text-[rgba(0,0,0,1)] leading-[22px] tracking-[normal] font-normal">
+        <span class="tracking-[0px]"># Travel</span>
+      </div>
+      <div id="weekCard1Tag2" class="absolute top-[73px] left-[1.54px] w-[49px] h-[26px] font-['Actor'] text-[11px] whitespace-nowrap text-center text-[rgba(0,0,0,1)] leading-[22px] tracking-[normal] font-normal">
+        <span class="tracking-[0px]"># Music</span>
+      </div>
+    </div>
+    
+    <!-- 4th week -->
+    <div class="w-[119px] opacity-[0.60] rounded-[25px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] bg-[linear-gradient(90deg,_rgba(251,241,215,1)_0%,rgba(115,174,81,1)_100%)] min-h-[114px] absolute top-[608px] left-[145px]"></div>
+    <img src="./public/assets/weekly-report/image_9.png" class="w-[4px] h-[8px] absolute top-[701px] left-[247px]" />
+    <div class="absolute top-[627px] left-[160px] w-[82.88px] h-[28.83px] font-['Adamina'] text-[16px] whitespace-nowrap text-center text-[rgba(11,85,57,1)] leading-[22px] tracking-[normal] font-normal">
+      <span class="tracking-[0px]">4th week</span>
+    </div>
+    <div id="weekCard2Tag1" class="absolute top-[655px] left-[144px] w-[49px] h-[17px] font-['Actor'] text-[12px] whitespace-nowrap text-center text-[rgba(0,0,0,1)] leading-[22px] tracking-[normal] font-normal">
+      <span class="tracking-[0px]"># Java</span>
+    </div>
+    <div id="weekCard2Tag2" class="absolute top-[681px] left-[150px] w-[49px] h-[26px] font-['Actor'] text-[11px] whitespace-nowrap text-center text-[rgba(0,0,0,1)] leading-[22px] tracking-[normal] font-normal">
+      <span class="tracking-[0px]"># Python</span>
+    </div>
+    
+    <!-- 3rd week -->
+    <div class="w-[119px] opacity-[0.65] rounded-[25px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] bg-[linear-gradient(90deg,_rgba(251,241,215,1)_0%,rgba(105,142,109,1)_100%)] min-h-[114px] absolute top-[608px] left-[279px]"></div>
+    <img src="./public/assets/weekly-report/image_9.png" class="w-[4px] h-[8px] absolute top-[701px] left-[381px]" />
+    <div class="absolute top-[627px] left-[295px] w-[82.88px] h-[28.83px] font-['Adamina'] text-[16px] whitespace-nowrap text-center text-[rgba(11,85,57,1)] leading-[22px] tracking-[normal] font-normal">
+      <span class="tracking-[0px]">3rd week</span>
+    </div>
+    <div id="weekCard3Tag1" class="absolute top-[656px] left-[280px] w-[70px] h-[17px] font-['Actor'] text-[12px] whitespace-nowrap text-center text-[rgba(0,0,0,1)] leading-[22px] tracking-[normal] font-normal">
+      <span class="tracking-[0px]"># Workout</span>
+    </div>
+    <div id="weekCard3Tag2" class="absolute top-[681px] left-[284px] w-[49px] h-[26px] font-['Actor'] text-[11px] whitespace-nowrap text-center text-[rgba(0,0,0,1)] leading-[22px] tracking-[normal] font-normal">
+      <span class="tracking-[0px]"># Sports</span>
+    </div>
+    
+    <!-- Bottom Navigation Bar -->
+    <div class="absolute top-[768px] left-0 w-[402px] h-[89px]">
+      <div class="w-[402px] rounded-[52px] shadow-[inset_0px_-4px_4px_0px_rgba(0,0,0,0.25),inset_0px_0px_4px_0px_rgba(0,0,0,0.25)] bg-[rgba(255,255,255,1)] min-h-[89px] absolute top-0 left-0"></div>
+      <button id="navWeekly" type="button" class="nav-button absolute top-[6px] left-[212px] w-[77px] h-[77px]" aria-label="Go to Weekly Report">
+        <img src="./public/assets/weekly-report/image_18.png" class="w-[77px] h-[77px]" />
+      </button>
+      <div class="w-[302px] h-[41.67px] flex flex-row flex-nowrap justify-start items-center absolute top-[22px] left-[47px]">
+        <button id="navHome" type="button" class="nav-button mr-[55px]" aria-label="Go to Home">
+          <img src="./public/assets/weekly-report/image_19.png" class="w-[33px] h-[38px]" />
+        </button>
+        <button id="navFavorite" type="button" class="nav-button mr-[55px]" aria-label="Go to Favorites Travel">
+          <img src="./public/assets/weekly-report/image_20.png" class="w-[41.67px] h-[39.63px]" />
+        </button>
+        <button id="navHistory" type="button" class="nav-button mr-[55px]" aria-label="Go to History Report">
+          <img src="./public/assets/weekly-report/image_21.png" class="w-[37.50px] h-[41.67px]" />
+        </button>
+        <button id="navProfile" type="button" class="nav-button" aria-label="Go to Profile">
+          <img src="./public/assets/weekly-report/image_22.png" class="w-[33.33px] h-[37.50px]" />
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const API_BASE = (window.__POCKETY_API_BASE__ || 'http://127.0.0.1:8000').replace(/\/$/, '');
+      const navConfig = [
+        { id: 'navHome', path: './home.html' },
+        { id: 'navFavorite', path: './favorites-travel.html' },
+        { id: 'navHistory', path: './history-report.html' },
+        { id: 'navWeekly', path: './weekly-report.html' },
+        { id: 'navProfile', path: './profile.html' },
+      ];
+
+      const moreDetailsButton = document.getElementById('moreDetailsButton');
+      const moreReportsButton = document.getElementById('moreReportsButton');
+      const overviewTitle = document.getElementById('overviewTitle');
+      const tagEls = [
+        document.getElementById('tagCloud1'),
+        document.getElementById('tagCloud2'),
+        document.getElementById('tagCloud3'),
+        document.getElementById('tagCloud4'),
+        document.getElementById('tagCloud5'),
+        document.getElementById('tagCloud6'),
+        document.getElementById('tagCloud7'),
+        document.getElementById('tagCloud8')
+      ];
+      const weekCardTagEls = [
+        document.getElementById('weekCard1Tag1'),
+        document.getElementById('weekCard1Tag2'),
+        document.getElementById('weekCard2Tag1'),
+        document.getElementById('weekCard2Tag2'),
+        document.getElementById('weekCard3Tag1'),
+        document.getElementById('weekCard3Tag2')
+      ];
+
+      function capitalize(text) {
+        const value = String(text || '').trim();
+        if (!value) return 'Other';
+        return value.charAt(0).toUpperCase() + value.slice(1);
+      }
+
+      function formatTag(text) {
+        return '# ' + capitalize(text);
+      }
+
+      async function loadWeeklyData() {
+        try {
+          const reportResp = await fetch(API_BASE + '/reports/weekly');
+          if (reportResp.ok) {
+            const reportData = await reportResp.json();
+            if (overviewTitle && reportData && typeof reportData.doc_count === 'number') {
+              overviewTitle.innerHTML = '<span class="tracking-[0%]">Overview of this week (' + reportData.doc_count + ')</span>';
+            }
+          }
+        } catch (error) {
+          // Keep static fallback.
+        }
+
+        try {
+          const docsResp = await fetch(API_BASE + '/documents');
+          if (!docsResp.ok) return;
+          const docs = await docsResp.json();
+          if (!Array.isArray(docs) || !docs.length) return;
+
+          const now = Date.now();
+          const weekAgo = now - 7 * 24 * 60 * 60 * 1000;
+          const counts = Object.create(null);
+
+          docs.forEach(function (doc) {
+            const created = new Date(doc.created_at || 0).getTime();
+            if (!created || created < weekAgo || created > now) return;
+            const key = String(doc.category || 'other').toLowerCase();
+            counts[key] = (counts[key] || 0) + 1;
+          });
+
+          const ranked = Object.keys(counts)
+            .sort(function (a, b) { return counts[b] - counts[a]; })
+            .slice(0, 8);
+
+          if (!ranked.length) return;
+
+          tagEls.forEach(function (el, index) {
+            if (!el || !ranked[index]) return;
+            el.innerHTML = '<span class="tracking-[0%]">' + capitalize(ranked[index]) + '</span>';
+          });
+
+          weekCardTagEls.forEach(function (el, index) {
+            if (!el || !ranked[index]) return;
+            el.innerHTML = '<span class="tracking-[0px]">' + formatTag(ranked[index]) + '</span>';
+          });
+        } catch (error) {
+          // Keep static fallback.
+        }
+      }
+
+      if (moreDetailsButton) {
+        moreDetailsButton.addEventListener('click', function () {
+          moreDetailsButton.classList.add('nav-press');
+          setTimeout(function () {
+            window.location.href = './report-summary.html';
+          }, 90);
+        });
+      }
+
+      if (moreReportsButton) {
+        moreReportsButton.addEventListener('click', function () {
+          moreReportsButton.classList.add('nav-press');
+          setTimeout(function () {
+            window.location.href = './history-report.html';
+          }, 90);
+        });
+      }
+
+      navConfig.forEach(function (item) {
+        const button = document.getElementById(item.id);
+        if (!button) {
+          return;
+        }
+
+        button.addEventListener('click', function () {
+          button.classList.add('nav-press');
+          setTimeout(function () {
+            window.location.href = item.path;
+          }, 90);
+        });
+      });
+
+      loadWeeklyData();
+    })();
+  </script>
+</body>
+</html>
