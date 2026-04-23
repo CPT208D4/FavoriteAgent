@@ -240,7 +240,7 @@
   <script>
     (function () {
       const config = window.__AI_CHAT_CONFIG__ || {};
-      const API_BASE = (window.__POCKETY_API_BASE__ || 'http://127.0.0.1:8000').replace(/\/$/, '');
+      const API_BASE = (window.__POCKETY_API_BASE__ || '/api').replace(/\/$/, '');
       const chatMode = config.mode || 'backend';
       const state = {
         messages: [],

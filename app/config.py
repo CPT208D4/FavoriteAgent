@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 from typing import Literal
 
@@ -22,7 +23,7 @@ class Settings(BaseSettings):
     chunk_overlap: int = 80
 
     # 嵌入：local=本机 sentence-transformers；api=OpenAI 兼容 /v1/embeddings
-    embedding_backend: Literal["local", "api"] = "local"
+    embedding_backend: Literal["local", "api"] = "api"
     embedding_model: str = "paraphrase-multilingual-MiniLM-L12-v2"
     embedding_api_base: str | None = None
     embedding_api_key: str | None = None
@@ -55,6 +56,9 @@ class Settings(BaseSettings):
 
     @model_validator(mode="after")
     def _paths(self) -> "Settings":
+        # Vercel 运行时项目目录只读，默认将可写数据目录放到 /tmp。
+        if os.getenv("VERCEL") and self.data_dir == Path(__file__).resolve().parent.parent / "data":
+            self.data_dir = Path("/tmp/knowledgebase-data")
         self.data_dir = self.data_dir.resolve()
         if self.database_url is None:
             self.database_url = f"sqlite:///{self.data_dir / 'kb.sqlite'}"

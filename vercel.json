@@ -1,0 +1,18 @@
+{
+  "version": 2,
+  "routes": [
+    {
+      "src": "^/api/(.*)$",
+      "dest": "/api/index.py"
+    },
+    {
+      "src": "^/$",
+      "dest": "/FavoriteAgent-frontend-pockety/home.html"
+    },
+    {
+      "src": "^/(.*)$",
+      "dest": "/FavoriteAgent-frontend-pockety/$1"
+    }
+  ]
+}
+
