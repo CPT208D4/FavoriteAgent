@@ -191,7 +191,11 @@
 
   <script>
     (function () {
-      const API_BASE = (window.__POCKETY_API_BASE__ || '/api').replace(/\/$/, '');
+      const API_BASE = (() => {
+        if (window.__POCKETY_API_BASE__) return window.__POCKETY_API_BASE__.replace(/\/$/, '');
+        if (window.location.port === '5500') return window.location.protocol + '//' + window.location.hostname + ':8000';
+        return '/api';
+      })();
       const navConfig = [
         { id: 'navHome', path: './home.html' },
         { id: 'navFavorite', path: './favorites-travel.html' },

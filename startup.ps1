@@ -95,8 +95,8 @@ try {
   $backendLog = Join-Path $logDir "backend.log"
   $frontendLog = Join-Path $logDir "frontend.log"
 
-  $backendCmd = "$pythonCmd -m uvicorn app.main:app --host 127.0.0.1 --port $backendPort"
-  $frontendCmd = "$pythonCmd -m http.server $frontendPort --bind 127.0.0.1 --directory `"$ScriptDir\FavoriteAgent-frontend-pockety`""
+  $backendCmd = "$pythonCmd -m uvicorn app.main:app --host 0.0.0.0 --port $backendPort"
+  $frontendCmd = "$pythonCmd -m http.server $frontendPort --bind 0.0.0.0 --directory `"$ScriptDir\FavoriteAgent-frontend-pockety`""
 
   Write-Info "Starting backend: $backendCmd"
   $backendProc = Start-Process -FilePath "powershell" `

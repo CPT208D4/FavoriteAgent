@@ -1,4 +1,5 @@
 import logging
+import re
 from datetime import datetime, timedelta, timezone
 
 from sqlalchemy.orm import Session
@@ -93,6 +94,42 @@ def _fallback_report(rows: list[DocumentORM], err: BaseException) -> str:
     return "\n".join(lines)
 
 
+def _clean_ui_sentence(text: str) -> str:
+    s = (text or "").strip()
+    if not s:
+        return ""
+    # Remove common label-like prefixes that break UI cards.
+    s = re.sub(
+        r"^\s*(weekly report|summary|summary highlight|summary detail|highlight|detail|overview|item\s*\d+\s*/\s*\d+)\s*[:\-]\s*",
+        "",
+        s,
+        flags=re.IGNORECASE,
+    )
+    s = re.sub(r"\s+", " ", s).strip()
+    return s
+
+
+def _sanitize_report_for_ui(report_text: str) -> str:
+    text = (report_text or "").strip()
+    if not text:
+        return text
+    normalized = re.sub(r"\s+", " ", text).strip()
+    parts = [p.strip() for p in re.split(r"(?<=[.!?])\s+", normalized) if p.strip()]
+    if not parts:
+        return normalized
+
+    first = _clean_ui_sentence(parts[0])
+    second_source = parts[1] if len(parts) > 1 else parts[0]
+    second = _clean_ui_sentence(second_source)
+    first = first if re.search(r"[.!?]$", first) else first + "."
+    second = second if re.search(r"[.!?]$", second) else second + "."
+
+    remainder = " ".join(parts[2:]).strip() if len(parts) > 2 else ""
+    if remainder:
+        return f"{first} {second} {remainder}".strip()
+    return f"{first} {second}".strip()
+
+
 def generate_period_report(db: Session, days: int, max_docs: int) -> tuple[int, str, bool]:
     rows = _collect_docs(db, days=days, max_docs=max_docs)
     if not rows:
@@ -100,23 +137,36 @@ def generate_period_report(db: Session, days: int, max_docs: int) -> tuple[int, 
     context = _compose_context(rows)
     n = len(rows)
     system = (
-        "You are a weekly report assistant for a favorites/knowledge-base app. "
-        "Write the report in English only and use only the provided material.\n"
-        "Requirements:\n"
-        f"1) There are {n} distinct items in the material ([Item i/n]). Mention every item at least once. "
-        "You may start with a short overview, then summarize each item briefly (title + one key point).\n"
-        "2) Then extract cross-item themes or patterns if any.\n"
-        "3) If numeric counts/frequencies exist in the material, you may cite them naturally; otherwise do not invent numbers.\n"
-        "4) End with 2-3 actionable suggestions for next week.\n"
-        "5) Do not fabricate facts not present in the material."
+        "You are a weekly report writer for a favorites/knowledge-base app. "
+        "Write in English only and use only the provided material.\n"
+        "Goal: produce concrete, informative output that is easy to display in compact UI cards.\n"
+        "Output rules (must follow):\n"
+        "1) Plain text only. Do NOT use Markdown syntax like **, #, -, bullets, or numbered lists.\n"
+        "2) Total length: 180-320 words.\n"
+        "3) The first TWO sentences are reserved for UI extraction:\n"
+        "   - Sentence 1: one concise highlight sentence.\n"
+        "   - Sentence 2: one concise detail sentence.\n"
+        "   - These two sentences must be natural statements and must NOT contain labels like "
+        "'Weekly Report', 'Summary', 'Highlight', 'Detail', 'Overview', 'Item 1/3', or a colon-based title.\n"
+        "   - DO NOT start sentence 1 or sentence 2 with a heading word followed by ':' or '-'.\n"
+        f"4) There are {n} distinct items in the material ([Item i/n]). Mention every item at least once in the remaining content.\n"
+        "5) After the first two sentences, write 2 short paragraphs:\n"
+        "   - Paragraph A: key evidence from the items.\n"
+        "   - Paragraph B: cross-item patterns and 2 actionable next steps.\n"
+        "6) Use specific facts/details from the material, avoid generic praise and filler.\n"
+        "7) Use numbers only when present in material; do not invent numbers."
     )
     prompt = (
         f"Time window: last {days} days (items whose created_at is within this window).\n"
-        f"Number of items included in this report: {n}.\n\n"
+        f"Number of items included in this report: {n}.\n"
+        "Important: the first two sentences will be shown separately in two UI cards, "
+        "so keep both short, meaningful, and self-contained.\n\n"
         f"Material:\n{context}"
     )
     try:
-        return len(rows), llm.chat_completion(system, prompt), False
+        raw_report = llm.chat_completion(system, prompt)
+        cleaned_report = _sanitize_report_for_ui(raw_report)
+        return len(rows), cleaned_report, False
     except Exception as exc:
         logger.warning("weekly report LLM failed: %s", exc, exc_info=True)
         return len(rows), _fallback_report(rows, exc), True

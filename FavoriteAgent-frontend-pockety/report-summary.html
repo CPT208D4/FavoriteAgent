@@ -30,6 +30,209 @@
       transform: scale(0.92);
       opacity: 0.9;
     }
+
+    .summary-content {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 320ms ease;
+    }
+
+    .summary-content.is-ready {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .summary-line {
+      width: 338px;
+      color: rgba(76, 75, 75, 1);
+      line-height: 1.26;
+      word-break: break-word;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+    }
+
+    .summary-line.tall {
+      -webkit-line-clamp: 3;
+      line-clamp: 3;
+    }
+
+    .summary-interactive-card {
+      cursor: pointer;
+      transition: transform 220ms ease, box-shadow 220ms ease, background-color 220ms ease;
+      animation: cardBreath 2.6s ease-in-out infinite;
+    }
+
+    .summary-interactive-card::after {
+      content: "";
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(89, 132, 255, 0.7);
+      transform: translateY(-50%);
+      box-shadow: 0 0 0 0 rgba(89, 132, 255, 0.45);
+      animation: cuePulse 1.9s ease-out infinite;
+    }
+
+    .summary-interactive-card:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 24px rgba(95, 115, 180, 0.16);
+      background: rgba(255, 255, 255, 0.44);
+    }
+
+    .summary-interactive-card:active {
+      transform: scale(0.988);
+    }
+
+    .summary-original-modal {
+      position: absolute;
+      inset: 0;
+      background: rgba(22, 30, 43, 0.38);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 80;
+    }
+
+    .summary-original-modal.is-open {
+      display: flex;
+      animation: fadeIn 170ms ease;
+    }
+
+    .summary-original-sheet {
+      width: 100%;
+      max-width: 342px;
+      max-height: 62%;
+      overflow: auto;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow: 0 20px 50px rgba(18, 37, 74, 0.24);
+      padding: 14px 14px 12px;
+      animation: popIn 180ms ease;
+    }
+
+    .summary-original-title {
+      font-family: 'Afacad', sans-serif;
+      font-size: 16px;
+      color: rgba(67, 82, 126, 1);
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .summary-original-text {
+      font-family: 'Afacad', sans-serif;
+      font-size: 16px;
+      color: rgba(71, 74, 88, 0.96);
+      line-height: 1.36;
+      white-space: normal;
+      word-break: break-word;
+    }
+
+    .summary-original-close {
+      margin-top: 12px;
+      margin-left: auto;
+      height: 32px;
+      border: 0;
+      border-radius: 16px;
+      background: rgba(77, 119, 232, 0.12);
+      color: rgba(64, 99, 193, 1);
+      font-family: 'Afacad', sans-serif;
+      font-size: 14px;
+      padding: 0 12px;
+      cursor: pointer;
+      transition: background-color 160ms ease;
+    }
+
+    .summary-original-close:hover {
+      background: rgba(77, 119, 232, 0.2);
+    }
+
+    .summary-loading {
+      position: absolute;
+      top: 132px;
+      left: 20px;
+      width: 362px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      transition: opacity 260ms ease;
+    }
+
+    .summary-loading.is-hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .loading-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 6px 6px;
+      color: rgba(73, 98, 173, 0.9);
+      font-family: 'Afacad', sans-serif;
+      font-size: 17px;
+    }
+
+    .loading-spinner {
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      border: 2px solid rgba(73, 98, 173, 0.25);
+      border-top-color: rgba(73, 98, 173, 0.95);
+      animation: spin 0.9s linear infinite;
+    }
+
+    .loading-card {
+      height: 57px;
+      border-radius: 25px;
+      background: rgba(255, 255, 255, 0.46);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .loading-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      transform: translateX(-100%);
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+      animation: shimmer 1.15s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes shimmer {
+      100% { transform: translateX(100%); }
+    }
+
+    @keyframes cardBreath {
+      0%, 100% { box-shadow: 0 0 0 rgba(95, 115, 180, 0); }
+      50% { box-shadow: 0 8px 24px rgba(95, 115, 180, 0.12); }
+    }
+
+    @keyframes cuePulse {
+      0% { box-shadow: 0 0 0 0 rgba(89, 132, 255, 0.45); opacity: 0.95; }
+      80% { box-shadow: 0 0 0 9px rgba(89, 132, 255, 0); opacity: 0.32; }
+      100% { box-shadow: 0 0 0 0 rgba(89, 132, 255, 0); opacity: 0.25; }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes popIn {
+      from { transform: translateY(8px) scale(0.985); opacity: 0.75; }
+      to { transform: translateY(0) scale(1); opacity: 1; }
+    }
   </style>
 </head>
 <body class="bg-gray-100 flex justify-center items-center min-h-screen">
@@ -72,72 +275,96 @@
       </div>
     </div>
     
-    <!-- Report Items -->
-    <!-- Item 1: Most favorite area -->
-    <div class="w-[373px] rounded-[25px] bg-[rgba(255,255,255,0.32)] min-h-[57px] absolute top-[117px] left-[14px]"></div>
-    <div id="summaryLine1" class="absolute top-[135px] left-[29px] w-[353px] h-[19px] font-['Afacad'] text-[18px] whitespace-nowrap leading-[normal] tracking-[normal] font-normal">
-      <span class="text-[rgba(76,75,75,1)] tracking-[0%]"># This week, your most favorite area is </span>
-      <span class="text-[rgba(73,98,173,1)] tracking-[0%]">science 😍</span>
+    <div id="summaryContent" class="summary-content">
+      <!-- Report Items -->
+      <!-- Item 1: Most favorite area -->
+      <div class="w-[373px] rounded-[25px] bg-[rgba(255,255,255,0.32)] min-h-[57px] absolute top-[117px] left-[14px]"></div>
+      <div id="summaryLine1" class="summary-line absolute top-[126px] left-[29px] font-['Afacad'] text-[18px] tracking-[normal] font-normal">
+        <span class="text-[rgba(76,75,75,1)] tracking-[0%]"># This week, your most favorite area is </span>
+        <span class="text-[rgba(73,98,173,1)] tracking-[0%]">science 😍</span>
+      </div>
+      
+      <!-- Item 2: Collected videos/images -->
+      <div class="w-[373px] rounded-[25px] bg-[rgba(255,255,255,0.32)] min-h-[58px] absolute top-[185px] left-[14px]"></div>
+      <div id="summaryLine2" class="summary-line absolute top-[194px] left-[29px] font-['Afacad'] text-[18px] tracking-[normal] font-normal">
+        <span class="text-[rgba(76,75,75,1)] tracking-[0%]"># In </span>
+        <span class="text-[rgba(73,98,173,1)] tracking-[0%]">science </span>
+        <span class="text-[rgba(76,75,75,1)] tracking-[0%]">area, you collected </span>
+        <span class="text-[rgba(211,89,106,1)] tracking-[0%]">12</span>
+        <span class="text-[rgba(76,75,75,1)] tracking-[0%]"> videos, </span>
+        <span class="text-[rgba(211,89,106,1)] tracking-[0%]">20</span>
+        <span class="text-[rgba(76,75,75,1)] tracking-[0%]"> images </span>
+        <span class="text-[rgba(73,98,173,1)] tracking-[0%]">🤗</span>
+      </div>
+      
+      <!-- Item 3: Talked with AI -->
+      <div id="summaryCard3" class="summary-interactive-card w-[373px] rounded-[25px] bg-[rgba(255,255,255,0.32)] min-h-[57px] absolute top-[253px] left-[14px]"></div>
+      <div id="summaryLine3" class="summary-line tall absolute top-[261px] left-[28px] font-['Afacad'] text-[18px] tracking-[normal] font-normal cursor-pointer">
+        <span class="text-[rgba(76,75,75,1)] tracking-[0%]"># This week, you talked with AI for </span>
+        <span class="text-[rgba(234,179,37,1)] tracking-[0%]">36</span>
+        <span class="text-[rgba(76,75,75,1)] tracking-[0%]"> times 😋</span>
+      </div>
+      
+      <!-- Item 4: Summary detail -->
+      <div id="summaryCard4" class="summary-interactive-card w-[373px] rounded-[25px] bg-[rgba(255,255,255,0.32)] min-h-[57px] absolute top-[321px] left-[14px]"></div>
+      <div id="summaryLine4" class="summary-line tall absolute top-[329px] left-[28px] font-['Afacad'] text-[18px] tracking-[normal] font-normal cursor-pointer">
+        <span class="text-[rgba(76,75,75,1)] tracking-[0%]"># Summary detail: </span>
+        <span class="text-[rgba(41,117,237,1)] tracking-[0%]">Additional highlights continue here. 🧐</span>
+      </div>
+      
+      <!-- Item 5: Reviewed collection -->
+      <div class="w-[373px] rounded-[25px] bg-[rgba(255,255,255,0.32)] min-h-[57px] absolute top-[392px] left-[14px]"></div>
+      <div id="summaryLine5" class="summary-line absolute top-[399px] left-[29px] font-['Afacad'] text-[18px] tracking-[normal] font-normal">
+        <span class="text-[rgba(76,75,75,1)] tracking-[0%]"># You reviewed your last week's collection for </span>
+        <span class="text-[rgba(255,0,4,1)] tracking-[0%]">0</span>
+        <span class="text-[rgba(76,75,75,1)] tracking-[0%]"> times 🥲</span>
+      </div>
+      
+      <!-- Item 6: Favorite areas count -->
+      <div class="w-[373px] rounded-[25px] bg-[rgba(255,255,255,0.32)] min-h-[57px] absolute top-[450px] left-[14px]"></div>
+      <div id="summaryLine6" class="summary-line absolute top-[458px] left-[25px] font-['Afacad'] text-[18px] tracking-[normal] font-normal">
+        <span class="text-[rgba(76,75,75,1)] tracking-[0%]"># This week, your favorite includes </span>
+        <span class="text-[rgba(52,153,184,1)] tracking-[0%]">8</span>
+        <span class="text-[rgba(76,75,75,1)] tracking-[0%]"> kinds of areas😯</span>
+      </div>
+      
+      <!-- Item 7: Tried new area -->
+      <div class="w-[373px] rounded-[25px] bg-[rgba(255,255,255,0.32)] min-h-[58px] absolute top-[508px] left-[14px]"></div>
+      <div id="summaryLine7" class="summary-line tall absolute top-[516px] left-[29px] font-['Afacad'] text-[18px] tracking-[normal] font-normal">
+        <span class="text-[rgba(76,75,75,1)] tracking-[0%]"># This week, you tried the </span>
+        <span class="text-[rgba(183,173,42,1)] tracking-[0%]">Engineering</span>
+        <span class="text-[rgba(76,75,75,1)] tracking-[0%]"> area for the first time🤩</span>
+      </div>
+      
+      <!-- Item 8: Most visited platform -->
+      <div class="w-[373px] rounded-[25px] bg-[rgba(255,255,255,0.32)] min-h-[57px] absolute top-[572px] left-[14px]"></div>
+      <div id="summaryLine8" class="summary-line absolute top-[579px] left-[29px] font-['Afacad'] text-[18px] tracking-[normal] font-normal">
+        <span class="text-[rgba(76,75,75,1)] tracking-[0%]"># The platform you visited most frequently is </span>
+        <span class="text-[rgba(128,29,198,1)] tracking-[0%]">Tiktok😁</span>
+      </div>
     </div>
-    
-    <!-- Item 2: Collected videos/images -->
-    <div class="w-[373px] rounded-[25px] bg-[rgba(255,255,255,0.32)] min-h-[58px] absolute top-[185px] left-[14px]"></div>
-    <div id="summaryLine2" class="absolute top-[192px] left-[29px] w-[353px] h-[38px] font-['Afacad'] text-[18px] leading-[normal] tracking-[normal] font-normal">
-      <span class="text-[rgba(76,75,75,1)] tracking-[0%]"># In </span>
-      <span class="text-[rgba(73,98,173,1)] tracking-[0%]">science </span>
-      <span class="text-[rgba(76,75,75,1)] tracking-[0%]">area, you collected </span>
-      <span class="text-[rgba(211,89,106,1)] tracking-[0%]">12</span>
-      <span class="text-[rgba(76,75,75,1)] tracking-[0%]"> videos, </span>
-      <span class="text-[rgba(211,89,106,1)] tracking-[0%]">20</span>
-      <span class="text-[rgba(76,75,75,1)] tracking-[0%]"> images </span>
-      <span class="text-[rgba(73,98,173,1)] tracking-[0%]">🤗</span>
+
+    <div id="summaryLoading" class="summary-loading">
+      <div class="loading-header">
+        <span class="loading-spinner" aria-hidden="true"></span>
+        <span>Generating your weekly summary...</span>
+      </div>
+      <div class="loading-card"></div>
+      <div class="loading-card"></div>
+      <div class="loading-card"></div>
+      <div class="loading-card"></div>
+      <div class="loading-card"></div>
+      <div class="loading-card"></div>
+      <div class="loading-card"></div>
+      <div class="loading-card"></div>
     </div>
-    
-    <!-- Item 3: Talked with AI -->
-    <div class="w-[373px] rounded-[25px] bg-[rgba(255,255,255,0.32)] min-h-[57px] absolute top-[253px] left-[14px]"></div>
-    <div id="summaryLine3" class="absolute top-[270px] left-[28px] w-[353px] h-[19px] font-['Afacad'] text-[18px] whitespace-nowrap leading-[normal] tracking-[normal] font-normal">
-      <span class="text-[rgba(76,75,75,1)] tracking-[0%]"># This week, you talked with AI for </span>
-      <span class="text-[rgba(234,179,37,1)] tracking-[0%]">36</span>
-      <span class="text-[rgba(76,75,75,1)] tracking-[0%]"> times 😋</span>
-    </div>
-    
-    <!-- Item 4: Most talked area -->
-    <div class="w-[373px] rounded-[25px] bg-[rgba(255,255,255,0.32)] min-h-[57px] absolute top-[321px] left-[14px]"></div>
-    <div id="summaryLine4" class="absolute top-[329px] left-[28px] w-[353px] h-[48px] font-['Afacad'] text-[18px] leading-[normal] tracking-[normal] font-normal">
-      <span class="text-[rgba(76,75,75,1)] tracking-[0%]"># Area where you talked with AI for most times is </span>
-      <span class="text-[rgba(41,117,237,1)] tracking-[0%]">Java</span>
-      <span class="text-[rgba(76,75,75,1)] tracking-[0%]"> 🧐</span>
-    </div>
-    
-    <!-- Item 5: Reviewed collection -->
-    <div class="w-[373px] rounded-[25px] bg-[rgba(255,255,255,0.32)] min-h-[57px] absolute top-[392px] left-[14px]"></div>
-    <div class="absolute top-[399px] left-[29px] w-[358px] h-[39px] font-['Afacad'] text-[18px] leading-[normal] tracking-[normal] font-normal">
-      <span class="text-[rgba(76,75,75,1)] tracking-[0%]"># You reviewed your last week's collection for </span>
-      <span class="text-[rgba(255,0,4,1)] tracking-[0%]">0</span>
-      <span class="text-[rgba(76,75,75,1)] tracking-[0%]"> times 🥲</span>
-    </div>
-    
-    <!-- Item 6: Favorite areas count -->
-    <div class="w-[373px] rounded-[25px] bg-[rgba(255,255,255,0.32)] min-h-[57px] absolute top-[460px] left-[14px]"></div>
-    <div class="absolute top-[468px] left-[25px] w-[358px] h-[44px] font-['Afacad'] text-[18px] leading-[normal] tracking-[normal] font-normal">
-      <span class="text-[rgba(76,75,75,1)] tracking-[0%]"># This week, your favorite includes </span>
-      <span class="text-[rgba(52,153,184,1)] tracking-[0%]">8</span>
-      <span class="text-[rgba(76,75,75,1)] tracking-[0%]"> kinds of areas😯</span>
-    </div>
-    
-    <!-- Item 7: Tried new area -->
-    <div class="w-[373px] rounded-[25px] bg-[rgba(255,255,255,0.32)] min-h-[58px] absolute top-[528px] left-[14px]"></div>
-    <div class="absolute top-[535px] left-[29px] w-[353px] h-[48px] font-['Afacad'] text-[18px] leading-[normal] tracking-[normal] font-normal">
-      <span class="text-[rgba(76,75,75,1)] tracking-[0%]"># This week, you tried the </span>
-      <span class="text-[rgba(183,173,42,1)] tracking-[0%]">Engineering</span>
-      <span class="text-[rgba(76,75,75,1)] tracking-[0%]"> area for the first time🤩</span>
-    </div>
-    
-    <!-- Item 8: Most visited platform -->
-    <div class="w-[373px] rounded-[25px] bg-[rgba(255,255,255,0.32)] min-h-[57px] absolute top-[599px] left-[14px]"></div>
-    <div class="absolute top-[605px] left-[29px] w-[358px] h-[48px] font-['Afacad'] text-[18px] leading-[normal] tracking-[normal] font-normal">
-      <span class="text-[rgba(76,75,75,1)] tracking-[0%]"># The platform you visited most frequently is </span>
-      <span class="text-[rgba(128,29,198,1)] tracking-[0%]">Tiktok😁</span>
+
+    <div id="summaryOriginalModal" class="summary-original-modal">
+      <div class="summary-original-sheet">
+        <div id="summaryOriginalTitle" class="summary-original-title">Original sentence</div>
+        <div id="summaryOriginalText" class="summary-original-text"></div>
+        <button id="summaryOriginalClose" type="button" class="summary-original-close">Close</button>
+      </div>
     </div>
     
     <!-- Bottom Navigation Bar -->
@@ -165,7 +392,11 @@
 
   <script>
     (function () {
-      const API_BASE = (window.__POCKETY_API_BASE__ || '/api').replace(/\/$/, '');
+      const API_BASE = (() => {
+        if (window.__POCKETY_API_BASE__) return window.__POCKETY_API_BASE__.replace(/\/$/, '');
+        if (window.location.port === '5500') return window.location.protocol + '//' + window.location.hostname + ':8000';
+        return '/api';
+      })();
       const navConfig = [
         { id: 'navHome', path: './home.html' },
         { id: 'navFavorite', path: './favorites-travel.html' },
@@ -175,16 +406,104 @@
       ];
 
       const backButton = document.getElementById('backButton');
+      const summaryContent = document.getElementById('summaryContent');
+      const summaryLoading = document.getElementById('summaryLoading');
       const summaryLine1 = document.getElementById('summaryLine1');
       const summaryLine2 = document.getElementById('summaryLine2');
       const summaryLine3 = document.getElementById('summaryLine3');
       const summaryLine4 = document.getElementById('summaryLine4');
+      const summaryLine5 = document.getElementById('summaryLine5');
+      const summaryLine6 = document.getElementById('summaryLine6');
+      const summaryLine7 = document.getElementById('summaryLine7');
+      const summaryLine8 = document.getElementById('summaryLine8');
+      const summaryCard3 = document.getElementById('summaryCard3');
+      const summaryCard4 = document.getElementById('summaryCard4');
+      const summaryOriginalModal = document.getElementById('summaryOriginalModal');
+      const summaryOriginalTitle = document.getElementById('summaryOriginalTitle');
+      const summaryOriginalText = document.getElementById('summaryOriginalText');
+      const summaryOriginalClose = document.getElementById('summaryOriginalClose');
+      const summaryState = {
+        highlightShort: '',
+        detailShort: '',
+        highlightRaw: '',
+        detailRaw: '',
+      };
 
-      function firstSentence(text) {
-        const value = String(text || '').trim();
-        if (!value) return '';
-        const cut = value.split(/[\n.!?]/)[0];
-        return cut.slice(0, 80);
+      function showSummaryContent() {
+        if (summaryLoading) {
+          summaryLoading.classList.add('is-hidden');
+        }
+        if (summaryContent) {
+          summaryContent.classList.add('is-ready');
+        }
+      }
+
+      function sanitizeSentence(text) {
+        return String(text || '')
+          .replace(/[#*`_~>\-]+/g, ' ')
+          .replace(/\s+/g, ' ')
+          .trim();
+      }
+
+      function extractSummaryLines(text) {
+        const raw = String(text || '')
+          .replace(/\r\n/g, '\n')
+          .replace(/\n+/g, ' ')
+          .trim();
+        if (!raw) {
+          return { highlight: '', detail: '' };
+        }
+
+        const normalized = raw
+          .replace(/([.!?])\s+/g, '$1|')
+          .split('|')
+          .map(function (s) { return s.trim(); })
+          .filter(Boolean);
+
+        const highlightBase = normalized[0] || raw;
+        const detailCandidates = normalized.slice(1, 4);
+        const detailBase = (detailCandidates.length
+          ? detailCandidates.join(' ')
+          : (normalized.slice(0, 2).join(' ') || raw));
+
+        return {
+          highlightRaw: sanitizeSentence(highlightBase),
+          detailRaw: sanitizeSentence(detailBase),
+          highlight: sanitizeSentence(highlightBase),
+          detail: sanitizeSentence(detailBase),
+        };
+      }
+
+      function renderSummaryLines() {
+        if (summaryLine3) {
+          const highlightText = summaryState.highlightShort || 'No highlight this week.';
+          summaryLine3.innerHTML =
+            '<span class="text-[rgba(76,75,75,1)] tracking-[0%]"># Summary highlight: </span>' +
+            '<span class="text-[rgba(234,179,37,1)] tracking-[0%]">' + highlightText + '</span>';
+        }
+        if (summaryLine4) {
+          const detailText = summaryState.detailShort || 'No more details this week.';
+          summaryLine4.innerHTML =
+            '<span class="text-[rgba(76,75,75,1)] tracking-[0%]"># Summary detail: </span>' +
+            '<span class="text-[rgba(41,117,237,1)] tracking-[0%]">' + detailText + '</span>';
+        }
+      }
+
+      function openSummaryOriginal(type) {
+        if (!summaryOriginalModal || !summaryOriginalText || !summaryOriginalTitle) return;
+        const isHighlight = type === 'highlight';
+        const title = isHighlight ? 'Summary highlight - original' : 'Summary detail - original';
+        const rawText = isHighlight
+          ? (summaryState.highlightRaw || summaryState.highlightShort || 'No original sentence available.')
+          : (summaryState.detailRaw || summaryState.detailShort || 'No original sentence available.');
+        summaryOriginalTitle.textContent = title;
+        summaryOriginalText.textContent = rawText;
+        summaryOriginalModal.classList.add('is-open');
+      }
+
+      function closeSummaryOriginal() {
+        if (!summaryOriginalModal) return;
+        summaryOriginalModal.classList.remove('is-open');
       }
 
       async function hydrateSummary() {
@@ -193,11 +512,17 @@
             fetch(API_BASE + '/reports/weekly'),
             fetch(API_BASE + '/documents')
           ]);
-          if (!reportResp.ok || !docsResp.ok) return;
+          if (!reportResp.ok || !docsResp.ok) {
+            showSummaryContent();
+            return;
+          }
 
           const report = await reportResp.json();
           const docs = await docsResp.json();
-          if (!Array.isArray(docs)) return;
+          if (!Array.isArray(docs)) {
+            showSummaryContent();
+            return;
+          }
 
           const categoryCount = Object.create(null);
           docs.forEach(function (doc) {
@@ -209,6 +534,7 @@
           });
           const top1 = topCategories[0] || 'other';
           const top2 = topCategories[1] || top1;
+          const top3 = topCategories[2] || top2;
           const docCount = typeof report.doc_count === 'number' ? report.doc_count : docs.length;
 
           if (summaryLine1) {
@@ -227,18 +553,44 @@
               '<span class="text-[rgba(73,98,173,1)] tracking-[0%]"> 🤗</span>';
           }
           if (summaryLine3 && report.report) {
-            summaryLine3.innerHTML =
-              '<span class="text-[rgba(76,75,75,1)] tracking-[0%]"># Summary highlight: </span>' +
-              '<span class="text-[rgba(234,179,37,1)] tracking-[0%]">' + firstSentence(report.report) + '</span>';
+            const lines = extractSummaryLines(report.report);
+            summaryState.highlightShort = lines.highlight || '';
+            summaryState.highlightRaw = lines.highlightRaw || '';
           }
           if (summaryLine4) {
-            summaryLine4.innerHTML =
-              '<span class="text-[rgba(76,75,75,1)] tracking-[0%]"># Report generation mode: </span>' +
-              '<span class="text-[rgba(41,117,237,1)] tracking-[0%]">' + (report.used_fallback ? 'fallback' : 'LLM') + '</span>' +
-              '<span class="text-[rgba(76,75,75,1)] tracking-[0%]"> 🧐</span>';
+            if (report.report) {
+              const lines = extractSummaryLines(report.report);
+              summaryState.detailShort = lines.detail || '';
+              summaryState.detailRaw = lines.detailRaw || '';
+            } else {
+              summaryState.detailShort = '';
+              summaryState.detailRaw = '';
+            }
           }
+          if (summaryLine5) {
+            summaryLine5.innerHTML =
+              '<span class="text-[rgba(76,75,75,1)] tracking-[0%]"># You added </span>' +
+              '<span class="text-[rgba(255,0,4,1)] tracking-[0%]">' + docCount + '</span>' +
+              '<span class="text-[rgba(76,75,75,1)] tracking-[0%]"> docs this week 📌</span>';
+          }
+          if (summaryLine6) {
+            summaryLine6.innerHTML =
+              '<span class="text-[rgba(76,75,75,1)] tracking-[0%]"># Active themes this week: </span>' +
+              '<span class="text-[rgba(52,153,184,1)] tracking-[0%]">' + topCategories.length + '</span>' +
+              '<span class="text-[rgba(76,75,75,1)] tracking-[0%]"> (top: ' + top1 + ', ' + top2 + ') 😯</span>';
+          }
+          if (summaryLine7) {
+            const emerging = topCategories[topCategories.length - 1] || top3 || top1;
+            summaryLine7.innerHTML =
+              '<span class="text-[rgba(76,75,75,1)] tracking-[0%]"># Emerging theme this week: </span>' +
+              '<span class="text-[rgba(183,173,42,1)] tracking-[0%]">' + emerging + '</span>' +
+              '<span class="text-[rgba(76,75,75,1)] tracking-[0%]"> worth exploring further ✨</span>';
+          }
+          renderSummaryLines();
+          showSummaryContent();
         } catch (error) {
-          // Keep static text.
+          // Keep static text as fallback.
+          showSummaryContent();
         }
       }
       if (backButton) {
@@ -264,6 +616,34 @@
           }, 90);
         });
       });
+
+      if (summaryCard3 || summaryLine3) {
+        const showHighlightOriginal = function () {
+          openSummaryOriginal('highlight');
+        };
+        if (summaryCard3) summaryCard3.addEventListener('click', showHighlightOriginal);
+        if (summaryLine3) summaryLine3.addEventListener('click', showHighlightOriginal);
+      }
+
+      if (summaryCard4 || summaryLine4) {
+        const showDetailOriginal = function () {
+          openSummaryOriginal('detail');
+        };
+        if (summaryCard4) summaryCard4.addEventListener('click', showDetailOriginal);
+        if (summaryLine4) summaryLine4.addEventListener('click', showDetailOriginal);
+      }
+
+      if (summaryOriginalClose) {
+        summaryOriginalClose.addEventListener('click', closeSummaryOriginal);
+      }
+
+      if (summaryOriginalModal) {
+        summaryOriginalModal.addEventListener('click', function (event) {
+          if (event.target === summaryOriginalModal) {
+            closeSummaryOriginal();
+          }
+        });
+      }
 
       hydrateSummary();
     })();

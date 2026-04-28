@@ -20,10 +20,14 @@
       position: relative;
       width: 67px;
       height: 38px;
-      background: rgba(22, 255, 22, 1);
+      border: 0;
+      padding: 0;
+      background: rgba(186, 201, 193, 0.9);
       border-radius: 65px;
       cursor: pointer;
+      transition: background-color 220ms ease, box-shadow 220ms ease;
     }
+
     .toggle-switch::after {
       content: '';
       position: absolute;
@@ -32,11 +36,23 @@
       background: white;
       border-radius: 50%;
       top: 1px;
-      right: 2px;
-      transition: transform 0.3s;
+      left: 2px;
+      transition: transform 220ms ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     }
-    .toggle-switch.active::after {
-      transform: translateX(-29px);
+
+    .toggle-switch.is-on {
+      background: rgba(22, 255, 22, 1);
+      box-shadow: 0 0 0 2px rgba(22, 255, 22, 0.1);
+    }
+
+    .toggle-switch.is-on::after {
+      transform: translateX(32px);
+    }
+
+    .toggle-switch:focus-visible {
+      outline: 2px solid rgba(52, 129, 255, 0.9);
+      outline-offset: 2px;
     }
   </style>
 </head>
@@ -108,15 +124,9 @@
     </div>
     
     <!-- Toggle Switches -->
-    <div class="w-[67px] rounded-[65px] bg-[rgba(22,255,22,1)] min-h-[38px] absolute top-[273px] left-[263px]">
-      <img src="./public/assets/profile/image_10.png" class="w-[31px] h-[36px] absolute top-[1px] left-[32px]" />
-    </div>
-    <div class="w-[67px] rounded-[65px] bg-[rgba(22,255,22,1)] min-h-[38px] absolute top-[355px] left-[263px]">
-      <img src="./public/assets/profile/image_10.png" class="w-[31px] h-[36px] absolute top-[1px] left-[32px]" />
-    </div>
-    <div class="w-[67px] rounded-[65px] bg-[rgba(22,255,22,1)] min-h-[38px] absolute top-[440px] left-[263px]">
-      <img src="./public/assets/profile/image_10.png" class="w-[31px] h-[36px] absolute top-[1px] left-[32px]" />
-    </div>
+    <button type="button" class="toggle-switch is-on absolute top-[273px] left-[263px]" data-app-toggle="bilibili" role="switch" aria-checked="true" aria-label="Toggle Bilibili"></button>
+    <button type="button" class="toggle-switch is-on absolute top-[355px] left-[263px]" data-app-toggle="rednote" role="switch" aria-checked="true" aria-label="Toggle RedNote"></button>
+    <button type="button" class="toggle-switch is-on absolute top-[440px] left-[263px]" data-app-toggle="tiktok" role="switch" aria-checked="true" aria-label="Toggle TikTok"></button>
     
     <!-- More apps -->
     <div class="absolute top-[515px] left-[41px] w-[111px] h-[35px] font-['Afacad'] text-[20px] whitespace-nowrap text-[rgba(0,0,0,1)] leading-[normal] tracking-[normal] font-normal">
@@ -181,5 +191,46 @@
       </div>
     </div>
   </div>
+  <script>
+    (function () {
+      var STORAGE_KEY = 'pockety-authorized-app-toggles';
+      var defaultState = { bilibili: true, rednote: true, tiktok: true };
+
+      function readState() {
+        try {
+          var raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) return Object.assign({}, defaultState);
+          var parsed = JSON.parse(raw);
+          return Object.assign({}, defaultState, parsed || {});
+        } catch (error) {
+          return Object.assign({}, defaultState);
+        }
+      }
+
+      function writeState(state) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      }
+
+      function applyToggle(button, enabled) {
+        button.classList.toggle('is-on', enabled);
+        button.setAttribute('aria-checked', enabled ? 'true' : 'false');
+      }
+
+      var state = readState();
+      var toggles = document.querySelectorAll('[data-app-toggle]');
+      toggles.forEach(function (button) {
+        var key = button.getAttribute('data-app-toggle');
+        var enabled = !!state[key];
+        applyToggle(button, enabled);
+
+        button.addEventListener('click', function () {
+          enabled = !enabled;
+          state[key] = enabled;
+          applyToggle(button, enabled);
+          writeState(state);
+        });
+      });
+    })();
+  </script>
 </body>
 </html>

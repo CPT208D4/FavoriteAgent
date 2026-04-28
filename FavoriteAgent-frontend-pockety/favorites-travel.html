@@ -164,10 +164,12 @@
         <div>
           <div id="activeBoardTitle" class="font-['Adamina'] text-[34px] leading-none text-[rgba(33,82,60,1)]">Travel</div>
           <div id="activeBoardCopy" class="mt-[8px] max-w-[190px] font-['Afacad'] text-[16px] leading-[1.2] text-[rgba(70,87,79,0.8)]">Rotate the disc to browse your boards.</div>
+          <div id="activeBoardMeta" class="mt-[6px] max-w-[210px] font-['Afacad'] text-[13px] text-[rgba(79,98,89,0.82)]">0 visible on disc</div>
         </div>
         <div class="flex flex-col items-end gap-[10px]">
-          <button id="createCollectionButton" type="button" class="h-[36px] rounded-[18px] bg-[rgba(255,255,255,0.78)] px-[14px] font-['Afacad'] text-[15px] font-semibold text-[rgba(54,102,79,1)] shadow-[0_8px_18px_rgba(120,140,128,0.14)]">+ New</button>
-          <button id="deleteCollectionButton" type="button" class="h-[34px] rounded-[17px] bg-[rgba(255,255,255,0.64)] px-[12px] font-['Afacad'] text-[14px] font-semibold text-[rgba(130,72,62,1)] shadow-[0_8px_18px_rgba(120,140,128,0.1)]">- Delete</button>
+          <button id="createCollectionButton" type="button" class="h-[36px] rounded-[18px] bg-[rgba(255,255,255,0.78)] px-[14px] font-['Afacad'] text-[15px] font-semibold text-[rgba(54,102,79,1)] shadow-[0_8px_18px_rgba(120,140,128,0.14)]">+ New Theme</button>
+          <button id="deleteCollectionButton" type="button" class="h-[34px] rounded-[17px] bg-[rgba(255,255,255,0.64)] px-[12px] font-['Afacad'] text-[14px] font-semibold text-[rgba(130,72,62,1)] shadow-[0_8px_18px_rgba(120,140,128,0.1)]">- Delete Theme</button>
+          <button id="newDocumentButton" type="button" class="h-[34px] rounded-[17px] bg-[rgba(231,246,238,0.88)] px-[12px] font-['Afacad'] text-[14px] font-semibold text-[rgba(45,102,74,1)] shadow-[0_8px_18px_rgba(120,140,128,0.1)]">+ New Document</button>
           <button id="assistantTrigger" type="button" class="mini-assistant relative w-[72px] h-[72px] z-20 overflow-visible" aria-label="Open AI Assistant">
             <img src="./public/assets/favorites-travel/image_14.png" class="w-[72px] h-auto max-w-none object-contain" />
             <span class="absolute -top-[8px] -left-[10px] inline-flex h-[28px] items-center rounded-[20px] bg-[rgba(255,255,255,0.72)] px-[10px] font-['Afacad'] text-[16px] text-[rgba(70,70,70,0.78)]">Hi!</span>
@@ -205,8 +207,44 @@
     </div>
   </div>
 
+  <div id="documentModal" class="fixed inset-0 z-[999] hidden items-center justify-center bg-[rgba(18,28,23,0.45)] px-[18px]">
+    <div class="w-full max-w-[360px] rounded-[22px] bg-white p-[16px] shadow-[0_20px_48px_rgba(30,52,43,0.28)]">
+      <div class="font-['Adamina'] text-[38px] leading-none text-[rgba(36,80,62,1)]">New Document</div>
+      <div class="mt-[6px] font-['Afacad'] text-[13px] text-[rgba(94,112,103,0.9)]">Save directly to backend POST /documents.</div>
+      <div id="documentModalMessage" class="mt-[6px] min-h-[18px] font-['Afacad'] text-[13px] text-[rgba(79,98,89,0.9)]"></div>
+
+      <form id="documentForm" class="mt-[8px] space-y-[8px]">
+        <input id="docTitle" name="title" type="text" required placeholder="Title" class="w-full rounded-[12px] border border-[rgba(204,216,210,1)] px-[10px] py-[8px] font-['Afacad'] text-[14px] outline-none focus:border-[rgba(90,140,116,1)]" />
+        <textarea id="docContent" name="content" required placeholder="Content" rows="4" class="w-full rounded-[12px] border border-[rgba(204,216,210,1)] px-[10px] py-[8px] font-['Afacad'] text-[14px] outline-none focus:border-[rgba(90,140,116,1)]"></textarea>
+        <input id="docCategory" name="category" type="text" placeholder="Category (optional, leave blank for auto-classification)" class="w-full rounded-[12px] border border-[rgba(204,216,210,1)] px-[10px] py-[8px] font-['Afacad'] text-[13px] outline-none focus:border-[rgba(90,140,116,1)]" />
+        <input id="docTags" name="tags" type="text" placeholder="Tags (optional, comma separated; blank = auto)" class="w-full rounded-[12px] border border-[rgba(204,216,210,1)] px-[10px] py-[8px] font-['Afacad'] text-[13px] outline-none focus:border-[rgba(90,140,116,1)]" />
+        <div class="flex justify-end gap-[8px] pt-[2px]">
+          <button id="documentCancelButton" type="button" class="h-[34px] rounded-[17px] bg-[rgba(242,246,244,1)] px-[14px] font-['Afacad'] text-[14px] font-semibold text-[rgba(82,99,90,1)]">Cancel</button>
+          <button id="documentSaveButton" type="submit" class="h-[34px] rounded-[17px] bg-[rgba(58,117,86,1)] px-[16px] font-['Afacad'] text-[14px] font-semibold text-white">Save</button>
+        </div>
+      </form>
+
+      <div class="my-[12px] h-px bg-[rgba(220,228,224,1)]"></div>
+
+      <form id="uploadDocumentForm" class="space-y-[8px]">
+        <div class="font-['Afacad'] text-[14px] font-semibold text-[rgba(66,84,74,0.9)]">Or upload a file</div>
+        <div class="font-['Afacad'] text-[12px] text-[rgba(90,107,98,0.8)]">Supported: .txt, .md, .csv, .pdf, .docx</div>
+        <input id="uploadFile" name="file" type="file" required accept=".txt,.md,.csv,.pdf,.docx,text/plain,text/markdown,text/csv,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" class="w-full rounded-[12px] border border-[rgba(204,216,210,1)] px-[10px] py-[8px] font-['Afacad'] text-[14px] outline-none" />
+        <div id="selectedFileName" class="font-['Afacad'] text-[12px] text-[rgba(95,113,103,0.9)]">Selected: none</div>
+        <div class="flex justify-end">
+          <button id="uploadSubmitButton" type="submit" class="h-[34px] rounded-[17px] bg-[rgba(58,117,86,1)] px-[16px] font-['Afacad'] text-[14px] font-semibold text-white">Upload File</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <script>
     (function () {
+      const API_BASE = (() => {
+        if (window.__POCKETY_API_BASE__) return window.__POCKETY_API_BASE__.replace(/\/$/, '');
+        if (window.location.port === '5500') return window.location.protocol + '//' + window.location.hostname + ':8000';
+        return '/api';
+      })();
       const STORAGE_KEY = 'pockety-custom-favorites';
       const HIDDEN_KEY = 'pockety-hidden-favorite-categories';
       const activeSlug = 'travel';
@@ -218,6 +256,20 @@
       const assistantTrigger = document.getElementById('assistantTrigger');
       const createCollectionButton = document.getElementById('createCollectionButton');
       const deleteCollectionButton = document.getElementById('deleteCollectionButton');
+      const newDocumentButton = document.getElementById('newDocumentButton');
+      const documentModal = document.getElementById('documentModal');
+      const documentCancelButton = document.getElementById('documentCancelButton');
+      const documentForm = document.getElementById('documentForm');
+      const documentSaveButton = document.getElementById('documentSaveButton');
+      const documentModalMessage = document.getElementById('documentModalMessage');
+      const docTitleInput = document.getElementById('docTitle');
+      const docContentInput = document.getElementById('docContent');
+      const docCategoryInput = document.getElementById('docCategory');
+      const docTagsInput = document.getElementById('docTags');
+      const uploadDocumentForm = document.getElementById('uploadDocumentForm');
+      const uploadSubmitButton = document.getElementById('uploadSubmitButton');
+      const uploadFileInput = document.getElementById('uploadFile');
+      const selectedFileName = document.getElementById('selectedFileName');
 
       const palettes = [
         'linear-gradient(145deg, rgba(213,236,223,0.98) 0%, rgba(111,161,141,0.95) 100%)',
@@ -241,6 +293,7 @@
         { slug: 'java', title: 'Java', tags: ['#http', '#mysql'], description: 'Backend notes, patterns, and small wins from your coding sessions.', path: './my-favorite.html?category=java' },
         { slug: 'workout', title: 'Workout', tags: ['#hiit', '#pilates'], description: 'Training clips and routines you may want to revisit this week.', path: './my-favorite.html?category=workout' }
       ];
+      let backendBoards = [];
 
       const state = {
         rotation: 0,
@@ -299,9 +352,109 @@
 
       function buildBoards() {
         const hidden = readHiddenCategories();
-        return defaultBoards.concat(readCustomBoards().map(normalizeCustomBoard)).filter(function (board) {
+        const sourceBoards = backendBoards.length ? backendBoards : defaultBoards.concat(readCustomBoards().map(normalizeCustomBoard));
+        return sourceBoards.filter(function (board) {
           return hidden.indexOf(board.slug) === -1;
         });
+      }
+
+      function titleFromSlug(slug) {
+        const value = String(slug || '').trim();
+        if (!value) return 'Other';
+        return value.charAt(0).toUpperCase() + value.slice(1);
+      }
+
+      function slugify(value) {
+        return String(value || '')
+          .trim()
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-+|-+$/g, '') || 'other';
+      }
+
+      function toTagsFromTitle(title) {
+        const words = String(title || '').toLowerCase().split(/[^a-z0-9]+/).filter(Boolean);
+        if (!words.length) return ['#favorite'];
+        return words.slice(0, 2).map(function (word) { return '#' + word; });
+      }
+
+      async function fetchBoardsFromBackend() {
+        try {
+          const response = await fetch(API_BASE + '/documents');
+          if (!response.ok) return [];
+          const docs = await response.json();
+          if (!Array.isArray(docs) || !docs.length) return [];
+
+          const bucket = Object.create(null);
+          docs.forEach(function (doc) {
+            const category = slugify(doc && doc.category);
+            if (!bucket[category]) {
+              bucket[category] = {
+                slug: category,
+                title: titleFromSlug(category),
+                tags: ['#' + category],
+                description: 'Imported from backend documents.',
+                path: './my-favorite.html?category=' + encodeURIComponent(category),
+                count: 0
+              };
+            }
+            bucket[category].count += 1;
+            if (doc && doc.title && bucket[category].tags.length < 3) {
+              toTagsFromTitle(doc.title).forEach(function (tag) {
+                if (bucket[category].tags.indexOf(tag) === -1 && bucket[category].tags.length < 3) {
+                  bucket[category].tags.push(tag);
+                }
+              });
+            }
+          });
+
+          return Object.keys(bucket).map(function (key) {
+            const item = bucket[key];
+            item.description = item.count + ' docs saved in this theme.';
+            return item;
+          });
+        } catch (error) {
+          return [];
+        }
+      }
+
+      function setModalMessage(message, isError) {
+        documentModalMessage.textContent = message || '';
+        documentModalMessage.style.color = isError ? 'rgba(150,62,62,1)' : 'rgba(79,98,89,0.9)';
+      }
+
+      function setSubmitting(button, submitting, text) {
+        if (!button) return;
+        if (submitting) {
+          button.dataset.originalText = button.textContent;
+          button.textContent = text || 'Submitting...';
+          button.disabled = true;
+          button.style.opacity = '0.7';
+        } else {
+          button.textContent = button.dataset.originalText || button.textContent;
+          button.disabled = false;
+          button.style.opacity = '1';
+        }
+      }
+
+      function openDocumentModal() {
+        if (!documentModal) return;
+        documentModal.classList.remove('hidden');
+        documentModal.classList.add('flex');
+        setModalMessage('', false);
+      }
+
+      function closeDocumentModal() {
+        if (!documentModal) return;
+        documentModal.classList.add('hidden');
+        documentModal.classList.remove('flex');
+        setModalMessage('', false);
+      }
+
+      async function refreshDiscFromBackend() {
+        backendBoards = await fetchBoardsFromBackend();
+        state.rotation = 0;
+        initDisc();
       }
 
       function createTag(tag) {
@@ -479,6 +632,9 @@
         if (!state.isDragging) return;
         state.isDragging = false;
         discViewport.classList.remove('is-dragging');
+        if (!state.cards.length) {
+          return;
+        }
         const step = 360 / state.cards.length;
         const snapped = Math.round(-state.rotation / step);
         state.rotation = -snapped * step;
@@ -493,6 +649,9 @@
       discViewport.addEventListener('pointercancel', endDrag);
       discViewport.addEventListener('wheel', function (event) {
         event.preventDefault();
+        if (!state.cards.length) {
+          return;
+        }
         state.rotation += event.deltaY * -0.09;
         renderDisc();
         clearTimeout(discViewport._wheelTimer);
@@ -539,7 +698,115 @@
         initDisc();
       });
 
-      initDisc();
+      if (newDocumentButton) {
+        newDocumentButton.addEventListener('click', openDocumentModal);
+      }
+
+      if (documentCancelButton) {
+        documentCancelButton.addEventListener('click', closeDocumentModal);
+      }
+
+      if (documentModal) {
+        documentModal.addEventListener('click', function (event) {
+          if (event.target === documentModal) {
+            closeDocumentModal();
+          }
+        });
+      }
+
+      if (uploadFileInput && selectedFileName) {
+        uploadFileInput.addEventListener('change', function () {
+          const file = uploadFileInput.files && uploadFileInput.files[0];
+          selectedFileName.textContent = file ? ('Selected: ' + file.name) : 'Selected: none';
+        });
+      }
+
+      if (documentForm) {
+        documentForm.addEventListener('submit', async function (event) {
+          event.preventDefault();
+          const title = String(docTitleInput && docTitleInput.value || '').trim();
+          const category = String(docCategoryInput && docCategoryInput.value || '').trim();
+          const content = String(docContentInput && docContentInput.value || '').trim();
+          const tagsRaw = String(docTagsInput && docTagsInput.value || '').trim();
+          if (!title || !content) {
+            setModalMessage('Please fill in title and content.', true);
+            return;
+          }
+          const payload = { title: title, content: content };
+          if (category) {
+            payload.category = category;
+          }
+          const tags = tagsRaw ? tagsRaw.split(',').map(function (item) { return item.trim(); }).filter(Boolean) : [];
+          if (tags.length) {
+            payload.tags = tags;
+          }
+          setSubmitting(documentSaveButton, true, 'Saving...');
+          try {
+            const response = await fetch(API_BASE + '/documents', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(payload)
+            });
+            if (!response.ok) {
+              throw new Error('save failed');
+            }
+            setModalMessage('Saved successfully. Closing...', false);
+            documentForm.reset();
+            await refreshDiscFromBackend();
+            setTimeout(function () {
+              closeDocumentModal();
+            }, 650);
+          } catch (error) {
+            setModalMessage('Save failed. Please check backend service.', true);
+          } finally {
+            setSubmitting(documentSaveButton, false);
+          }
+        });
+      }
+
+      if (uploadDocumentForm) {
+        uploadDocumentForm.addEventListener('submit', async function (event) {
+          event.preventDefault();
+          const title = String(docTitleInput && docTitleInput.value || '').trim();
+          const category = String(docCategoryInput && docCategoryInput.value || '').trim();
+          const tags = String(docTagsInput && docTagsInput.value || '').trim();
+          const file = uploadFileInput && uploadFileInput.files ? uploadFileInput.files[0] : null;
+          if (!file) {
+            setModalMessage('Please choose a file first.', true);
+            return;
+          }
+          const data = new FormData();
+          data.append('file', file);
+          if (title) data.append('title', title);
+          if (category) data.append('category', category);
+          if (tags) data.append('tags', tags);
+          setSubmitting(uploadSubmitButton, true, 'Uploading...');
+          try {
+            const response = await fetch(API_BASE + '/documents/upload', {
+              method: 'POST',
+              body: data
+            });
+            if (!response.ok) {
+              throw new Error('upload failed');
+            }
+            setModalMessage('Uploaded successfully. Closing...', false);
+            uploadDocumentForm.reset();
+            selectedFileName.textContent = 'Selected: none';
+            await refreshDiscFromBackend();
+            setTimeout(function () {
+              closeDocumentModal();
+            }, 650);
+          } catch (error) {
+            setModalMessage('Upload failed. Please check backend logs.', true);
+          } finally {
+            setSubmitting(uploadSubmitButton, false);
+          }
+        });
+      }
+
+      (async function () {
+        await refreshDiscFromBackend();
+      })();
     })();
   </script>
 </body>
