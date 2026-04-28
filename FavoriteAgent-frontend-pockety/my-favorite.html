@@ -45,12 +45,33 @@
     }
 
     .favorite-row {
-      transition: transform 180ms ease, background 180ms ease;
+      transition: transform 180ms ease, background 180ms ease, filter 180ms ease, opacity 180ms ease;
     }
 
     .favorite-row:hover {
       transform: translateY(-1px);
       background: rgba(255, 255, 255, 0.08);
+      filter: brightness(1.03);
+    }
+
+    .favorite-row:active {
+      transform: scale(0.98);
+      opacity: 0.93;
+    }
+
+    .clickable-cue {
+      transition: transform 180ms ease, filter 180ms ease, opacity 180ms ease;
+    }
+
+    .clickable-cue:hover,
+    .clickable-cue:focus-visible {
+      transform: scale(1.04);
+      filter: brightness(1.06);
+    }
+
+    .clickable-cue:active {
+      transform: scale(0.95);
+      opacity: 0.92;
     }
 
     .nav-button {
@@ -155,11 +176,11 @@
 
     <div class="absolute top-[77px] left-[43px] font-['Jacques_Francois'] text-[38px] leading-none text-[rgba(0,0,0,1)]">My Favorite</div>
 
-    <button id="backButton" type="button" class="absolute top-[91px] left-[19px] z-20" aria-label="Go back">
+    <button id="backButton" type="button" class="clickable-cue absolute top-[91px] left-[19px] z-20" aria-label="Go back">
       <img src="./public/assets/my-favorite/image_18.png" class="w-[24.67px] h-[23.33px]" />
     </button>
 
-    <button id="assistantButton" type="button" class="absolute top-[56px] left-[291px] z-20 w-[124px] h-[124px]" aria-label="Ask AI about this category">
+    <button id="assistantButton" type="button" class="clickable-cue absolute top-[56px] left-[291px] z-20 w-[124px] h-[124px]" aria-label="Ask AI about this category">
       <img src="./public/assets/my-favorite/image_19.png" class="w-[108px] h-auto absolute top-[8px] right-0" />
       <img src="./public/assets/my-favorite/image_20.png" class="w-[43px] h-[35px] absolute top-0 left-0" />
       <div class="absolute top-px left-[11px] opacity-[0.47] text-[20px] whitespace-nowrap text-[rgba(0,0,0,1)] leading-[normal] font-normal">Hi!</div>
@@ -177,8 +198,8 @@
     </div>
 
     <div id="swipeArea" class="absolute top-[163px] left-[37px] w-[330px] h-[567px] overflow-visible">
-      <button id="leftPreview" type="button" class="panel-slide side-preview absolute top-[165px] -left-[208px] w-[198px] h-[286px] rounded-[26px] px-[18px] py-[22px] opacity-[0.86] text-left"></button>
-      <button id="rightPreview" type="button" class="panel-slide side-preview absolute top-[165px] -right-[208px] w-[198px] h-[286px] rounded-[26px] px-[18px] py-[22px] opacity-[0.86] text-left"></button>
+      <button id="leftPreview" type="button" class="clickable-cue panel-slide side-preview absolute top-[165px] -left-[208px] w-[198px] h-[286px] rounded-[26px] px-[18px] py-[22px] opacity-[0.86] text-left"></button>
+      <button id="rightPreview" type="button" class="clickable-cue panel-slide side-preview absolute top-[165px] -right-[208px] w-[198px] h-[286px] rounded-[26px] px-[18px] py-[22px] opacity-[0.86] text-left"></button>
 
       <div id="mainPanel" class="panel-slide main-board absolute inset-0 rounded-[30px] px-[18px] py-[20px] text-[rgba(42,58,50,1)]">
         <div class="absolute inset-x-[16px] top-[18px] flex items-start justify-between">

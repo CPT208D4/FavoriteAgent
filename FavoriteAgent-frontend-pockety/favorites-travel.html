@@ -68,6 +68,7 @@
       transition: transform 180ms ease, opacity 180ms ease, box-shadow 180ms ease;
       overflow: hidden;
       border: 1px solid rgba(255, 255, 255, 0.28);
+      cursor: pointer;
     }
 
     .orbit-card::after {
@@ -100,6 +101,18 @@
       width: 190px;
       min-height: 140px;
       box-shadow: 0 20px 36px rgba(62, 95, 80, 0.22);
+    }
+
+    .orbit-card:hover,
+    .orbit-card:focus-visible {
+      transform: translate(-50%, -50%) scale(1.03) !important;
+      filter: brightness(1.04);
+      box-shadow: 0 22px 38px rgba(62, 95, 80, 0.24);
+    }
+
+    .orbit-card:active {
+      transform: translate(-50%, -50%) scale(0.98) !important;
+      filter: brightness(0.98);
     }
 
     .orbit-title {
@@ -146,11 +159,33 @@
     }
 
     .mini-assistant {
-      transition: transform 180ms ease;
+      transition: transform 180ms ease, filter 180ms ease, opacity 180ms ease;
     }
 
-    .mini-assistant:hover {
+    .mini-assistant:hover,
+    .mini-assistant:focus-visible {
       transform: translateY(-2px) scale(1.03);
+      filter: brightness(1.05);
+    }
+
+    .mini-assistant:active {
+      transform: scale(0.95);
+      opacity: 0.92;
+    }
+
+    .clickable-cue {
+      transition: transform 180ms ease, filter 180ms ease, opacity 180ms ease;
+    }
+
+    .clickable-cue:hover,
+    .clickable-cue:focus-visible {
+      transform: scale(1.04);
+      filter: brightness(1.06);
+    }
+
+    .clickable-cue:active {
+      transform: scale(0.95);
+      opacity: 0.92;
     }
 
     .nav-button {
@@ -280,9 +315,9 @@
           <div id="activeBoardMeta" class="mt-[6px] max-w-[210px] font-['Afacad'] text-[13px] text-[rgba(79,98,89,0.82)]">0 visible on disc</div>
         </div>
         <div class="flex flex-col items-end gap-[10px]">
-          <button id="createCollectionButton" type="button" class="h-[36px] rounded-[18px] bg-[rgba(255,255,255,0.78)] px-[14px] font-['Afacad'] text-[15px] font-semibold text-[rgba(54,102,79,1)] shadow-[0_8px_18px_rgba(120,140,128,0.14)]">+ New Theme</button>
-          <button id="deleteCollectionButton" type="button" class="h-[34px] rounded-[17px] bg-[rgba(255,255,255,0.64)] px-[12px] font-['Afacad'] text-[14px] font-semibold text-[rgba(130,72,62,1)] shadow-[0_8px_18px_rgba(120,140,128,0.1)]">- Delete Theme</button>
-          <button id="newDocumentButton" type="button" class="h-[34px] rounded-[17px] bg-[rgba(231,246,238,0.88)] px-[12px] font-['Afacad'] text-[14px] font-semibold text-[rgba(45,102,74,1)] shadow-[0_8px_18px_rgba(120,140,128,0.1)]">+ New Document</button>
+          <button id="createCollectionButton" type="button" class="clickable-cue h-[36px] rounded-[18px] bg-[rgba(255,255,255,0.78)] px-[14px] font-['Afacad'] text-[15px] font-semibold text-[rgba(54,102,79,1)] shadow-[0_8px_18px_rgba(120,140,128,0.14)]">+ New Theme</button>
+          <button id="deleteCollectionButton" type="button" class="clickable-cue h-[34px] rounded-[17px] bg-[rgba(255,255,255,0.64)] px-[12px] font-['Afacad'] text-[14px] font-semibold text-[rgba(130,72,62,1)] shadow-[0_8px_18px_rgba(120,140,128,0.1)]">- Delete Theme</button>
+          <button id="newDocumentButton" type="button" class="clickable-cue h-[34px] rounded-[17px] bg-[rgba(231,246,238,0.88)] px-[12px] font-['Afacad'] text-[14px] font-semibold text-[rgba(45,102,74,1)] shadow-[0_8px_18px_rgba(120,140,128,0.1)]">+ New Document</button>
           <button id="assistantTrigger" type="button" class="mini-assistant relative w-[72px] h-[72px] z-20 overflow-visible" aria-label="Open AI Assistant">
             <img src="./public/assets/favorites-travel/image_14.png" class="w-[72px] h-auto max-w-none object-contain" />
             <span class="absolute -top-[8px] -left-[10px] inline-flex h-[28px] items-center rounded-[20px] bg-[rgba(255,255,255,0.72)] px-[10px] font-['Afacad'] text-[16px] text-[rgba(70,70,70,0.78)]">Hi!</span>
@@ -338,8 +373,8 @@
         <input id="docCategory" name="category" type="text" placeholder="Category (optional, leave blank for auto-classification)" class="w-full rounded-[12px] border border-[rgba(204,216,210,1)] px-[10px] py-[8px] font-['Afacad'] text-[13px] outline-none focus:border-[rgba(90,140,116,1)]" />
         <input id="docTags" name="tags" type="text" placeholder="Tags (optional, comma separated; blank = auto)" class="w-full rounded-[12px] border border-[rgba(204,216,210,1)] px-[10px] py-[8px] font-['Afacad'] text-[13px] outline-none focus:border-[rgba(90,140,116,1)]" />
         <div class="flex justify-end gap-[8px] pt-[2px]">
-          <button id="documentCancelButton" type="button" class="h-[34px] rounded-[17px] bg-[rgba(242,246,244,1)] px-[14px] font-['Afacad'] text-[14px] font-semibold text-[rgba(82,99,90,1)]">Cancel</button>
-          <button id="documentSaveButton" type="submit" class="h-[34px] rounded-[17px] bg-[rgba(58,117,86,1)] px-[16px] font-['Afacad'] text-[14px] font-semibold text-white">Save</button>
+          <button id="documentCancelButton" type="button" class="clickable-cue h-[34px] rounded-[17px] bg-[rgba(242,246,244,1)] px-[14px] font-['Afacad'] text-[14px] font-semibold text-[rgba(82,99,90,1)]">Cancel</button>
+          <button id="documentSaveButton" type="submit" class="clickable-cue h-[34px] rounded-[17px] bg-[rgba(58,117,86,1)] px-[16px] font-['Afacad'] text-[14px] font-semibold text-white">Save</button>
         </div>
       </form>
 
@@ -351,7 +386,7 @@
         <input id="uploadFile" name="file" type="file" required accept=".txt,.md,.csv,.pdf,.docx,text/plain,text/markdown,text/csv,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" class="w-full rounded-[12px] border border-[rgba(204,216,210,1)] px-[10px] py-[8px] font-['Afacad'] text-[14px] outline-none" />
         <div id="selectedFileName" class="font-['Afacad'] text-[12px] text-[rgba(95,113,103,0.9)]">Selected: none</div>
         <div class="flex justify-end">
-          <button id="uploadSubmitButton" type="submit" class="h-[34px] rounded-[17px] bg-[rgba(58,117,86,1)] px-[16px] font-['Afacad'] text-[14px] font-semibold text-white">Upload File</button>
+          <button id="uploadSubmitButton" type="submit" class="clickable-cue h-[34px] rounded-[17px] bg-[rgba(58,117,86,1)] px-[16px] font-['Afacad'] text-[14px] font-semibold text-white">Upload File</button>
         </div>
       </form>
     </div>
