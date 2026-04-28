@@ -81,6 +81,21 @@
       background: rgba(255, 255, 255, 0.34);
     }
 
+    .orbit-card::before {
+      content: "";
+      position: absolute;
+      right: 18px;
+      bottom: 18px;
+      width: 7px;
+      height: 7px;
+      border-top: 2px solid rgba(56, 86, 72, 0.7);
+      border-right: 2px solid rgba(56, 86, 72, 0.7);
+      transform: rotate(45deg);
+      z-index: 2;
+      pointer-events: none;
+      animation: cardArrowPulse 1.6s ease-in-out infinite;
+    }
+
     .orbit-card.is-active {
       width: 190px;
       min-height: 140px;
@@ -237,6 +252,17 @@
     @keyframes discFloat {
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-4px); }
+    }
+
+    @keyframes cardArrowPulse {
+      0%, 100% {
+        opacity: 0.75;
+        transform: rotate(45deg) translate(0, 0);
+      }
+      50% {
+        opacity: 1;
+        transform: rotate(45deg) translate(1px, -1px);
+      }
     }
   </style>
 </head>
