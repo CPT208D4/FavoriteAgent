@@ -57,7 +57,13 @@ class Settings(BaseSettings):
     @model_validator(mode="after")
     def _paths(self) -> "Settings":
         # Vercel 运行时项目目录只读，默认将可写数据目录放到 /tmp。
-        if os.getenv("VERCEL") and self.data_dir == Path(__file__).resolve().parent.parent / "data":
+        # Some runtimes may not expose the VERCEL env var reliably during import,
+        # so also fallback when data_dir resolves under /var/task.
+        default_repo_data = Path(__file__).resolve().parent.parent / "data"
+        if (
+            (os.getenv("VERCEL") and self.data_dir == default_repo_data)
+            or str(self.data_dir).startswith("/var/task/")
+        ):
             self.data_dir = Path("/tmp/knowledgebase-data")
         self.data_dir = self.data_dir.resolve()
         if self.database_url is None:
