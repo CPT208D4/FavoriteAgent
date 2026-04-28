@@ -75,6 +75,76 @@
     .stack-scroll::-webkit-scrollbar {
       display: none;
     }
+
+    .favorites-sync {
+      position: absolute;
+      inset: 163px 37px 144px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      border-radius: 30px;
+      background: rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: opacity 260ms ease, visibility 260ms ease;
+      z-index: 18;
+    }
+
+    .favorites-sync.is-hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .favorites-sync-spinner {
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      border: 3px solid rgba(72, 116, 91, 0.18);
+      border-top-color: rgba(72, 116, 91, 0.92);
+      animation: favoritesSpin 0.9s linear infinite;
+    }
+
+    .favorites-sync-card {
+      width: 160px;
+      height: 92px;
+      border-radius: 24px;
+      background: linear-gradient(145deg, rgba(202, 229, 214, 0.88) 0%, rgba(124, 165, 146, 0.92) 100%);
+      box-shadow: 0 14px 30px rgba(84, 113, 99, 0.12);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .favorites-sync-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      transform: translateX(-100%);
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.42), transparent);
+      animation: favoritesShimmer 1.2s ease-in-out infinite;
+    }
+
+    .favorites-sync-text {
+      font-family: 'Afacad', sans-serif;
+      font-size: 18px;
+      color: rgba(48, 93, 69, 0.9);
+    }
+
+    .favorites-sync-subtext {
+      font-family: 'Afacad', sans-serif;
+      font-size: 14px;
+      color: rgba(72, 96, 85, 0.72);
+    }
+
+    @keyframes favoritesSpin {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes favoritesShimmer {
+      100% { transform: translateX(100%); }
+    }
   </style>
 </head>
 <body class="bg-gray-100 flex justify-center items-center min-h-screen">
@@ -124,6 +194,12 @@
         <div id="rowsContainer" class="stack-scroll absolute left-[16px] right-[16px] top-[98px] bottom-[18px] overflow-y-auto pr-[4px]"></div>
       </div>
     </div>
+    <div id="favoritesSyncState" class="favorites-sync">
+      <div class="favorites-sync-card"></div>
+      <div class="favorites-sync-spinner"></div>
+      <div class="favorites-sync-text">Synchronizing your Pockety favorites...</div>
+      <div id="favoritesSyncHint" class="favorites-sync-subtext">Importing your saved documents</div>
+    </div>
 
     <div class="absolute top-[768px] left-0 w-[402px] h-[89px]">
       <div class="w-[402px] rounded-[52px] [box-shadow:inset_0px_-4px_4px_0px_rgba(0,0,0,0.25),_inset_0px_0px_4px_0px_rgba(0,0,0,0.25)] bg-[rgba(255,255,255,1)] min-h-[89px] absolute top-0 left-0"></div>
@@ -163,6 +239,8 @@
       const mainCategoryDescriptionEl = document.getElementById('mainCategoryDescription');
       const mainPanelEl = document.getElementById('mainPanel');
       const swipeAreaEl = document.getElementById('swipeArea');
+      const favoritesSyncStateEl = document.getElementById('favoritesSyncState');
+      const favoritesSyncHintEl = document.getElementById('favoritesSyncHint');
       const assistantButtonEl = document.getElementById('assistantButton');
       const backButtonEl = document.getElementById('backButton');
       const navConfig = [
@@ -393,6 +471,29 @@
         }
       }
 
+      function setSyncState(visible, hint) {
+        if (!favoritesSyncStateEl) return;
+        favoritesSyncStateEl.classList.toggle('is-hidden', !visible);
+        if (favoritesSyncHintEl && hint) {
+          favoritesSyncHintEl.textContent = hint;
+        }
+      }
+
+      async function waitForItems() {
+        const attempts = 10;
+        for (let attempt = 0; attempt < attempts; attempt += 1) {
+          const items = await loadItems();
+          if (Array.isArray(items) && items.length) {
+            return items;
+          }
+          if (attempt < attempts - 1) {
+            setSyncState(true, 'Importing your saved documents (' + (attempt + 1) + '/' + attempts + ')');
+            await new Promise(function (resolve) { setTimeout(resolve, 900); });
+          }
+        }
+        return loadItems();
+      }
+
       function formatDate(value) {
         const date = new Date(value);
         if (Number.isNaN(date.getTime())) {
@@ -602,7 +703,8 @@
       });
 
       (async function init() {
-        state.items = await loadItems();
+        setSyncState(true, 'Synchronizing your themes and saved moments');
+        state.items = await waitForItems();
         state.categories = buildCategoriesFromItems(state.items);
         const currentSlug = new URLSearchParams(window.location.search).get('category') || 'travel';
         const matchedIndex = state.categories.findIndex(function (item) {
@@ -615,6 +717,7 @@
         }
         initSwipe();
         renderCategory(state.activeIndex);
+        setSyncState(false);
       })();
     })();
   </script>

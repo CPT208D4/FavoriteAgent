@@ -151,6 +151,93 @@
       transform: scale(0.92);
       opacity: 0.9;
     }
+
+    .disc-sync {
+      position: absolute;
+      inset: 112px 18px 22px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      border-radius: 32px;
+      background: rgba(255, 255, 255, 0.42);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: opacity 260ms ease, visibility 260ms ease;
+      z-index: 16;
+    }
+
+    .disc-sync.is-hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .disc-sync-spinner {
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      border: 3px solid rgba(78, 122, 98, 0.2);
+      border-top-color: rgba(78, 122, 98, 0.9);
+      animation: discSpin 0.9s linear infinite;
+    }
+
+    .disc-sync-text {
+      font-family: 'Afacad', sans-serif;
+      font-size: 18px;
+      color: rgba(56, 96, 75, 0.88);
+    }
+
+    .disc-sync-subtext {
+      font-family: 'Afacad', sans-serif;
+      font-size: 14px;
+      color: rgba(75, 100, 90, 0.72);
+    }
+
+    .disc-sync-orbit {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      animation: discFloat 2.4s ease-in-out infinite;
+    }
+
+    .disc-sync-orbit::before,
+    .disc-sync-orbit::after {
+      content: "";
+      position: absolute;
+      border-radius: 999px;
+      background: rgba(129, 181, 151, 0.26);
+    }
+
+    .disc-sync-orbit::before {
+      inset: 18px;
+      border: 1px dashed rgba(92, 138, 113, 0.28);
+      background: transparent;
+      animation: discRotate 7s linear infinite;
+    }
+
+    .disc-sync-orbit::after {
+      width: 28px;
+      height: 28px;
+      left: 46px;
+      top: 46px;
+      background: linear-gradient(145deg, rgba(214, 239, 226, 0.98) 0%, rgba(116, 170, 142, 0.96) 100%);
+      box-shadow: 0 8px 18px rgba(89, 132, 108, 0.18);
+    }
+
+    @keyframes discSpin {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes discRotate {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes discFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
   </style>
 </head>
 <body class="bg-gray-100 flex justify-center items-center min-h-screen">
@@ -179,6 +266,12 @@
 
       <div id="discViewport" class="disc-viewport absolute inset-x-0 top-[112px] bottom-[22px] z-10">
         <div id="discRing" class="disc-ring"></div>
+      </div>
+      <div id="discSyncState" class="disc-sync">
+        <div class="disc-sync-orbit"></div>
+        <div class="disc-sync-spinner"></div>
+        <div class="disc-sync-text">Synchronizing your Pockety favorites...</div>
+        <div id="discSyncHint" class="disc-sync-subtext">Preparing your saved themes</div>
       </div>
     </div>
 
@@ -253,6 +346,8 @@
       const activeBoardTitle = document.getElementById('activeBoardTitle');
       const activeBoardCopy = document.getElementById('activeBoardCopy');
       const activeBoardMeta = document.getElementById('activeBoardMeta');
+      const discSyncState = document.getElementById('discSyncState');
+      const discSyncHint = document.getElementById('discSyncHint');
       const assistantTrigger = document.getElementById('assistantTrigger');
       const createCollectionButton = document.getElementById('createCollectionButton');
       const deleteCollectionButton = document.getElementById('deleteCollectionButton');
@@ -294,6 +389,7 @@
         { slug: 'workout', title: 'Workout', tags: ['#hiit', '#pilates'], description: 'Training clips and routines you may want to revisit this week.', path: './my-favorite.html?category=workout' }
       ];
       let backendBoards = [];
+      let syncResolved = false;
 
       const state = {
         rotation: 0,
@@ -418,6 +514,14 @@
         }
       }
 
+      function setDiscSync(visible, hint) {
+        if (!discSyncState) return;
+        discSyncState.classList.toggle('is-hidden', !visible);
+        if (discSyncHint && hint) {
+          discSyncHint.textContent = hint;
+        }
+      }
+
       function setModalMessage(message, isError) {
         documentModalMessage.textContent = message || '';
         documentModalMessage.style.color = isError ? 'rgba(150,62,62,1)' : 'rgba(79,98,89,0.9)';
@@ -455,6 +559,21 @@
         backendBoards = await fetchBoardsFromBackend();
         state.rotation = 0;
         initDisc();
+      }
+
+      async function waitForBackendBoards() {
+        const attempts = 10;
+        for (let attempt = 0; attempt < attempts; attempt += 1) {
+          const boards = await fetchBoardsFromBackend();
+          if (boards.length) {
+            return boards;
+          }
+          if (attempt < attempts - 1) {
+            setDiscSync(true, 'Preparing your saved themes (' + (attempt + 1) + '/' + attempts + ')');
+            await new Promise(function (resolve) { setTimeout(resolve, 900); });
+          }
+        }
+        return [];
       }
 
       function createTag(tag) {
@@ -805,7 +924,12 @@
       }
 
       (async function () {
-        await refreshDiscFromBackend();
+        setDiscSync(true, 'Synchronizing your themes and saved moments');
+        backendBoards = await waitForBackendBoards();
+        state.rotation = 0;
+        initDisc();
+        syncResolved = true;
+        setDiscSync(false);
       })();
     })();
   </script>
