@@ -35,6 +35,24 @@ class DocumentUpdate(BaseModel):
     source_url: Optional[str] = None
 
 
+class Theme(BaseModel):
+    slug: str = Field(..., min_length=1, max_length=128)
+    title: str = Field(..., min_length=1, max_length=256)
+    description: str = Field("", max_length=512)
+    tags: list[str] = Field(default_factory=list)
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
+
+    model_config = {"from_attributes": True}
+
+
+class ThemeCreate(BaseModel):
+    slug: str = Field(..., min_length=1, max_length=128)
+    title: str = Field(..., min_length=1, max_length=256)
+    description: str = Field("", max_length=512)
+    tags: list[str] = Field(default_factory=list)
+
+
 class RetrieveRequest(BaseModel):
     query: str = Field(..., min_length=1, description="用户问题或检索语句")
     top_k: int = Field(5, ge=1, le=50)

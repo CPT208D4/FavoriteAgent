@@ -4,7 +4,13 @@ from pathlib import Path
 from fastapi import APIRouter, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from .api.routers import chat_router, documents_router, reports_router, retrieval_router
+from .api.routers import (
+    chat_router,
+    documents_router,
+    reports_router,
+    retrieval_router,
+    themes_router,
+)
 from .database import SessionLocal, init_db
 from .db_models import Document as DocumentORM
 from .services.content_service import seed_from_json_file
@@ -41,6 +47,7 @@ app.add_middleware(
 )
 
 app.include_router(documents_router)
+app.include_router(themes_router)
 app.include_router(retrieval_router)
 app.include_router(chat_router)
 app.include_router(reports_router)
@@ -48,6 +55,7 @@ app.include_router(reports_router)
 # Keep legacy routes and also expose /api/* for one-project deployments.
 api_prefixed_router = APIRouter(prefix="/api")
 api_prefixed_router.include_router(documents_router)
+api_prefixed_router.include_router(themes_router)
 api_prefixed_router.include_router(retrieval_router)
 api_prefixed_router.include_router(chat_router)
 api_prefixed_router.include_router(reports_router)

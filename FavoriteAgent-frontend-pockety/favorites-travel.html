@@ -392,6 +392,17 @@
     </div>
   </div>
 
+  <div id="globalToast" class="fixed top-[18px] left-1/2 z-[1000] hidden w-[min(360px,calc(100%-36px))] -translate-x-1/2 rounded-[18px] border border-[rgba(210,226,217,1)] bg-white px-[14px] py-[12px] shadow-[0_18px_40px_rgba(30,52,43,0.22)]">
+    <div class="flex items-start gap-[10px]">
+      <div id="globalToastIcon" class="mt-[2px] h-[10px] w-[10px] shrink-0 rounded-full bg-[rgba(58,117,86,1)]"></div>
+      <div class="min-w-0 flex-1">
+        <div id="globalToastTitle" class="font-['Afacad'] text-[14px] font-semibold text-[rgba(36,80,62,1)]">Success</div>
+        <div id="globalToastMessage" class="mt-[2px] font-['Afacad'] text-[13px] leading-[1.35] text-[rgba(79,98,89,0.92)]"></div>
+      </div>
+      <button id="globalToastClose" type="button" class="clickable-cue -mr-[2px] -mt-[2px] h-[28px] w-[28px] rounded-[10px] bg-[rgba(242,246,244,1)] text-[14px] font-semibold text-[rgba(82,99,90,1)]">×</button>
+    </div>
+  </div>
+
   <script>
     (function () {
       const API_BASE = (() => {
@@ -426,6 +437,12 @@
       const uploadSubmitButton = document.getElementById('uploadSubmitButton');
       const uploadFileInput = document.getElementById('uploadFile');
       const selectedFileName = document.getElementById('selectedFileName');
+      const globalToast = document.getElementById('globalToast');
+      const globalToastTitle = document.getElementById('globalToastTitle');
+      const globalToastMessage = document.getElementById('globalToastMessage');
+      const globalToastIcon = document.getElementById('globalToastIcon');
+      const globalToastClose = document.getElementById('globalToastClose');
+      let globalToastTimer = null;
 
       const palettes = [
         'linear-gradient(145deg, rgba(213,236,223,0.98) 0%, rgba(111,161,141,0.95) 100%)',
@@ -498,12 +515,13 @@
         const title = String(item.title || 'New Favorite').trim() || 'New Favorite';
         const description = String(item.description || '').trim();
         const tags = Array.isArray(item.tags) && item.tags.length ? item.tags : ['#custom', '#favorite'];
+        const slug = String(item.slug || ('custom-' + slugify(title + '-' + (item.createdAt || index)))).trim();
         return {
-          slug: 'custom-' + index,
+          slug: slug,
           title: title,
           tags: tags.slice(0, 3),
           description: description || 'A custom favorite board created by you.',
-          path: './my-favorite.html?category=' + encodeURIComponent('custom-' + index)
+          path: './my-favorite.html?category=' + encodeURIComponent(slug)
         };
       }
 
@@ -549,39 +567,52 @@
 
       async function fetchBoardsFromBackend() {
         try {
-          const response = await fetch(API_BASE + '/documents');
-          if (!response.ok) return [];
-          const docs = await response.json();
-          if (!Array.isArray(docs) || !docs.length) return [];
+          const docsResp = await fetch(API_BASE + '/documents');
+          const themesResp = await fetch(API_BASE + '/themes');
+          const docs = docsResp.ok ? await docsResp.json() : [];
+          const themes = themesResp.ok ? await themesResp.json() : [];
 
-          const bucket = Object.create(null);
-          docs.forEach(function (doc) {
+          const countByCategory = Object.create(null);
+          (Array.isArray(docs) ? docs : []).forEach(function (doc) {
             const category = slugify(doc && doc.category);
-            if (!bucket[category]) {
-              bucket[category] = {
-                slug: category,
-                title: titleFromSlug(category),
-                tags: ['#' + category],
-                description: 'Imported from backend documents.',
-                path: './my-favorite.html?category=' + encodeURIComponent(category),
-                count: 0
-              };
-            }
-            bucket[category].count += 1;
-            if (doc && doc.title && bucket[category].tags.length < 3) {
-              toTagsFromTitle(doc.title).forEach(function (tag) {
-                if (bucket[category].tags.indexOf(tag) === -1 && bucket[category].tags.length < 3) {
-                  bucket[category].tags.push(tag);
-                }
-              });
-            }
+            countByCategory[category] = (countByCategory[category] || 0) + 1;
           });
 
-          return Object.keys(bucket).map(function (key) {
-            const item = bucket[key];
-            item.description = item.count + ' docs saved in this theme.';
-            return item;
+          const boards = [];
+          (Array.isArray(themes) ? themes : []).forEach(function (theme) {
+            const slug = slugify(theme && theme.slug);
+            const title = String(theme && theme.title || '').trim() || titleFromSlug(slug);
+            const tags = Array.isArray(theme && theme.tags) ? theme.tags : ['#' + slug];
+            const desc = String(theme && theme.description || '').trim();
+            const count = countByCategory[slug] || 0;
+            boards.push({
+              slug: slug,
+              title: title,
+              tags: tags.slice(0, 3),
+              description: (count + ' docs saved in this theme.') + (desc ? (' ' + desc) : ''),
+              path: './my-favorite.html?category=' + encodeURIComponent(slug),
+              count: count
+            });
           });
+
+          // Also expose categories that exist only via documents (legacy data).
+          const seen = Object.create(null);
+          boards.forEach(function (b) { if (b && b.slug) seen[b.slug] = true; });
+          Object.keys(countByCategory).forEach(function (slug) {
+            if (seen[slug]) return;
+            const count = countByCategory[slug] || 0;
+            boards.push({
+              slug: slug,
+              title: titleFromSlug(slug),
+              tags: ['#' + slug],
+              description: count + ' docs saved in this theme.',
+              path: './my-favorite.html?category=' + encodeURIComponent(slug),
+              count: count
+            });
+          });
+
+          // Sort: user themes first (by created order from API), then doc-only categories.
+          return boards;
         } catch (error) {
           return [];
         }
@@ -614,10 +645,35 @@
         }
       }
 
+      function showGlobalToast(title, message, isError) {
+        if (!globalToast) return;
+        if (globalToastTimer) {
+          clearTimeout(globalToastTimer);
+          globalToastTimer = null;
+        }
+        if (globalToastTitle) globalToastTitle.textContent = title || (isError ? 'Failed' : 'Success');
+        if (globalToastMessage) globalToastMessage.textContent = message || '';
+        if (globalToastIcon) globalToastIcon.style.background = isError ? 'rgba(150,62,62,1)' : 'rgba(58,117,86,1)';
+        globalToast.classList.remove('hidden');
+        globalToastTimer = setTimeout(function () {
+          globalToast.classList.add('hidden');
+        }, 2600);
+      }
+
+      if (globalToastClose && globalToast) {
+        globalToastClose.addEventListener('click', function () {
+          globalToast.classList.add('hidden');
+        });
+      }
+
       function openDocumentModal() {
         if (!documentModal) return;
+        const activeBoard = state.cards[state.activeIndex] && state.cards[state.activeIndex].board;
         documentModal.classList.remove('hidden');
         documentModal.classList.add('flex');
+        if (docCategoryInput && activeBoard && activeBoard.slug) {
+          docCategoryInput.value = activeBoard.slug;
+        }
         setModalMessage('', false);
       }
 
@@ -942,14 +998,27 @@
             if (!response.ok) {
               throw new Error('save failed');
             }
-            setModalMessage('Saved successfully. Closing...', false);
+            const saved = await response.json().catch(function () { return null; });
+            const savedCategory = saved && saved.category ? String(saved.category) : '';
+            setModalMessage(
+              savedCategory
+                ? ('Saved successfully. Auto category: ' + savedCategory + '. Closing...')
+                : 'Saved successfully. Closing...',
+              false
+            );
+            showGlobalToast(
+              'Saved',
+              savedCategory ? ('Saved successfully. Auto category: ' + savedCategory + '.') : 'Saved successfully.',
+              false
+            );
             documentForm.reset();
             await refreshDiscFromBackend();
             setTimeout(function () {
               closeDocumentModal();
-            }, 650);
+            }, 900);
           } catch (error) {
             setModalMessage('Save failed. Please check backend service.', true);
+            showGlobalToast('Save failed', 'Please check backend service.', true);
           } finally {
             setSubmitting(documentSaveButton, false);
           }
@@ -981,15 +1050,28 @@
             if (!response.ok) {
               throw new Error('upload failed');
             }
-            setModalMessage('Uploaded successfully. Closing...', false);
+            const saved = await response.json().catch(function () { return null; });
+            const savedCategory = saved && saved.category ? String(saved.category) : '';
+            setModalMessage(
+              savedCategory
+                ? ('Uploaded successfully. Auto category: ' + savedCategory + '. Closing...')
+                : 'Uploaded successfully. Closing...',
+              false
+            );
+            showGlobalToast(
+              'Uploaded',
+              savedCategory ? ('Uploaded successfully. Auto category: ' + savedCategory + '.') : 'Uploaded successfully.',
+              false
+            );
             uploadDocumentForm.reset();
             selectedFileName.textContent = 'Selected: none';
             await refreshDiscFromBackend();
             setTimeout(function () {
               closeDocumentModal();
-            }, 650);
+            }, 900);
           } catch (error) {
             setModalMessage('Upload failed. Please check backend logs.', true);
+            showGlobalToast('Upload failed', 'Please check backend logs.', true);
           } finally {
             setSubmitting(uploadSubmitButton, false);
           }

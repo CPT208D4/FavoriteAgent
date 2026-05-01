@@ -19,7 +19,7 @@ def ask(question: str, top_k: int) -> AskResponse:
             "Reply in English only. Politely explain that there is no hit, and suggest "
             "trying different keywords or adding more documents to the knowledge base."
         )
-        answer = llm.chat_completion(fallback, question)
+        answer = llm.chat_completion_enforced_english(fallback, question)
         return AskResponse(answer=answer, sources=[], used_fallback=True)
 
     context = _build_context(ret.chunks)
@@ -32,7 +32,7 @@ def ask(question: str, top_k: int) -> AskResponse:
         "3) End with a 'Sources' section and list doc_id / chunk_id."
     )
     user_prompt = f"Question: {question}\n\nRetrieved chunks:\n{context}"
-    answer = llm.chat_completion(system_prompt, user_prompt)
+    answer = llm.chat_completion_enforced_english(system_prompt, user_prompt)
     sources = [
         SourceItem(
             doc_id=c.doc_id,
