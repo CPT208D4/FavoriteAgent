@@ -509,8 +509,20 @@
 
       function buildBoards() {
         const hidden = readHiddenCategories();
-        const sourceBoards = backendBoards.length ? backendBoards : defaultBoards.concat(readCustomBoards().map(normalizeCustomBoard));
-        return sourceBoards.filter(function (board) {
+        const customBoards = readCustomBoards().map(normalizeCustomBoard);
+        const sourceBoards = backendBoards.concat(defaultBoards).concat(customBoards);
+        const seen = Object.create(null);
+        const mergedBoards = sourceBoards.filter(function (board) {
+          if (!board || !board.slug) {
+            return false;
+          }
+          if (seen[board.slug]) {
+            return false;
+          }
+          seen[board.slug] = true;
+          return true;
+        });
+        return mergedBoards.filter(function (board) {
           return hidden.indexOf(board.slug) === -1;
         });
       }
