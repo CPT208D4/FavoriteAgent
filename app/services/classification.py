@@ -73,7 +73,32 @@ def _keyword_fallback(text: str) -> tuple[str, list[str]]:
         return "Business", ["business"]
     if any(k in t for k in ["art", "music", "film", "设计", "艺术", "电影"]):
         return "Arts & Culture", ["culture"]
-    if any(k in t for k in ["course", "tutorial", "learn", "学习", "课程", "教程"]):
+    if any(
+        k in t
+        for k in [
+            "course",
+            "tutorial",
+            "learn",
+            "学习",
+            "课程",
+            "教程",
+            "algorithm",
+            "algorithms",
+            "complexity",
+            "time complexity",
+            "space complexity",
+            "big-o",
+            "big o",
+            "o(n)",
+            "asymptotic",
+            "leetcode",
+            "数据结构",
+            "算法",
+            "时间复杂度",
+            "空间复杂度",
+            "复杂度",
+        ]
+    ):
         return "Education", ["education"]
     if any(k in t for k in ["health", "medical", "fitness", "健康", "医疗", "养生"]):
         return "Health", ["health"]

@@ -657,7 +657,7 @@
         globalToast.classList.remove('hidden');
         globalToastTimer = setTimeout(function () {
           globalToast.classList.add('hidden');
-        }, 2600);
+        }, 5000);
       }
 
       if (globalToastClose && globalToast) {
@@ -668,11 +668,12 @@
 
       function openDocumentModal() {
         if (!documentModal) return;
-        const activeBoard = state.cards[state.activeIndex] && state.cards[state.activeIndex].board;
         documentModal.classList.remove('hidden');
         documentModal.classList.add('flex');
-        if (docCategoryInput && activeBoard && activeBoard.slug) {
-          docCategoryInput.value = activeBoard.slug;
+        // Leave category blank by default so uploads use backend auto-classification.
+        // Pre-filling from the active disc card caused accidental pins (e.g. travel) while browsing.
+        if (docCategoryInput) {
+          docCategoryInput.value = '';
         }
         setModalMessage('', false);
       }
