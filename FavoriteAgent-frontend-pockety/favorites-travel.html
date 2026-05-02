@@ -392,7 +392,7 @@
     </div>
   </div>
 
-  <div id="globalToast" class="fixed top-[18px] left-1/2 z-[1000] hidden w-[min(360px,calc(100%-36px))] -translate-x-1/2 rounded-[18px] border border-[rgba(210,226,217,1)] bg-white px-[14px] py-[12px] shadow-[0_18px_40px_rgba(30,52,43,0.22)]">
+  <div id="globalToast" class="fixed z-[1000] hidden box-border max-w-[360px] rounded-[18px] border border-[rgba(210,226,217,1)] bg-white px-[14px] py-[12px] shadow-[0_18px_40px_rgba(30,52,43,0.22)]">
     <div class="flex items-start gap-[10px]">
       <div id="globalToastIcon" class="mt-[2px] h-[10px] w-[10px] shrink-0 rounded-full bg-[rgba(58,117,86,1)]"></div>
       <div class="min-w-0 flex-1">
@@ -645,6 +645,26 @@
         }
       }
 
+      function positionGlobalToast() {
+        if (!globalToast) return;
+        const shell = document.querySelector('.favorites-shell');
+        if (shell) {
+          const r = shell.getBoundingClientRect();
+          const pad = 12;
+          const toastW = Math.min(360, Math.max(200, r.width - pad * 2));
+          const topPx = Math.max(8, r.top + pad);
+          globalToast.style.top = Math.round(topPx) + 'px';
+          globalToast.style.left = Math.round(r.left + r.width / 2) + 'px';
+          globalToast.style.transform = 'translateX(-50%)';
+          globalToast.style.width = toastW + 'px';
+        } else {
+          globalToast.style.top = '18px';
+          globalToast.style.left = '50%';
+          globalToast.style.transform = 'translateX(-50%)';
+          globalToast.style.width = 'min(360px, calc(100vw - 36px))';
+        }
+      }
+
       function showGlobalToast(title, message, isError) {
         if (!globalToast) return;
         if (globalToastTimer) {
@@ -654,11 +674,23 @@
         if (globalToastTitle) globalToastTitle.textContent = title || (isError ? 'Failed' : 'Success');
         if (globalToastMessage) globalToastMessage.textContent = message || '';
         if (globalToastIcon) globalToastIcon.style.background = isError ? 'rgba(150,62,62,1)' : 'rgba(58,117,86,1)';
+        positionGlobalToast();
+        requestAnimationFrame(function () {
+          positionGlobalToast();
+        });
         globalToast.classList.remove('hidden');
         globalToastTimer = setTimeout(function () {
           globalToast.classList.add('hidden');
         }, 5000);
       }
+
+      function repositionGlobalToastIfVisible() {
+        if (globalToast && !globalToast.classList.contains('hidden')) {
+          positionGlobalToast();
+        }
+      }
+      window.addEventListener('resize', repositionGlobalToastIfVisible, { passive: true });
+      window.addEventListener('scroll', repositionGlobalToastIfVisible, { passive: true, capture: true });
 
       if (globalToastClose && globalToast) {
         globalToastClose.addEventListener('click', function () {
