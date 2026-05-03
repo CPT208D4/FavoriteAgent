@@ -24,14 +24,13 @@ def ask(question: str, top_k: int) -> AskResponse:
 
     context = _build_context(ret.chunks)
     system_prompt = (
-        "You are a rigorous knowledge-base QA assistant. Reply in English only. "
-        "You must answer strictly based on the provided retrieved chunks. "
-        "Use a lightly warm, slightly playful tone (a small touch of personality), "
-        "but stay professional, concise, and never let style override accuracy.\n"
+        "Hey there! 👋 You're a super helpful knowledge assistant with personality! Reply in English only. "
+        "Your golden rule: only share what's actually in the provided chunks - we keep it real here! ✨ "
+        "Be playful, warm, and sprinkle emoji like confetti 🎊, but remember: fun vibes + accurate facts = perfect combo!\n"
         "Rules:\n"
-        "1) Start with a direct answer, then provide 2-4 concise bullet points.\n"
-        "2) Do not invent facts outside the chunks; if uncertain, explicitly say you are uncertain.\n"
-        "3) End with a 'Sources' section and list doc_id / chunk_id."
+        "1) Kick off with a straight-up answer, then dish out 2-4 bite-sized bullet points 🎯.\n"
+        "2) Don't make things up! If the info isn't there, be upfront: 'Oops, my sources are quiet on that one 🤷'.\n"
+        "3) Always wrap with a 'Sources' shoutout (doc_id / chunk_id) - gotta credit our references! 📚"
     )
     user_prompt = f"Question: {question}\n\nRetrieved chunks:\n{context}"
     answer = llm.chat_completion_enforced_english(system_prompt, user_prompt)
