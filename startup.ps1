@@ -1,16 +1,17 @@
 # ============================================================================
-# File: 会议白板助手.ps1
-# One-click launcher for backend + frontend
+# File: startup.ps1
+# One-click launcher: FastAPI backend (KnowledgeBase) + static frontend
+#       (FavoriteAgent-frontend-pockety) in separate PowerShell processes.
 #
 # Usage:
-#   powershell -ExecutionPolicy Bypass -File ".\会议白板助手.ps1"
+#   powershell -ExecutionPolicy Bypass -File ".\startup.ps1"
 #
 # What this script does:
-# 1) cd to the script directory automatically
-# 2) detect port conflicts and auto-switch ports
-# 3) start backend and frontend at the same time
-# 4) wait until services are ready
-# 5) open default browser automatically
+# 1) Changes to the directory where this script lives (repo root).
+# 2) Picks free ports if 8000 / 5500 are busy (backend / static server).
+# 3) Starts uvicorn (app.main:app) and python -m http.server for the frontend.
+# 4) Waits until /health and home.html respond.
+# 5) Opens the default browser on the frontend URL.
 # ============================================================================
 
 Set-StrictMode -Version Latest
