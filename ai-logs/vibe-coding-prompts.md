@@ -4,7 +4,7 @@ Representative prompts used with AI coding assistants to design, implement, and 
 
 ---
 
-## 1. Backend scaffold (FastAPI + SQLite + Chroma + RAG)
+## 1. Backend (FastAPI + SQLite + Chroma + RAG)
 
 Build a Python **FastAPI** knowledge-base service for a “Pocket / favorites” style product:
 
@@ -60,19 +60,3 @@ We had **Figma** screens for Pocket / travel / AI assistant / weekly report flow
 - **JS:** debounce search inputs; avoid blocking the main thread; handle **CORS** explicitly when the API is on another origin (backend must allow the Vercel origin if applicable).
 - **A11y:** focus order, button labels, sufficient contrast vs Figma.
 
-### 4.5 Deployment (Vercel)
-
-The public demo is served from **Vercel** at **[https://pockety-three.vercel.app](https://pockety-three.vercel.app)** — static hosting with fast CDN delivery. The backend API runs separately; configure the frontend’s **base URL** (environment or constant) to point at your deployed FastAPI instance, and ensure **CORS** on the API allows `https://pockety-three.vercel.app` if browsers block cross-origin calls.
-
----
-
-## 5. Local static server (development)
-
-For quick iteration without Vercel:
-
-```bash
-cd FavoriteAgent-frontend-pockety
-python -m http.server 5500
-```
-
-Open `home.html`, `ai-assistant.html`, `weekly-report.html`, etc. Use the same paths as documented in the root **README** for local URLs.
