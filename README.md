@@ -230,7 +230,7 @@ KnowledgeBase/
 │   └── services/          # chunking, embedding, vector_store, retrieval, rerank, llm, qa, reporting, classification
 ├── ai-logs/               # vibe coding + exact in-app LLM prompts
 ├── data/                  # kb.sqlite, chroma/, documents.json
-├── FavoriteAgent-frontend-pockety/   # static UI (Figma-based), deployed to Vercel
+├── FavoriteAgent-frontend-pockety/   # Frontend
 ├── scripts/init_data.py
 ├── requirements.txt
 ├── .env.example
@@ -239,14 +239,3 @@ KnowledgeBase/
 
 ---
 
-## Troubleshooting
-
-1. **`POST /retrieve` or `/chat/ask` fails with embedding HTTP errors** — Check gateway quota, key, and URL; test `/v1/embeddings` with curl. After changing embedding models, clear `data/chroma` and reindex.
-
-2. **`GET /reports/weekly` returns `doc_count: 0`** — Weekly uses **`created_at` within the last 7 days (UTC)**. Seed data with old timestamps may be excluded; create a new document or verify clock/timezone.
-
-3. **Vercel site cannot reach the API** — Configure the frontend base URL; enable **CORS** on the backend for `https://pockety-three.vercel.app`; ensure the API is publicly reachable and TLS-valid.
-
-4. **`GET /` returns 404** — Expected; open `/docs` instead.
-
-5. **Swagger UI feels slow** — Avoid watching the whole repo with `--reload`; scope `--reload-dir` to `app` (and scripts/data if needed).
