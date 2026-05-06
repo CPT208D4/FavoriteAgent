@@ -3,7 +3,7 @@
 Representative prompts used with AI coding assistants to design, implement, and iterate on this project. The **frontend** section is expanded because the UI was derived from **Figma**, exported/rebuilt as static HTML, then made interactive and optimized.
 ---
 
-## 1. Backend
+## 1. Backend knowledgebase
 
 **User**
 
@@ -31,7 +31,7 @@ Representative prompts used with AI coding assistants to design, implement, and 
 
 ---
 
-## 3. Weekly report + auto tags (follow-up messages)
+## 3. Weekly report + auto tags 
 
 **User**
 
@@ -39,11 +39,11 @@ Representative prompts used with AI coding assistants to design, implement, and 
 >
 > Prompt the LLM for an **English** weekly write-up. Our frontend wants the **first two sentences** as separate “cards”, so the model should write plain text **without markdown** (no `**`, bullets, `#`). If the LLM times out or errors, still return **HTTP 200** with a **fallback** outline built from titles + short previews, and a JSON field like **`used_fallback: true`** so the UI can show a small notice.
 
-**User (later)**
+**User**
 
 > Classification: if the client leaves **category** or **tags** empty on create, call the chat model once with a **fixed list of English folder names** (Science, Technology, … Other) and make it reply with **JSON only** `{"category":"...", "tags":[...]}`. If JSON is bad or the model fails, fall back to simple **keyword rules** in code — don’t block the request.
 
-**User (later)**
+**User**
 
 > `/reports/weekly` keeps failing with read timeout from httpx. Bump **read timeout** vs **connect**, and **retry** a couple times on timeout / connection errors only. Don’t retry on 4xx from the provider.
 
@@ -61,7 +61,7 @@ Representative prompts used with AI coding assistants to design, implement, and 
 
 **User**
 
-> **`ai-assistant.html`**: chat UI that POSTs to **`/chat/ask`** with `{ question, top_k }`, append assistant message, show **sources** from the response if any. Disable send while loading; show network errors in the thread.
+> In **`ai-assistant.html`**, chat UI that POSTs to **`/chat/ask`** with `{ question, top_k }`, append assistant message, show **sources** from the response if any. Disable send while loading; show network errors in the thread.
 
 **User**
 
