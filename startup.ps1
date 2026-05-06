@@ -88,25 +88,18 @@ try {
   $backendPort = Get-FreePort -PreferredPort 8000
   $frontendPort = Get-FreePort -PreferredPort 5500
 
-  $logDir = Join-Path $ScriptDir ".runtime-logs"
-  if (-not (Test-Path $logDir)) {
-    New-Item -ItemType Directory -Path $logDir | Out-Null
-  }
-  $backendLog = Join-Path $logDir "backend.log"
-  $frontendLog = Join-Path $logDir "frontend.log"
-
   $backendCmd = "$pythonCmd -m uvicorn app.main:app --host 0.0.0.0 --port $backendPort"
   $frontendCmd = "$pythonCmd -m http.server $frontendPort --bind 0.0.0.0 --directory `"$ScriptDir\FavoriteAgent-frontend-pockety`""
 
   Write-Info "Starting backend: $backendCmd"
   $backendProc = Start-Process -FilePath "powershell" `
-    -ArgumentList "-NoProfile", "-ExecutionPolicy", "Bypass", "-Command", "$backendCmd 2>&1 | Out-File -FilePath `"$backendLog`" -Encoding utf8" `
+    -ArgumentList "-NoProfile", "-ExecutionPolicy", "Bypass", "-Command", $backendCmd `
     -WorkingDirectory $ScriptDir `
     -PassThru
 
   Write-Info "Starting frontend: $frontendCmd"
   $frontendProc = Start-Process -FilePath "powershell" `
-    -ArgumentList "-NoProfile", "-ExecutionPolicy", "Bypass", "-Command", "$frontendCmd 2>&1 | Out-File -FilePath `"$frontendLog`" -Encoding utf8" `
+    -ArgumentList "-NoProfile", "-ExecutionPolicy", "Bypass", "-Command", $frontendCmd `
     -WorkingDirectory $ScriptDir `
     -PassThru
 
@@ -120,10 +113,10 @@ try {
   $frontendReady = Wait-HttpReady -Url $frontendPageUrl -TimeoutSeconds 120
 
   if (-not $backendReady) {
-    throw "Backend startup timeout. Check log: $backendLog"
+    throw "Backend startup timeout. Verify dependencies (pip install -r requirements.txt), .env, and that port $backendPort is free."
   }
   if (-not $frontendReady) {
-    throw "Frontend startup timeout. Check log: $frontendLog"
+    throw "Frontend startup timeout. Verify FavoriteAgent-frontend-pockety exists and port $frontendPort is free."
   }
 
   Write-Ok "Backend ready: $backendHealthUrl"
@@ -132,7 +125,6 @@ try {
   Write-Ok "Default browser opened."
   Write-Host ""
   Write-Host "Background process PID: backend=$($backendProc.Id), frontend=$($frontendProc.Id)"
-  Write-Host "Logs directory: $logDir"
 } catch {
   Write-Host "[ERROR] $($_.Exception.Message)" -ForegroundColor Red
   exit 1

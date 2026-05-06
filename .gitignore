@@ -1,3 +1,5 @@
+.runtime-logs/
+
 __pycache__/
 *.py[cod]
 .venv/
