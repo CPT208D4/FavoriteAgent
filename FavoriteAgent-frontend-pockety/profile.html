@@ -50,6 +50,14 @@
       transform: translateX(32px);
     }
 
+    .profile-nav-tab-press {
+      transition: transform 90ms ease, opacity 90ms ease;
+    }
+    .profile-nav-tab-press.is-pressed {
+      transform: scale(0.94);
+      opacity: 0.65;
+    }
+
     .toggle-switch:focus-visible {
       outline: 2px solid rgba(52, 129, 255, 0.9);
       outline-offset: 2px;
@@ -184,9 +192,16 @@
         <div class="w-[37.50px] h-[41.67px] mr-[55px] flex justify-center items-center cursor-pointer" onclick="window.location.href='weekly-report.html'">
           <img src="./public/assets/profile/image_21.png" class="w-[37.50px] h-[41.67px]" />
         </div>
-        <!-- Profile Icon (Active) -->
-        <div class="w-[33.33px] h-[37.50px] flex justify-center items-center">
-          <img src="./public/assets/profile/image_22.png" class="w-[33.33px] h-[37.50px]" />
+        <!-- Profile Icon (Active): press feedback only, no navigation (same as home.html first small tab). -->
+        <div
+          class="profile-nav-tab-press w-[33.33px] h-[37.50px] flex justify-center items-center cursor-pointer"
+          role="button"
+          tabindex="0"
+          aria-current="page"
+          onclick="(function (el) { el.classList.add('is-pressed'); setTimeout(function () { el.classList.remove('is-pressed'); }, 140); })(this)"
+          onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); this.click(); }"
+        >
+          <img src="./public/assets/profile/image_22.png" class="w-[33.33px] h-[37.50px]" alt="" />
         </div>
       </div>
     </div>

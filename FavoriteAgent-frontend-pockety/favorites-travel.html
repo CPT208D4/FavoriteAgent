@@ -947,7 +947,8 @@
       [
         { id: 'navHome', path: './home.html' },
         { id: 'navFavorite', path: './favorites-travel.html' },
-        { id: 'navHistory', path: './history-report.html' },
+        // Second tab = travel hub; on this page it only shows press feedback (same as home's first small tab).
+        { id: 'navHistory', path: '' },
         { id: 'navWeekly', path: './weekly-report.html' },
         { id: 'navProfile', path: './profile.html' }
       ].forEach(function (item) {
@@ -955,7 +956,15 @@
         if (!button) return;
         button.addEventListener('click', function () {
           button.classList.add('nav-press');
-          setTimeout(function () { window.location.href = item.path; }, 90);
+          if (!item.path) {
+            setTimeout(function () {
+              button.classList.remove('nav-press');
+            }, 140);
+            return;
+          }
+          setTimeout(function () {
+            window.location.href = item.path;
+          }, 90);
         });
       });
 

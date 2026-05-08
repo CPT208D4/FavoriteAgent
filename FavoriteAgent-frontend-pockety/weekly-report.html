@@ -215,7 +215,8 @@
       const navConfig = [
         { id: 'navHome', path: './home.html' },
         { id: 'navFavorite', path: './favorites-travel.html' },
-        { id: 'navHistory', path: './history-report.html' },
+        // Third small icon in the row: press-only on this page (same behavior as home.html first small tab).
+        { id: 'navHistory', path: '' },
         { id: 'navWeekly', path: './weekly-report.html' },
         { id: 'navProfile', path: './profile.html' },
       ];
@@ -328,6 +329,12 @@
 
         button.addEventListener('click', function () {
           button.classList.add('nav-press');
+          if (!item.path) {
+            setTimeout(function () {
+              button.classList.remove('nav-press');
+            }, 140);
+            return;
+          }
           setTimeout(function () {
             window.location.href = item.path;
           }, 90);
