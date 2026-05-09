@@ -4,7 +4,7 @@ This folder holds **primary prompts** used with AI coding assistants (Cursor / C
 
 | File | Contents |
 |------|----------|
-| [`vibe-coding-prompts.md`](vibe-coding-prompts.md) | High-level development prompts (architecture, RAG, uploads, reports). |
+| [`vibe-coding-prompts.md`](vibe-coding-prompts.md) | Milestone-style dev prompts (Apr–May 2026), aligned with git history: backend, Vercel, UX, toasts, docs. |
 | [`in-app-llm-system-prompts.md`](in-app-llm-system-prompts.md) | **Verbatim** strings and templates as used in code; keep in sync with `app/services/*.py` and `llm.py`. |
 
 If prompts drift from the codebase, **source files win**—check `app/services/qa.py`, `classification.py`, `reporting.py`, and `llm.py`.
